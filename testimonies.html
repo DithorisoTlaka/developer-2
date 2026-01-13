@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimonials • Rare Grade Tech</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --text-primary: #0f172a;
+      --gradient-start: #7c3aed;
+      --gradient-mid: #a78bfa;
+      --gradient-end: #c084fc;
+      --purple-gradient: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+      --white-gradient: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #ffffff 100%);
+      --shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.22);
+    }
+
+    body {
+      font-family: 'Rajdhani', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+    }
+
+    .gradient-title {
+      background: var(--purple-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.4));
+    }
+
+    /* Navigation - same as home page */
+    .glass {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-futuristic {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transform: translateZ(0);
+    }
+
+    .btn-futuristic:hover {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 20px 40px -10px rgba(124, 58, 237, 0.45) !important;
+    }
+
+    .btn-futuristic:active {
+      transform: translateY(2px) scale(0.98);
+      transition: transform 0.15s;
+    }
+
+    .btn-futuristic::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+      );
+      transition: left 0.7s;
+    }
+
+    .btn-futuristic:hover::before {
+      left: 100%;
+    }
+
+    /* Testimonial card */
+    .testimonial-card {
+      transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .testimonial-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .quote-icon {
+      font-size: 4rem;
+      line-height: 1;
+      opacity: 0.15;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Navigation - Identical to Home page -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between glass rounded-b-2xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl">
+          RGT
+        </div>
+        <div class="text-2xl font-black gradient-title">
+          Rare Grade Tech
+        </div>
+      </div>
+      <div class="hidden md:flex items-center space-x-10 text-base font-medium text-white">
+        <a href="index.html" class="hover:text-purple-300 transition-colors">Home</a>
+        <a href="services.html" class="hover:text-purple-300 transition-colors">Services</a>
+        <a href="#" class="text-purple-300 font-semibold">Testimonies</a>
+        <a href="pricing.html" class="hover:text-purple-300 transition-colors">Pricing</a>
+      </div>
+      <a href="tel:+27615270749" 
+         class="btn-futuristic px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-lg shadow-lg shadow-purple-700/30">
+        Get in Touch
+      </a>
+    </nav>
+  </header>
+
+  <!-- Testimonials Hero -->
+  <section class="pt-32 pb-16 px-6 lg:px-8 text-center">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="text-5xl md:text-7xl font-black gradient-title mb-6 tracking-tight">
+        Client Testimonials
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+        Hear what our clients say about working with Rare Grade Tech
+      </p>
+    </div>
+  </section>
+
+  <!-- Testimonials Grid -->
+  <section class="py-12 px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+
+      <!-- Testimonial 1 -->
+      <div class="testimonial-card bg-white rounded-2xl p-8 shadow-xl border border-purple-100 relative">
+        <div class="quote-icon absolute top-4 left-6 text-purple-500">“</div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+            SM
+          </div>
+          <div>
+            <h4 class="font-bold text-lg">Sipho M.</h4>
+            <p class="text-gray-500 text-sm">CEO, TechNova Solutions</p>
+          </div>
+        </div>
+        <p class="text-gray-700 leading-relaxed mb-6">
+          "Rare Grade Tech completely transformed our outdated systems into a modern, scalable platform. 
+          Their attention to detail, clean code and post-launch support is exceptional. 
+          Best tech partner we've ever worked with!"
+        </p>
+        <div class="flex text-yellow-400">
+          ★★★★★
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="testimonial-card bg-white rounded-2xl p-8 shadow-xl border border-purple-100 relative">
+        <div class="quote-icon absolute top-4 left-6 text-purple-500">“</div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl">
+            LN
+          </div>
+          <div>
+            <h4 class="font-bold text-lg">Lerato N.</h4>
+            <p class="text-gray-500 text-sm">Marketing Director, FreshWave</p>
+          </div>
+        </div>
+        <p class="text-gray-700 leading-relaxed mb-6">
+          "The new website and branding they created for us is absolutely stunning. 
+          Not only beautiful, but it converted visitors into customers at a much higher rate. 
+          Professional, creative, and fast – highly recommended!"
+        </p>
+        <div class="flex text-yellow-400">
+          ★★★★★
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="testimonial-card bg-white rounded-2xl p-8 shadow-xl border border-purple-100 relative">
+        <div class="quote-icon absolute top-4 left-6 text-purple-500">“</div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-700 flex items-center justify-center text-white font-bold text-xl">
+            JD
+          </div>
+          <div>
+            <h4 class="font-bold text-lg">James Dlamini</h4>
+            <p class="text-gray-500 text-sm">IT Manager, ProBuild Construction</p>
+          </div>
+        </div>
+        <p class="text-gray-700 leading-relaxed mb-6">
+          "Our computers were constantly breaking down. Rare Grade Tech not only fixed everything 
+          but upgraded our entire setup and trained the team. Downtime dropped to almost zero. 
+          Outstanding service and value for money."
+        </p>
+        <div class="flex text-yellow-400">
+          ★★★★★
+        </div>
+      </div>
+
+      <!-- Testimonial 4 -->
+      <div class="testimonial-card bg-white rounded-2xl p-8 shadow-xl border border-purple-100 relative">
+        <div class="quote-icon absolute top-4 left-6 text-purple-500">“</div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-xl">
+            AN
+          </div>
+          <div>
+            <h4 class="font-bold text-lg">Amahle Nkosi</h4>
+            <p class="text-gray-500 text-sm">Founder, StyleVibe Boutique</p>
+          </div>
+        </div>
+        <p class="text-gray-700 leading-relaxed mb-6">
+          "They built our custom e-commerce platform and handled all the graphic design needs. 
+          Sales increased by 240% in the first three months. Truly mind-blowing quality!"
+        </p>
+        <div class="flex text-yellow-400">
+          ★★★★★
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-24 px-6 lg:px-8 bg-gradient-to-b from-white to-purple-50/30">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-black gradient-title mb-6">
+        Join Our Happy Clients
+      </h2>
+      <p class="text-xl text-gray-600 mb-10">
+        Ready to experience the Rare Grade difference? Let's create something extraordinary together.
+      </p>
+      <a href="tel:+27615270749" 
+         class="btn-futuristic inline-block px-12 py-6 rounded-full bg-gradient-to-r from-purple-600 to-purple-800 text-white font-bold text-xl shadow-2xl">
+        Get Your Free Consultation →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-purple-200 py-16 px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
+      <div>
+        <div class="text-3xl font-black gradient-title mb-4">Rare Grade Tech</div>
+        <p class="text-gray-600">Imagination to Reality</p>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-xl mb-6 gradient-title">Get In Touch</h4>
+        <div class="text-gray-700 space-y-3">
+          <p>📍 69 Hooge str, Mokopane, Limpopo, South Africa</p>
+          <p>🕒 08:00 - 17:00 PM (Mon - Fri)</p>
+          <p>📞 <a href="tel:+27615270749" class="hover:text-purple-700">+27 61 527 0749</a></p>
+          <p>✉️ <a href="mailto:admin@raregradetech.com" class="hover:text-purple-700">admin@raregradetech.com</a></p>
+        </div>
+      </div>
+
+      <div class="text-center md:text-right">
+        <p class="text-gray-500 text-sm mt-10">
+          © 2026 Rare Grade Tech. All rights reserved.<br/>
+          Mind Blowing Quality & Ethics.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Simple scroll animation for testimonials -->
+  <script>
+    const cards = document.querySelectorAll('.testimonial-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => observer.observe(card));
+  </script>
+
+</body>
+</html>
