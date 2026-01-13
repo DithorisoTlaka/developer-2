@@ -5,39 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rare Grade Tech • Imagination to Reality</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #f8fafc;
-      --card-bg: #ffffff;
       --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --gradient-start: #6d28d9;
-      --gradient-mid: #7c3aed;
-      --gradient-end: #60a5fa;
+      --gradient-start: #a78bfa;
+      --gradient-mid: #c084fc;
+      --gradient-end: #e0f2fe;
       --purple-gradient: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
-      --border: rgba(124, 58, 237, 0.15);
-      --shadow: 0 20px 40px -12px rgba(109, 40, 217, 0.18);
+      --white-gradient: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #ffffff 100%);
     }
 
     body {
-      font-family: 'Exo 2', system-ui, sans-serif;
+      font-family: 'Rajdhani', 'Exo 2', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text-primary);
     }
 
     h1, h2, h3 {
       font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
+      font-weight: 900;
     }
 
-    .gradient-text {
-      background: var(--purple-gradient);
+    .gradient-title {
+      background: var(--white-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.5));
     }
 
+    /* Glass effect for navbar */
     .glass {
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(12px);
@@ -46,26 +45,61 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     }
 
-    /* Hero with image background */
+    /* Enhanced button styles with animations */
+    .btn-futuristic {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transform: translateZ(0);
+    }
+
+    .btn-futuristic:hover {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 20px 40px -10px rgba(124, 58, 237, 0.45) !important;
+    }
+
+    .btn-futuristic:active {
+      transform: translateY(2px) scale(0.98);
+      transition: transform 0.15s;
+    }
+
+    .btn-futuristic::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+      );
+      transition: left 0.7s;
+    }
+
+    .btn-futuristic:hover::before {
+      left: 100%;
+    }
+
+    /* Hero background */
     .hero-bg {
       background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)),
+        linear-gradient(rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.78)),
         url('https://images.unsplash.com/photo-1580894894513-541e068a3e2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
     }
 
-    /* Flip Card Styles */
+    /* Flip card styles remain the same */
     .flip-card {
       perspective: 1200px;
       height: 380px;
     }
 
     .flip-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
       transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       transform-style: preserve-3d;
     }
@@ -76,16 +110,8 @@
 
     .flip-card-front,
     .flip-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
       backface-visibility: hidden;
       border-radius: 1.5rem;
-      padding: 2.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
     }
 
     .flip-card-front {
@@ -93,7 +119,7 @@
     }
 
     .flip-card-back {
-      background: var(--purple-gradient);
+      background: linear-gradient(135deg, #6d28d9, #7c3aed, #60a5fa);
       color: white;
       transform: rotateY(180deg);
     }
@@ -101,14 +127,14 @@
 </head>
 <body class="antialiased">
 
-  <!-- Navigation Bar (now transparent on hero) -->
+  <!-- Navigation -->
   <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
     <nav class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between glass rounded-b-2xl">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl">
           RGT
         </div>
-        <div class="text-2xl font-black gradient-text tracking-wider">
+        <div class="text-2xl font-black gradient-title">
           Rare Grade Tech
         </div>
       </div>
@@ -118,44 +144,44 @@
         <a href="#testimonies" class="hover:text-purple-300 transition-colors">Testimonies</a>
         <a href="#pricing" class="hover:text-purple-300 transition-colors">Pricing</a>
       </div>
-      <a href="tel:+27615270749" class="px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold transition-all transform hover:scale-105">
+      <a href="tel:+27615270749" 
+         class="btn-futuristic px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-lg shadow-lg shadow-purple-700/30">
         Get in Touch
       </a>
     </nav>
   </header>
 
-  <!-- Hero Section with Image Background -->
+  <!-- Hero Section -->
   <section id="home" class="hero-bg min-h-screen flex items-center justify-center text-center text-white px-6 relative">
     <div class="max-w-5xl mx-auto z-10">
-      <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6 gradient-text drop-shadow-2xl">
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 gradient-title drop-shadow-2xl">
         Imagination to Reality
       </h1>
-      <p class="text-xl md:text-3xl mb-12 font-light drop-shadow-lg max-w-3xl mx-auto">
+      <p class="text-xl md:text-3xl mb-12 font-light drop-shadow-lg max-w-3xl mx-auto opacity-90">
         Rare Grade Tech – Turning cutting-edge hardware & software into powerful solutions
       </p>
 
-      <a href="tel:+27615270749" class="inline-block px-12 py-6 rounded-full bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold text-xl hover:shadow-2xl hover:shadow-purple-700/50 transition-all transform hover:scale-105">
+      <a href="tel:+27615270749" 
+         class="btn-futuristic inline-block px-12 py-6 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xl shadow-2xl shadow-purple-700/50">
         Start Your Project Today →
       </a>
     </div>
   </section>
 
-  <!-- Vision & Mission Flip Cards -->
+  <!-- Vision & Mission -->
   <section class="py-24 px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto">
       <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-        <!-- Vision Card -->
+        <!-- Vision -->
         <div class="flip-card">
           <div class="flip-card-inner glass rounded-3xl">
-            <div class="flip-card-front">
-              <h2 class="text-4xl md:text-5xl font-black gradient-text mb-6">VISION</h2>
-              <p class="text-xl font-medium text-gray-700">
-                Breaking limitations through technology
-              </p>
+            <div class="flip-card-front p-10">
+              <h2 class="text-5xl font-black gradient-title mb-6">VISION</h2>
+              <p class="text-xl font-medium text-gray-700">Breaking limitations through technology</p>
               <p class="text-sm text-gray-500 mt-4">(Hover to see full vision)</p>
             </div>
-            <div class="flip-card-back flex flex-col justify-center">
-              <h2 class="text-4xl font-black mb-6">VISION</h2>
+            <div class="flip-card-back p-10 flex flex-col justify-center">
+              <h2 class="text-5xl font-black mb-6">VISION</h2>
               <p class="text-lg leading-relaxed">
                 To break limitations through tech, enabling our clients to realize their full potential for growth & success.
               </p>
@@ -163,18 +189,16 @@
           </div>
         </div>
 
-        <!-- Mission Card -->
+        <!-- Mission -->
         <div class="flip-card">
           <div class="flip-card-inner glass rounded-3xl">
-            <div class="flip-card-front">
-              <h2 class="text-4xl md:text-5xl font-black gradient-text mb-6">MISSION</h2>
-              <p class="text-xl font-medium text-gray-700">
-                Building tomorrow's solutions today
-              </p>
+            <div class="flip-card-front p-10">
+              <h2 class="text-5xl font-black gradient-title mb-6">MISSION</h2>
+              <p class="text-xl font-medium text-gray-700">Building tomorrow's solutions today</p>
               <p class="text-sm text-gray-500 mt-4">(Hover to see full mission)</p>
             </div>
-            <div class="flip-card-back flex flex-col justify-center">
-              <h2 class="text-4xl font-black mb-6">MISSION</h2>
+            <div class="flip-card-back p-10 flex flex-col justify-center">
+              <h2 class="text-5xl font-black mb-6">MISSION</h2>
               <p class="text-lg leading-relaxed">
                 Design, develop & build innovative, well-grounded tech/software solutions to meet our clients' mind-blowing needs with mind-blowing quality & ethics.
               </p>
@@ -185,16 +209,16 @@
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Footer (unchanged) -->
   <footer class="border-t border-purple-200 py-16 px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
       <div>
-        <div class="text-3xl font-black gradient-text mb-4">Rare Grade Tech</div>
+        <div class="text-3xl font-black gradient-title mb-4">Rare Grade Tech</div>
         <p class="text-gray-600">Imagination to Reality</p>
       </div>
 
       <div>
-        <h4 class="font-bold text-xl mb-6 gradient-text">Get In Touch</h4>
+        <h4 class="font-bold text-xl mb-6 gradient-title">Get In Touch</h4>
         <div class="text-gray-700 space-y-3">
           <p>📍 69 Hooge str, Mokopane, Limpopo, South Africa</p>
           <p>🕒 08:00 - 17:00 PM (Mon - Fri)</p>
