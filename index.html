@@ -12,8 +12,8 @@
       --text-primary: #0f172a;
       --gradient-start: #a78bfa;
       --gradient-mid: #c084fc;
-      --gradient-end: #e0f2fe;
-      --purple-gradient: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+      --gradient-end: #60a5fa;
+      --purple-gradient: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #c084fc 100%);
       --white-gradient: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #ffffff 100%);
     }
 
@@ -36,6 +36,14 @@
       filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.5));
     }
 
+    .gradient-purple {
+      background: var(--purple-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.4));
+    }
+
     /* Glass effect for navbar */
     .glass {
       background: rgba(255, 255, 255, 0.12);
@@ -45,7 +53,7 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     }
 
-    /* Enhanced button styles with animations */
+    /* Button animations */
     .btn-futuristic {
       position: relative;
       overflow: hidden;
@@ -93,7 +101,7 @@
       background-attachment: fixed;
     }
 
-    /* Flip card styles remain the same */
+    /* Flip card styles */
     .flip-card {
       perspective: 1200px;
       height: 380px;
@@ -119,7 +127,7 @@
     }
 
     .flip-card-back {
-      background: linear-gradient(135deg, #6d28d9, #7c3aed, #60a5fa);
+      background: var(--purple-gradient);
       color: white;
       transform: rotateY(180deg);
     }
@@ -168,20 +176,20 @@
     </div>
   </section>
 
-  <!-- Vision & Mission -->
+  <!-- Vision & Mission Flip Cards -->
   <section class="py-24 px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto">
       <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-        <!-- Vision -->
+        <!-- Vision Card -->
         <div class="flip-card">
           <div class="flip-card-inner glass rounded-3xl">
             <div class="flip-card-front p-10">
-              <h2 class="text-5xl font-black gradient-title mb-6">VISION</h2>
+              <h2 class="text-5xl md:text-6xl font-black gradient-purple mb-6">VISION</h2>
               <p class="text-xl font-medium text-gray-700">Breaking limitations through technology</p>
               <p class="text-sm text-gray-500 mt-4">(Hover to see full vision)</p>
             </div>
             <div class="flip-card-back p-10 flex flex-col justify-center">
-              <h2 class="text-5xl font-black mb-6">VISION</h2>
+              <h2 class="text-5xl md:text-6xl font-black mb-6">VISION</h2>
               <p class="text-lg leading-relaxed">
                 To break limitations through tech, enabling our clients to realize their full potential for growth & success.
               </p>
@@ -189,16 +197,16 @@
           </div>
         </div>
 
-        <!-- Mission -->
+        <!-- Mission Card -->
         <div class="flip-card">
           <div class="flip-card-inner glass rounded-3xl">
             <div class="flip-card-front p-10">
-              <h2 class="text-5xl font-black gradient-title mb-6">MISSION</h2>
+              <h2 class="text-5xl md:text-6xl font-black gradient-purple mb-6">MISSION</h2>
               <p class="text-xl font-medium text-gray-700">Building tomorrow's solutions today</p>
               <p class="text-sm text-gray-500 mt-4">(Hover to see full mission)</p>
             </div>
             <div class="flip-card-back p-10 flex flex-col justify-center">
-              <h2 class="text-5xl font-black mb-6">MISSION</h2>
+              <h2 class="text-5xl md:text-6xl font-black mb-6">MISSION</h2>
               <p class="text-lg leading-relaxed">
                 Design, develop & build innovative, well-grounded tech/software solutions to meet our clients' mind-blowing needs with mind-blowing quality & ethics.
               </p>
@@ -209,7 +217,7 @@
     </div>
   </section>
 
-  <!-- Footer (unchanged) -->
+  <!-- Footer -->
   <footer class="border-t border-purple-200 py-16 px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
       <div>
