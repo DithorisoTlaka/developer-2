@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services • Rare Grade Tech</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --text-primary: #0f172a;
+      --gradient-start: #7c3aed;
+      --gradient-mid: #a78bfa;
+      --gradient-end: #c084fc;
+      --purple-gradient: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
+      --white-gradient: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #ffffff 100%);
+      --shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.22);
+    }
+
+    body {
+      font-family: 'Rajdhani', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+    }
+
+    .gradient-title {
+      background: var(--purple-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.4));
+    }
+
+    .card-hover {
+      transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transform: translateY(0) scale(1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: var(--shadow);
+    }
+
+    .icon-bg {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(167, 139, 250, 0.1));
+    }
+
+    .btn-futuristic {
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .btn-futuristic:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 30px -8px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-futuristic:active {
+      transform: translateY(1px) scale(0.98);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Navigation -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-100 shadow-sm">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white font-bold text-xl">
+          RGT
+        </div>
+        <div class="text-2xl font-black gradient-title">
+          Rare Grade Tech
+        </div>
+      </div>
+      <div class="hidden md:flex items-center space-x-10 text-base font-medium">
+        <a href="index.html" class="hover:text-purple-700 transition-colors">Home</a>
+        <a href="#" class="text-purple-700 font-semibold">Services</a>
+        <a href="testimonies.html" class="hover:text-purple-700 transition-colors">Testimonies</a>
+        <a href="pricing.html" class="hover:text-purple-700 transition-colors">Pricing</a>
+      </div>
+      <a href="tel:+27615270749" 
+         class="btn-futuristic px-7 py-3 rounded-full bg-gradient-to-r from-purple-600 to-purple-800 text-white font-semibold shadow-lg">
+        Get in Touch
+      </a>
+    </nav>
+  </header>
+
+  <!-- Services Hero -->
+  <section class="pt-32 pb-20 px-6 lg:px-8 text-center">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="text-5xl md:text-7xl font-black gradient-title mb-6 tracking-tight">
+        Our Services
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+        From concept to completion — we bring imagination into powerful digital and technical reality.
+      </p>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="py-16 px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+
+      <!-- Service 1: Software Development -->
+      <div class="card-hover bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
+        <div class="w-16 h-16 rounded-xl icon-bg flex items-center justify-center mb-6">
+          <span class="text-4xl">💻</span>
+        </div>
+        <h3 class="text-2xl font-bold gradient-title mb-4">Software Development</h3>
+        <p class="text-gray-600 mb-6">
+          Custom desktop, mobile & enterprise applications built with modern technologies, clean architecture & future-proof code.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2 mb-6">
+          <li>• Desktop & Mobile Apps</li>
+          <li>• Backend & API Development</li>
+          <li>• Cloud Integration</li>
+          <li>• Maintenance & Support</li>
+        </ul>
+      </div>
+
+      <!-- Service 2: Web Development -->
+      <div class="card-hover bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
+        <div class="w-16 h-16 rounded-xl icon-bg flex items-center justify-center mb-6">
+          <span class="text-4xl">🌐</span>
+        </div>
+        <h3 class="text-2xl font-bold gradient-title mb-4">Web Development</h3>
+        <p class="text-gray-600 mb-6">
+          Stunning, fast & responsive websites and web applications that perform flawlessly across all devices.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2 mb-6">
+          <li>• Modern Websites & E-commerce</li>
+          <li>• Web Applications (React, Vue, Next.js)</li>
+          <li>• Progressive Web Apps (PWA)</li>
+          <li>• SEO & Performance Optimization</li>
+        </ul>
+      </div>
+
+      <!-- Service 3: Computer Repair & Hardware -->
+      <div class="card-hover bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
+        <div class="w-16 h-16 rounded-xl icon-bg flex items-center justify-center mb-6">
+          <span class="text-4xl">🔧</span>
+        </div>
+        <h3 class="text-2xl font-bold gradient-title mb-4">Computer Repair</h3>
+        <p class="text-gray-600 mb-6">
+          Expert diagnosis, repair & upgrade services for laptops, desktops, servers and all types of computer hardware.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2 mb-6">
+          <li>• Hardware Troubleshooting</li>
+          <li>• Virus & Malware Removal</li>
+          <li>• Component Upgrades</li>
+          <li>• Data Recovery</li>
+        </ul>
+      </div>
+
+      <!-- Service 4: Graphic Design -->
+      <div class="card-hover bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
+        <div class="w-16 h-16 rounded-xl icon-bg flex items-center justify-center mb-6">
+          <span class="text-4xl">🎨</span>
+        </div>
+        <h3 class="text-2xl font-bold gradient-title mb-4">Graphic Design</h3>
+        <p class="text-gray-600 mb-6">
+          Eye-catching visual identity, branding, marketing materials & digital assets that make your business stand out.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2 mb-6">
+          <li>• Logo & Brand Identity</li>
+          <li>• Social Media Graphics</li>
+          <li>• Marketing Materials</li>
+          <li>• UI/UX Design Support</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-24 px-6 lg:px-8 bg-gradient-to-b from-white to-purple-50/30">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-black gradient-title mb-6">
+        Ready to Transform Your Ideas?
+      </h2>
+      <p class="text-xl text-gray-600 mb-10">
+        Contact us today and let's build something extraordinary together.
+      </p>
+      <a href="tel:+27615270749" 
+         class="btn-futuristic inline-block px-12 py-6 rounded-full bg-gradient-to-r from-purple-600 to-purple-800 text-white font-bold text-xl shadow-2xl">
+        Let's Get Started →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-purple-200 py-16 px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
+      <div>
+        <div class="text-3xl font-black gradient-title mb-4">Rare Grade Tech</div>
+        <p class="text-gray-600">Imagination to Reality</p>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-xl mb-6 gradient-title">Get In Touch</h4>
+        <div class="text-gray-700 space-y-3">
+          <p>📍 69 Hooge str, Mokopane, Limpopo, South Africa</p>
+          <p>🕒 08:00 - 17:00 PM (Mon - Fri)</p>
+          <p>📞 <a href="tel:+27615270749" class="hover:text-purple-700">+27 61 527 0749</a></p>
+          <p>✉️ <a href="mailto:admin@raregradetech.com" class="hover:text-purple-700">admin@raregradetech.com</a></p>
+        </div>
+      </div>
+
+      <div class="text-center md:text-right">
+        <p class="text-gray-500 text-sm mt-10">
+          © 2026 Rare Grade Tech. All rights reserved.<br/>
+          Mind Blowing Quality & Ethics.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
