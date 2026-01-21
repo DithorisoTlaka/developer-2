@@ -23,6 +23,8 @@
       --glow:        rgba(99, 102, 241, 0.18);
       --error:       #f87171;
       --success:     #34d399;
+      --sidebar-collapsed: 72px;
+      --sidebar-expanded: 260px;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -53,222 +55,97 @@
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
-    .logo {
-      font-size: 2.4rem;
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      text-align: center;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
+    .logo { font-size: 2.4rem; font-weight: 600; letter-spacing: -0.04em; text-align: center; margin-bottom: 0.5rem; color: white; }
+    .subtitle { text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2.2rem; }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 2.2rem;
-    }
+    .tabs { display: flex; margin-bottom: 1.8rem; border-bottom: 1px solid var(--border); }
+    .tab { flex: 1; background: none; border: none; padding: 0.9rem 0; font-size: 0.97rem; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: color 0.2s; position: relative; }
+    .tab.active { color: white; }
+    .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--primary); }
 
-    .tabs {
-      display: flex;
-      margin-bottom: 1.8rem;
-      border-bottom: 1px solid var(--border);
-    }
+    .form-field { margin-bottom: 1.4rem; }
+    label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    input { width: 100%; padding: 0.9rem 1.1rem; background: #0f1622; border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 0.97rem; transition: border-color 0.2s, box-shadow 0.2s; }
+    input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--glow); }
 
-    .tab {
-      flex: 1;
-      background: none;
-      border: none;
-      padding: 0.9rem 0;
-      font-size: 0.97rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-weight: 500;
-      transition: color 0.2s;
-      position: relative;
-    }
+    .btn { width: 100%; padding: 1rem; margin: 0.6rem 0; border: none; border-radius: 9999px; font-size: 0.97rem; font-weight: 500; cursor: pointer; transition: all 0.2s; position: relative; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-google { background: #ffffff; color: #111827; display: flex; align-items: center; justify-content: center; gap: 0.7rem; }
+    .btn-google:hover { background: #f3f4f6; }
 
-    .tab.active {
-      color: white;
-    }
+    .btn-loading::after { content: ""; display: inline-block; width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-left: 8px; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--primary);
-    }
+    .divider { display: flex; align-items: center; text-align: center; margin: 1.6rem 0; color: var(--text-muted); font-size: 0.85rem; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+    .divider span { padding: 0 1.2rem; }
 
-    .form-field {
-      margin-bottom: 1.4rem;
-    }
+    .toggle { text-align: center; margin-top: 1.2rem; color: var(--text-muted); font-size: 0.92rem; }
+    .toggle a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .toggle a:hover { text-decoration: underline; }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.9rem 1.1rem;
-      background: #0f1622;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: white;
-      font-size: 0.97rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--glow);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 1rem;
-      margin: 0.6rem 0;
-      border: none;
-      border-radius: 9999px;
-      font-size: 0.97rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-google {
-      background: #ffffff;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.7rem;
-    }
-
-    .btn-google:hover {
-      background: #f3f4f6;
-    }
-
-    .btn-loading::after {
-      content: "";
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid white;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 1s linear infinite;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 1.6rem 0;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .divider span {
-      padding: 0 1.2rem;
-    }
-
-    .toggle {
-      text-align: center;
-      margin-top: 1.2rem;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-    }
-
-    .toggle a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .toggle a:hover {
-      text-decoration: underline;
-    }
-
-    .error-msg {
-      color: var(--error);
-      font-size: 0.85rem;
-      margin: 0.8rem 0;
-      text-align: center;
-    }
+    .error-msg { color: var(--error); font-size: 0.85rem; margin: 0.8rem 0; text-align: center; }
 
     /* ── DASHBOARD ─────────────────────────────────────── */
     #dashboard { display: none; }
 
-    .dashboard-wrapper {
-      display: flex;
-      min-height: 100vh;
-    }
+    .dashboard-wrapper { display: flex; min-height: 100vh; }
 
     .sidebar-left {
-      width: 260px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
       position: fixed;
       top: 0;
+      left: 0;
       bottom: 0;
-      overflow-y: auto;
+      width: var(--sidebar-collapsed);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      transition: width 0.3s ease;
+      overflow: hidden;
+      z-index: 100;
     }
 
-    .sidebar-content {
-      padding: 5rem 0 2rem;
+    .sidebar-left.expanded { width: var(--sidebar-expanded); }
+
+    .sidebar-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 101;
     }
+
+    .sidebar-content { padding: 5rem 0 2rem; }
 
     .tab-link {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       padding: 1rem 1.8rem;
       color: var(--text-muted);
       text-decoration: none;
       font-weight: 500;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .tab-link:hover,
-    .tab-link.active {
-      background: rgba(99,102,241,0.12);
-      color: white;
-    }
+    .tab-link.active { background: rgba(99,102,241,0.12); color: white; }
+
+    .tab-link .icon { font-size: 1.4rem; min-width: 24px; text-align: center; }
 
     .main-view {
-      margin-left: 260px;
+      margin-left: var(--sidebar-collapsed);
       flex: 1;
       padding: 2.5rem;
+      transition: margin-left 0.3s ease;
     }
+
+    .sidebar-left.expanded ~ .main-view { margin-left: var(--sidebar-expanded); }
 
     .dashboard-header {
       display: flex;
@@ -279,10 +156,7 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .welcome {
-      font-size: 1.9rem;
-      font-weight: 600;
-    }
+    .welcome { font-size: 1.9rem; font-weight: 600; }
 
     .card {
       background: var(--surface);
@@ -292,14 +166,30 @@
       margin-bottom: 2rem;
     }
 
-    .card h2 {
-      margin-bottom: 1rem;
-      color: var(--primary);
+    .card h2 { margin-bottom: 1rem; color: var(--primary); }
+
+    .assignment-item {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .assignment-item:last-child { border-bottom: none; }
+
+    .assignment-title { font-weight: 500; margin-bottom: 0.3rem; }
+    .assignment-due { color: var(--error); font-size: 0.9rem; }
+
+    .empty-state {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 4rem 1rem;
+      font-size: 1.1rem;
     }
 
     @media (max-width: 900px) {
-      .sidebar-left { width: 220px; }
-      .main-view { margin-left: 220px; padding: 1.5rem; }
+      .sidebar-left { width: var(--sidebar-collapsed); }
+      .sidebar-left.expanded { width: var(--sidebar-expanded); }
+      .main-view { margin-left: var(--sidebar-collapsed); }
+      .sidebar-left.expanded ~ .main-view { margin-left: var(--sidebar-expanded); }
     }
   </style>
 </head>
@@ -386,13 +276,26 @@
   <!-- DASHBOARD -->
   <div id="dashboard">
     <div class="dashboard-wrapper">
-      <aside class="sidebar-left">
+      <aside class="sidebar-left" id="sidebar">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="ri-menu-line"></i>
+        </button>
         <div class="sidebar-content">
-          <a href="#" class="tab-link active" data-tab="overview" onclick="showTab(event, 'overview')">Overview</a>
-          <a href="#" class="tab-link" data-tab="assignments" onclick="showTab(event, 'assignments')">Assignments</a>
-          <a href="#" class="tab-link" data-tab="materials" onclick="showTab(event, 'materials')">Materials</a>
-          <a href="#" class="tab-link" data-tab="timetable" onclick="showTab(event, 'timetable')">Timetable</a>
-          <a href="#" class="tab-link" data-tab="chat" onclick="showTab(event, 'chat')">Lecturer Chat</a>
+          <a href="#" class="tab-link active" data-tab="overview" onclick="showTab(event, 'overview')">
+            <i class="ri-dashboard-line icon"></i> Overview
+          </a>
+          <a href="#" class="tab-link" data-tab="assignments" onclick="showTab(event, 'assignments')">
+            <i class="ri-task-line icon"></i> Assignments
+          </a>
+          <a href="#" class="tab-link" data-tab="materials" onclick="showTab(event, 'materials')">
+            <i class="ri-book-2-line icon"></i> Materials
+          </a>
+          <a href="#" class="tab-link" data-tab="timetable" onclick="showTab(event, 'timetable')">
+            <i class="ri-calendar-schedule-line icon"></i> Timetable
+          </a>
+          <a href="#" class="tab-link" data-tab="chat" onclick="showTab(event, 'chat')">
+            <i class="ri-chat-3-line icon"></i> Lecturer Chat
+          </a>
         </div>
       </aside>
 
@@ -412,7 +315,7 @@
         <div id="assignments" class="tab-content" style="display:none;">
           <div class="card">
             <h2>Assignments</h2>
-            <p>Your assignments will appear here once added by lecturers.</p>
+            <div id="assignmentsList"></div>
           </div>
         </div>
 
@@ -440,7 +343,7 @@
     </div>
   </div>
 
-  <!-- Firebase + Firestore logic -->
+  <!-- Firebase + Realtime Database + Firestore logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import {
@@ -459,9 +362,16 @@
       getDoc
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
+    import {
+      getDatabase,
+      ref,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
       authDomain: "learnermanagementsystem-f3b6a.firebaseapp.com",
+      databaseURL: "https://learnermanagementsystem-f3b6a-default-rtdb.firebaseio.com",
       projectId: "learnermanagementsystem-f3b6a",
       storageBucket: "learnermanagementsystem-f3b6a.firebasestorage.app",
       messagingSenderId: "173549259244",
@@ -472,6 +382,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const rtdb = getDatabase(app);
     const googleProvider = new GoogleAuthProvider();
 
     async function isStudentAllowed(email) {
@@ -486,12 +397,48 @@
       if (isLoading) {
         btn.disabled = true;
         btn.classList.add('btn-loading');
-        btn.innerHTML = btn.innerHTML.replace(/Sign in|Create account|Continue with Google/, 'Checking...');
+        const originalText = btn.innerHTML;
+        btn.dataset.originalText = originalText;
+        btn.innerHTML = 'Checking...';
       } else {
         btn.disabled = false;
         btn.classList.remove('btn-loading');
-        // Reset text would require storing original text - simplified version here
+        if (btn.dataset.originalText) {
+          btn.innerHTML = btn.dataset.originalText;
+        }
       }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('expanded');
+    }
+
+    // Load assignments from Realtime Database
+    function loadAssignments() {
+      const assignmentsRef = ref(rtdb, 'assignments');
+      onValue(assignmentsRef, (snapshot) => {
+        const listEl = document.getElementById('assignmentsList');
+        listEl.innerHTML = '';
+
+        if (!snapshot.exists() || Object.keys(snapshot.val() || {}).length === 0) {
+          listEl.innerHTML = '<div class="empty-state">No assignments posted yet.</div>';
+          return;
+        }
+
+        const assignments = snapshot.val();
+        Object.keys(assignments).forEach(key => {
+          const ass = assignments[key];
+          const item = document.createElement('div');
+          item.className = 'assignment-item';
+          item.innerHTML = `
+            <div class="assignment-title">${ass.title || 'Untitled Assignment'}</div>
+            <div class="assignment-due">Due: ${ass.dueDate || 'No due date'}</div>
+            ${ass.description ? `<p>${ass.description}</p>` : ''}
+          `;
+          listEl.appendChild(item);
+        });
+      });
     }
 
     // ── UI Switching ─────────────────────────────────────────────
@@ -506,6 +453,9 @@
 
       const name = user.displayName || user.email?.split('@')[0] || 'Learner';
       document.getElementById('userDisplayName').textContent = name;
+
+      // Load assignments when dashboard is shown
+      loadAssignments();
     }
 
     onAuthStateChanged(auth, (user) => {
@@ -526,7 +476,7 @@
       e.currentTarget.classList.add('active');
     };
 
-    // ── Form Handlers with pre-check ─────────────────────────────
+    // ── Form Handlers ────────────────────────────────────────────
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
@@ -616,7 +566,6 @@
           errorEl.textContent = 'Your Google account has not been pre-registered by an administrator or lecturer.';
           return;
         }
-        // allowed → already signed in, UI will update via onAuthStateChanged
       } catch (err) {
         errorEl.textContent = 'Google sign-in failed or account not pre-registered.';
       } finally {
