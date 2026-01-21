@@ -388,11 +388,11 @@
     let chatUnsubscribe = null;
     let currentUser = null;
 
-    async function isInvitedUser(email) {
+    async function learners(email) {
       if (!email) return false;
       const normalized = email.toLowerCase().trim();
       return new Promise((resolve) => {
-        const invitedRef = ref(database, 'invitedusers');
+        const invitedRef = ref(database, 'learners');
         onValue(invitedRef, (snapshot) => {
           const data = snapshot.val();
           if (!data) return resolve(false);
