@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lumina — Access</title>
+  <title>Lumina — Your Learning Space</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
 
   <style>
     :root {
@@ -19,22 +21,25 @@
       --primary:     #6366f1;
       --primary-dark:#4f46e5;
       --glow:        rgba(99, 102, 241, 0.18);
+      --error:       #f87171;
+      --success:     #34d399;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    /* ── AUTH PAGE ─────────────────────────────────────── */
+    #authPage {
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
       padding: 1.5rem;
     }
 
@@ -197,121 +202,366 @@
       text-decoration: underline;
     }
 
-    @media (max-width: 480px) {
-      .auth-container {
-        padding: 2rem 1.5rem;
-      }
-      .logo {
-        font-size: 2.1rem;
-      }
+    .error-msg {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin: 0.8rem 0;
+      text-align: center;
+    }
+
+    /* ── DASHBOARD ─────────────────────────────────────── */
+    #dashboard {
+      display: none;
+    }
+
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar-left {
+      width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-content {
+      padding: 5rem 0 2rem;
+    }
+
+    .tab-link {
+      display: block;
+      padding: 1rem 1.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tab-link:hover,
+    .tab-link.active {
+      background: rgba(99,102,241,0.12);
+      color: white;
+    }
+
+    .main-view {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2.5rem;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .welcome {
+      font-size: 1.9rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    @media (max-width: 900px) {
+      .sidebar-left { width: 220px; }
+      .main-view { margin-left: 220px; padding: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="auth-container">
-    <div class="logo">Lumina</div>
-    <div class="subtitle">Your learning space</div>
+  <!-- ── AUTHENTICATION PAGE ─────────────────────────────────────── -->
+  <div id="authPage">
+    <div class="auth-container">
+      <div class="logo">Lumina</div>
+      <div class="subtitle">Your learning space</div>
 
-    <div class="tabs">
-      <button class="tab active" onclick="switchMode('login')">Sign in</button>
-      <button class="tab" onclick="switchMode('signup')">Create account</button>
-    </div>
-
-    <!-- Sign In -->
-    <form id="loginForm" class="auth-form">
-      <div class="form-field">
-        <label for="loginEmail">Email</label>
-        <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
-      </div>
-      <div class="form-field">
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+      <div class="tabs">
+        <button class="tab active" onclick="switchMode('login')">Sign in</button>
+        <button class="tab" onclick="switchMode('signup')">Create account</button>
       </div>
 
-      <button type="submit" class="btn btn-primary">Sign in</button>
+      <div id="errorMessage" class="error-msg"></div>
 
-      <div class="divider"><span>or</span></div>
+      <!-- Sign In Form -->
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
 
-      <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
-        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.51h5.84c-.25 1.31-.98 2.42-2.07 3.16v2.63h3.35c1.96-1.81 3.1-4.47 3.1-7.8z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-1.01 7.28-2.74l-3.35-2.63c-1.01.68-2.29 1.08-3.93 1.08-3.02 0-5.58-2.04-6.49-4.79H.96v2.67C2.77 20.39 6.62 23 12 23z"/><path fill="#FBBC05" d="M5.51 14.21c-.23-.68-.36-1.41-.36-2.21s.13-1.53.36-2.21V7.34H.96C.35 8.85 0 10.39 0 12s.35 3.15.96 4.66l4.55-2.45z"/><path fill="#EA4335" d="M12 4.98c1.64 0 3.11.56 4.27 1.66l3.19-3.19C17.46 1.01 14.97 0 12 0 6.62 0 2.77 2.61 0.96 6.34l4.55 2.45C6.42 6.02 8.98 4.98 12 4.98z"/></svg>
-        Continue with Google
-      </button>
-    </form>
+        <button type="submit" class="btn btn-primary">Sign in</button>
 
-    <!-- Sign Up -->
-    <form id="signupForm" class="auth-form" style="display:none;">
-      <div class="form-field">
-        <label for="signupEmail">Email</label>
-        <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
+        <div class="divider"><span>or</span></div>
+
+        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
+            <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
+            <path d="M5.68 14.47C5.25 13.17 5 11.61 5 10C5 8.39 5.25 6.83 5.68 5.53V2.4H2.06C0.72 5.09 0 8 0 11C0 13.99 0.72 16.91 2.06 19.6L5.68 14.47Z" fill="#FBBC05"/>
+            <path d="M12 4.98C13.64 4.98 15.11 5.54 16.27 6.64L19.46 3.45C17.46 1.59 14.97 0.5 12 0.5C7.78 0.5 3.98 2.58 2.06 5.9L5.68 10C6.57 7.25 9.07 5.22 12 5.22V4.98Z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="signupForm" style="display:none;">
+        <div class="form-field">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+        </div>
+        <div class="form-field">
+          <label for="signupConfirm">Confirm Password</label>
+          <input type="password" id="signupConfirm" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create account</button>
+
+        <div class="divider"><span>or</span></div>
+
+        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
+            <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
+            <path d="M5.68 14.47C5.25 13.17 5 11.61 5 10C5 8.39 5.25 6.83 5.68 5.53V2.4H2.06C0.72 5.09 0 8 0 11C0 13.99 0.72 16.91 2.06 19.6L5.68 14.47Z" fill="#FBBC05"/>
+            <path d="M12 4.98C13.64 4.98 15.11 5.54 16.27 6.64L19.46 3.45C17.46 1.59 14.97 0.5 12 0.5C7.78 0.5 3.98 2.58 2.06 5.9L5.68 10C6.57 7.25 9.07 5.22 12 5.22V4.98Z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+      </form>
+
+      <div class="toggle" id="toggleSignup">
+        Don't have an account? <a href="#" onclick="switchMode('signup'); return false;">Sign up</a>
       </div>
-      <div class="form-field">
-        <label for="signupPassword">Password</label>
-        <input type="password" id="signupPassword" placeholder="••••••••" required autocomplete="new-password" />
+      <div class="toggle" id="toggleLogin" style="display:none;">
+        Already have an account? <a href="#" onclick="switchMode('login'); return false;">Sign in</a>
       </div>
-      <div class="form-field">
-        <label for="signupConfirm">Confirm password</label>
-        <input type="password" id="signupConfirm" placeholder="••••••••" required autocomplete="new-password" />
-      </div>
-
-      <button type="submit" class="btn btn-primary">Create account</button>
-
-      <div class="divider"><span>or</span></div>
-
-      <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
-        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.51h5.84c-.25 1.31-.98 2.42-2.07 3.16v2.63h3.35c1.96-1.81 3.1-4.47 3.1-7.8z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-1.01 7.28-2.74l-3.35-2.63c-1.01.68-2.29 1.08-3.93 1.08-3.02 0-5.58-2.04-6.49-4.79H.96v2.67C2.77 20.39 6.62 23 12 23z"/><path fill="#FBBC05" d="M5.51 14.21c-.23-.68-.36-1.41-.36-2.21s.13-1.53.36-2.21V7.34H.96C.35 8.85 0 10.39 0 12s.35 3.15.96 4.66l4.55-2.45z"/><path fill="#EA4335" d="M12 4.98c1.64 0 3.11.56 4.27 1.66l3.19-3.19C17.46 1.01 14.97 0 12 0 6.62 0 2.77 2.61 0.96 6.34l4.55 2.45C6.42 6.02 8.98 4.98 12 4.98z"/></svg>
-        Continue with Google
-      </button>
-    </form>
-
-    <div class="toggle" id="toggleSignup">
-      Don't have an account? <a href="#" onclick="switchMode('signup'); return false;">Sign up</a>
-    </div>
-    <div class="toggle" id="toggleLogin" style="display:none;">
-      Already have an account? <a href="#" onclick="switchMode('login'); return false;">Sign in</a>
     </div>
   </div>
 
-  <script>
-    function switchMode(mode) {
-      document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  <!-- ── LEARNER DASHBOARD ───────────────────────────────────────── -->
+  <div id="dashboard">
+    <div class="dashboard-wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar-left">
+        <div class="sidebar-content">
+          <a href="#" class="tab-link active" data-tab="overview" onclick="showTab(event, 'overview')">Overview</a>
+          <a href="#" class="tab-link" data-tab="assignments" onclick="showTab(event, 'assignments')">Assignments</a>
+          <a href="#" class="tab-link" data-tab="materials" onclick="showTab(event, 'materials')">Materials</a>
+          <a href="#" class="tab-link" data-tab="timetable" onclick="showTab(event, 'timetable')">Timetable</a>
+          <a href="#" class="tab-link" data-tab="chat" onclick="showTab(event, 'chat')">Lecturer Chat</a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-view">
+        <div class="dashboard-header">
+          <div class="welcome">Welcome back, <span id="userDisplayName">Learner</span></div>
+          <button class="btn btn-primary" onclick="signOutUser()">Sign Out</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div id="overview" class="tab-content active">
+          <div class="card">
+            <h2>Dashboard Overview</h2>
+            <p>Quick summary of your progress, upcoming deadlines, and recent activity.</p>
+          </div>
+        </div>
+
+        <div id="assignments" class="tab-content" style="display:none;">
+          <div class="card">
+            <h2>Assignments</h2>
+            <p>Your current assignments and submission status will appear here.</p>
+          </div>
+        </div>
+
+        <div id="materials" class="tab-content" style="display:none;">
+          <div class="card">
+            <h2>Learning Materials</h2>
+            <p>Notes, videos, past papers and study guides.</p>
+          </div>
+        </div>
+
+        <div id="timetable" class="tab-content" style="display:none;">
+          <div class="card">
+            <h2>Timetable & Exams</h2>
+            <p>Your class and exam schedule.</p>
+          </div>
+        </div>
+
+        <div id="chat" class="tab-content" style="display:none;">
+          <div class="card">
+            <h2>Lecturer Chat</h2>
+            <p>Send messages to your lecturers.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Firebase & Auth Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
+      authDomain: "learnermanagementsystem-f3b6a.firebaseapp.com",
+      projectId: "learnermanagementsystem-f3b6a",
+      storageBucket: "learnermanagementsystem-f3b6a.firebasestorage.app",
+      messagingSenderId: "173549259244",
+      appId: "1:173549259244:web:f8722018a989c484a7d8c9",
+      measurementId: "G-K1VW244B7P"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // ── Show / Hide Pages ────────────────────────────────────
+    function showAuth() {
+      document.getElementById('authPage').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+
+    function showDashboard(user) {
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+
+      const name = user.displayName || user.email?.split('@')[0] || 'Learner';
+      document.getElementById('userDisplayName').textContent = name;
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        showDashboard(user);
+      } else {
+        showAuth();
+      }
+    });
+
+    // ── Tab Navigation ───────────────────────────────────────
+    function showTab(e, tabId) {
+      e.preventDefault();
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+
+      document.getElementById(tabId).style.display = 'block';
+      e.currentTarget.classList.add('active');
+    }
+
+    // ── Form Handlers ────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('errorMessage');
+
+      errorEl.textContent = '';
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        errorEl.textContent = err.code === 'auth/wrong-password' ? 'Incorrect password'
+                            : err.code === 'auth/user-not-found' ? 'No account found with this email'
+                            : 'Login failed. Please try again.';
+      }
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirm').value;
+      const errorEl = document.getElementById('errorMessage');
+
+      errorEl.textContent = '';
+
+      if (password !== confirm) {
+        errorEl.textContent = 'Passwords do not match';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorEl.textContent = 'Password must be at least 6 characters';
+        return;
+      }
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        errorEl.textContent = err.code === 'auth/email-already-in-use' ? 'This email is already registered'
+                            : err.code === 'auth/weak-password' ? 'Password is too weak'
+                            : 'Sign up failed. Please try again.';
+      }
+    });
+
+    window.signInWithGoogle = async () => {
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (err) {
+        document.getElementById('errorMessage').textContent = 'Google sign-in failed';
+      }
+    };
+
+    window.signOutUser = () => {
+      signOut(auth);
+    };
+
+    // ── Switch between login & signup ────────────────────────
+    window.switchMode = function(mode) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('errorMessage').textContent = '';
 
       if (mode === 'login') {
         document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('signupForm').style.display = 'none';
         document.querySelector('.tab:first-child').classList.add('active');
         document.getElementById('toggleSignup').style.display = 'block';
         document.getElementById('toggleLogin').style.display = 'none';
       } else {
+        document.getElementById('loginForm').style.display = 'none';
         document.getElementById('signupForm').style.display = 'block';
         document.querySelector('.tab:last-child').classList.add('active');
         document.getElementById('toggleSignup').style.display = 'none';
         document.getElementById('toggleLogin').style.display = 'block';
       }
-    }
-
-    // Placeholder actions — replace with real auth logic (Firebase etc.)
-    document.getElementById('loginForm').addEventListener('submit', e => {
-      e.preventDefault();
-      alert('Signing in...');
-      // firebase signInWithEmailAndPassword(...)
-    });
-
-    document.getElementById('signupForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const pw = document.getElementById('signupPassword').value;
-      const confirm = document.getElementById('signupConfirm').value;
-      if (pw !== confirm) {
-        alert("Passwords don't match");
-        return;
-      }
-      alert('Creating account...');
-      // firebase createUserWithEmailAndPassword(...)
-    });
-
-    window.signInWithGoogle = () => {
-      alert('Continuing with Google...');
-      // firebase signInWithPopup(...)
     };
   </script>
 </body>
