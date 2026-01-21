@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Modern icon library - Remix Icon (lightweight & clean) -->
+  <!-- Modern icon library - Remix Icon -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
 
   <style>
@@ -385,6 +385,16 @@
       font-weight: 500;
     }
 
+    .material-item a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .material-item a:hover {
+      text-decoration: underline;
+    }
+
     .chat-area {
       height: 420px;
       border: 1px solid var(--border);
@@ -438,6 +448,24 @@
       padding: 0.4rem 0.8rem;
       border-radius: 8px;
       margin: 0.3rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: rgba(99,102,241,0.05);
+      font-weight: 600;
+      color: var(--primary);
     }
 
     @media (max-width: 900px) {
@@ -573,7 +601,7 @@
           <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
         </div>
 
-        <!-- Tab contents – all fully functional -->
+        <!-- Tab contents -->
         <div id="assignments" class="tab-pane active">
           <div class="card">
             <h3>Assignments</h3>
@@ -584,22 +612,74 @@
         <div id="materials" class="tab-pane">
           <div class="card">
             <h3>Learning Materials</h3>
-            <div id="materialsList">
-              <div class="material-item" data-id="1">Physics – Mechanics Notes (PDF)</div>
-              <div class="material-item" data-id="2">Video: Introduction to Organic Chemistry</div>
-              <div class="material-item" data-id="3">Flashcards – Biology Cell Structure</div>
+            <div class="material-list">
+              <div class="material-item">
+                <strong>Previous Question Papers</strong><br>
+                <a href="#" target="_blank">2025 June Exam – Mathematics (PDF)</a><br>
+                <a href="#" target="_blank">2025 November Exam – Physical Sciences (PDF)</a><br>
+                <a href="#" target="_blank">2024 Supplementary – English Home Language (PDF)</a>
+              </div>
+              <div class="material-item">
+                <strong>Study Guides</strong><br>
+                <a href="#" target="_blank">Life Sciences Grade 12 Study Guide 2026</a><br>
+                <a href="#" target="_blank">Accounting Grade 12 Study Guide – Term 1–4</a><br>
+                <a href="#" target="_blank">Geography Mapwork Guide & Tips</a>
+              </div>
+              <div class="material-item">
+                <strong>Online Videos & Tutorials</strong><br>
+                <a href="https://www.youtube.com/watch?v=example1" target="_blank">Khan Academy – Calculus Basics</a><br>
+                <a href="https://www.youtube.com/watch?v=example2" target="_blank">Crash Course Chemistry – Organic Compounds</a><br>
+                <a href="https://www.youtube.com/watch?v=example3" target="_blank">Mindset Learn – Grade 12 Accounting</a>
+              </div>
             </div>
           </div>
         </div>
 
         <div id="timetable" class="tab-pane">
           <div class="card">
-            <h3>Exam Timetable</h3>
-            <div id="timetable">
-              <p data-date="2026-02-10">Feb 10, 2026 – Mathematics (09:00–11:00)</p>
-              <p data-date="2026-02-12">Feb 12, 2026 – Physical Sciences (08:30–11:00)</p>
-              <p data-date="2026-02-15">Feb 15, 2026 – English Home Language (08:00–11:00)</p>
-            </div>
+            <h3>Exam Timetable – 2026</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Subject</th>
+                  <th>Paper</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>5 October 2026</td>
+                  <td>08:00 – 11:00</td>
+                  <td>Mathematics</td>
+                  <td>Paper 1</td>
+                </tr>
+                <tr>
+                  <td>7 October 2026</td>
+                  <td>08:00 – 11:00</td>
+                  <td>Physical Sciences</td>
+                  <td>Paper 1</td>
+                </tr>
+                <tr>
+                  <td>9 October 2026</td>
+                  <td>08:00 – 11:00</td>
+                  <td>English Home Language</td>
+                  <td>Paper 1</td>
+                </tr>
+                <tr>
+                  <td>12 October 2026</td>
+                  <td>08:00 – 11:00</td>
+                  <td>Life Sciences</td>
+                  <td>Paper 1</td>
+                </tr>
+                <tr class="today">
+                  <td>21 January 2026</td>
+                  <td>09:00 – 12:00</td>
+                  <td>Accounting</td>
+                  <td>Mid-year Trial Paper 2</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -714,7 +794,7 @@
     }
 
     // ────────────────────────────────────────────────
-    // Dashboard interactivity (unchanged)
+    // Dashboard interactivity
     // ────────────────────────────────────────────────
     let currentAssignmentId = null;
 
@@ -849,7 +929,7 @@
       if (e.key === "Enter") sendChatMessage();
     });
 
-    console.log("Lumina app ready — modern sidebar icons & fully functional tabs");
+    console.log("Lumina app ready – updated tab contents");
   </script>
 </body>
 </html>
