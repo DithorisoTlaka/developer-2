@@ -7,10 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
   <!-- Modern icon library - Remix Icon -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
-
   <style>
     :root {
       --bg: #f8fafc;
@@ -27,9 +25,7 @@
       --sidebar-collapsed: 72px;
       --sidebar-expanded: 340px;
     }
-
     * { margin:0; padding:0; box-sizing:border-box; }
-
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
@@ -37,21 +33,17 @@
       line-height: 1.6;
       min-height: 100vh;
     }
-
     .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
-
     header {
       padding: 2.5rem 0 1.5rem;
       position: relative;
       z-index: 10;
     }
-
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
     .logo {
       font-size: 1.75rem;
       font-weight: 600;
@@ -60,22 +52,18 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .nav-links {
       display: flex;
       gap: 2.5rem;
       align-items: center;
     }
-
     .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.2s ease;
     }
-
     .nav-links a:hover { color: var(--primary); }
-
     .btn {
       padding: 0.75rem 1.75rem;
       border-radius: 9999px;
@@ -86,31 +74,26 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
     .btn-primary {
       background: var(--primary);
       color: white;
       box-shadow: 0 10px 25px var(--glow);
     }
-
     .btn-primary:hover {
       background: var(--primary-dark);
       transform: translateY(-2px);
       box-shadow: 0 15px 35px var(--glow);
     }
-
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
     }
-
     .btn-outline:hover {
       background: rgba(99,102,241,0.05);
       border-color: var(--primary);
       color: var(--primary);
     }
-
     .modal {
       display: none;
       position: fixed;
@@ -121,7 +104,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .modal-content {
       background: var(--surface);
       border-radius: 20px;
@@ -131,14 +113,12 @@
       border: 1px solid var(--border);
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
     }
-
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
     }
-
     .close-btn {
       background: none;
       border: none;
@@ -146,18 +126,15 @@
       color: var(--text-muted);
       cursor: pointer;
     }
-
     .form-group {
       margin-bottom: 1.5rem;
     }
-
     label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
       color: var(--text);
     }
-
     input, textarea {
       width: 100%;
       padding: 0.9rem 1.2rem;
@@ -167,28 +144,23 @@
       background: var(--bg);
       transition: border-color 0.2s;
     }
-
     input:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px var(--glow);
     }
-
     .divider {
       text-align: center;
       color: var(--text-muted);
       margin: 1.2rem 0;
       font-size: 0.95rem;
     }
-
     .error-msg {
       color: var(--error);
       font-size: 0.9rem;
       margin-top: 0.5rem;
     }
-
     .hero { padding: 8rem 0 10rem; text-align: center; }
-
     .hero h1 {
       font-size: clamp(3.5rem, 8vw, 6.5rem);
       font-weight: 600;
@@ -199,17 +171,11 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .hero p { font-size: 1.4rem; color: var(--text-muted); max-width: 620px; margin: 0 auto 2.5rem; font-weight: 300; }
-
     .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
-
     .features { padding: 8rem 0; }
-
     .section-title { text-align: center; font-size: 2.8rem; font-weight: 600; margin-bottom: 4rem; }
-
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
-
     .feature-card {
       background: var(--surface);
       border-radius: 20px;
@@ -217,34 +183,26 @@
       border: 1px solid var(--border);
       transition: all 0.3s ease;
     }
-
     .feature-card:hover {
       transform: translateY(-12px);
       border-color: var(--accent);
       box-shadow: 0 25px 50px -12px rgba(99,102,241,0.12);
     }
-
     .feature-icon { font-size: 2.8rem; margin-bottom: 1.5rem; color: var(--primary); }
-
     .feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-
     .feature-card p { color: var(--text-muted); }
-
     footer { padding: 5rem 0 3rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
-
     /* ──────────────────────────────────────────────── */
-    /*               DASHBOARD LAYOUT                   */
+    /* DASHBOARD LAYOUT */
     /* ──────────────────────────────────────────────── */
     #dashboard {
       display: none;
       min-height: calc(100vh - 120px);
     }
-
     .dashboard-wrapper {
       display: flex;
       height: 100%;
     }
-
     .sidebar-left {
       position: fixed;
       top: 0;
@@ -258,18 +216,15 @@
       overflow: hidden;
       z-index: 90;
     }
-
     .sidebar-left:hover {
       width: var(--sidebar-expanded);
     }
-
     .sidebar-content {
       padding-top: 5rem;
       height: 100%;
       display: flex;
       flex-direction: column;
     }
-
     .tab-link {
       display: flex;
       align-items: center;
@@ -282,38 +237,31 @@
       white-space: nowrap;
       cursor: pointer;
     }
-
     .tab-link:hover,
     .tab-link.active {
       background: rgba(99,102,241,0.07);
       color: var(--primary);
     }
-
     .tab-link .icon {
       font-size: 1.6rem;
       min-width: 32px;
       text-align: center;
     }
-
     .main-view {
       margin-left: var(--sidebar-collapsed);
       flex: 1;
       padding: 2.5rem 3rem;
       transition: margin-left 0.35s ease;
     }
-
     .sidebar-left:hover ~ .main-view {
       margin-left: var(--sidebar-expanded);
     }
-
     .tab-pane {
       display: none;
     }
-
     .tab-pane.active {
       display: block;
     }
-
     .card {
       background: var(--surface);
       border-radius: 16px;
@@ -322,13 +270,11 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
       margin-bottom: 2rem;
     }
-
     .card h3 {
       margin-bottom: 1.2rem;
       font-size: 1.35rem;
       color: var(--primary);
     }
-
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -337,12 +283,10 @@
       padding-bottom: 1.5rem;
       border-bottom: 1px solid var(--border);
     }
-
     .welcome {
       font-size: 1.9rem;
       font-weight: 600;
     }
-
     .assignment-item {
       display: flex;
       align-items: center;
@@ -350,51 +294,42 @@
       padding: 1rem 0;
       border-bottom: 1px solid var(--border);
     }
-
     .assignment-item input[type="checkbox"] {
       width: 18px;
       height: 18px;
       accent-color: var(--primary);
     }
-
     .assignment-text.completed {
       text-decoration: line-through;
       color: var(--text-muted);
       opacity: 0.8;
     }
-
     .due {
       color: var(--error);
       font-size: 0.9rem;
       margin-top: 0.2rem;
     }
-
     .material-item {
       padding: 1rem 0;
       border-bottom: 1px solid var(--border);
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .material-item:hover {
       background: rgba(99,102,241,0.05);
     }
-
     .material-item.opened {
       color: var(--success);
       font-weight: 500;
     }
-
     .material-item a {
       color: var(--primary);
       text-decoration: none;
       font-weight: 500;
     }
-
     .material-item a:hover {
       text-decoration: underline;
     }
-
     .chat-area {
       height: 420px;
       border: 1px solid var(--border);
@@ -404,7 +339,6 @@
       overflow-y: auto;
       background: rgba(99,102,241,0.02);
     }
-
     .chat-message {
       margin-bottom: 1rem;
       padding: 0.9rem 1.3rem;
@@ -412,29 +346,24 @@
       max-width: 80%;
       word-wrap: break-word;
     }
-
     .chat-message.user {
       background: var(--primary);
       color: white;
       margin-left: auto;
     }
-
     .chat-message.lecturer {
       background: #e2e8f0;
     }
-
     .chat-input-area {
       display: flex;
       gap: 0.8rem;
     }
-
     .chat-input-area input {
       flex: 1;
       padding: 0.9rem 1.2rem;
       border: 1px solid var(--border);
       border-radius: 9999px;
     }
-
     .submit-btn {
       padding: 0.9rem 1.6rem;
       border-radius: 9999px;
@@ -442,32 +371,27 @@
       color: white;
       border: none;
     }
-
     .today {
       background: rgba(99,102,241,0.08);
       padding: 0.4rem 0.8rem;
       border-radius: 8px;
       margin: 0.3rem 0;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
     }
-
     th, td {
       padding: 12px 15px;
       text-align: left;
       border-bottom: 1px solid var(--border);
     }
-
     th {
       background: rgba(99,102,241,0.05);
       font-weight: 600;
       color: var(--primary);
     }
-
     @media (max-width: 900px) {
       .main-view { margin-left: 0; padding: 1.5rem; }
       .sidebar-left:hover { width: var(--sidebar-expanded); }
@@ -572,7 +496,7 @@
   <!-- ──────────────────────────────────────────────── -->
   <div id="dashboard" class="container">
     <div class="dashboard-wrapper">
-      <!-- Left collapsible sidebar with modern icons -->
+      <!-- Left collapsible sidebar -->
       <aside class="sidebar-left">
         <div class="sidebar-content">
           <div class="tab-link active" data-tab="assignments" onclick="showTab('assignments')">
@@ -745,10 +669,14 @@
       document.getElementById("dashboard").style.display = "none";
     }
 
-onAuthStateChanged(auth, (user) => {
-  showDashboard({ displayName: "Test User" }); // force dashboard
-  // else showLanding();
-});
+    // TEMPORARY: Force show dashboard for testing (remove when auth is fully ready)
+    showDashboard({ displayName: "Dithoriso" });
+
+    // Comment out real auth listener during testing if needed
+    // onAuthStateChanged(auth, (user) => {
+    //   if (user) showDashboard(user);
+    //   else showLanding();
+    // });
 
     window.signInWithGoogle = async () => {
       try {
@@ -794,7 +722,7 @@ onAuthStateChanged(auth, (user) => {
     }
 
     // ────────────────────────────────────────────────
-    // Dashboard interactivity
+    // Dashboard interactivity (unchanged)
     // ────────────────────────────────────────────────
     let currentAssignmentId = null;
 
@@ -929,10 +857,7 @@ onAuthStateChanged(auth, (user) => {
       if (e.key === "Enter") sendChatMessage();
     });
 
-    console.log("Lumina app ready – updated tab contents");
-
-    // TEMPORARY: Force show dashboard for testing (remove later)
-showDashboard({ displayName: "Test User", email: "test@example.com" });
+    console.log("Lumina app ready");
   </script>
 </body>
 </html>
