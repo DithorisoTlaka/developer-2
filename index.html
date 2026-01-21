@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+  <!-- Modern icon library - Remix Icon (lightweight & clean) -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+
   <style>
     :root {
       --bg: #f8fafc;
@@ -287,7 +290,7 @@
     }
 
     .tab-link .icon {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       min-width: 32px;
       text-align: center;
     }
@@ -541,24 +544,24 @@
   <!-- ──────────────────────────────────────────────── -->
   <div id="dashboard" class="container">
     <div class="dashboard-wrapper">
-      <!-- Left collapsible sidebar -->
+      <!-- Left collapsible sidebar with modern icons -->
       <aside class="sidebar-left">
         <div class="sidebar-content">
           <div class="tab-link active" data-tab="assignments" onclick="showTab('assignments')">
-            <span class="icon">📝</span>
+            <i class="ri-task-line icon"></i>
             <span>Assignments</span>
           </div>
           <div class="tab-link" data-tab="materials" onclick="showTab('materials')">
-            <span class="icon">📚</span>
+            <i class="ri-book-2-line icon"></i>
             <span>Materials</span>
           </div>
           <div class="tab-link" data-tab="timetable" onclick="showTab('timetable')">
-            <span class="icon">🗓️</span>
+            <i class="ri-calendar-schedule-line icon"></i>
             <span>Timetable</span>
           </div>
           <div class="tab-link" data-tab="chat" onclick="showTab('chat')">
-            <span class="icon">💬</span>
-            <span>Chat</span>
+            <i class="ri-chat-3-line icon"></i>
+            <span>Lecturer Chat</span>
           </div>
         </div>
       </aside>
@@ -570,7 +573,7 @@
           <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
         </div>
 
-        <!-- Tab contents -->
+        <!-- Tab contents – all fully functional -->
         <div id="assignments" class="tab-pane active">
           <div class="card">
             <h3>Assignments</h3>
@@ -651,7 +654,7 @@
       document.getElementById("userName").textContent = name;
 
       initDashboard();
-      showTab('assignments'); // default tab
+      showTab('assignments'); // default open tab
     }
 
     function showLanding() {
@@ -700,7 +703,7 @@
     };
 
     // ────────────────────────────────────────────────
-    // Tab switching
+    // Tab switching – fully functional
     // ────────────────────────────────────────────────
     function showTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
@@ -796,7 +799,14 @@
     function loadChat() {
       const area = document.getElementById("chatArea");
       const saved = localStorage.getItem("chatMessages");
-      if (saved) area.innerHTML = saved;
+      if (saved) {
+        area.innerHTML = saved;
+      } else {
+        area.innerHTML = `
+          <div class="chat-message lecturer">Good morning class! Please submit your assignments by tomorrow evening.</div>
+          <div class="chat-message lecturer">Any questions about quadratic equations?</div>
+        `;
+      }
       area.scrollTop = area.scrollHeight;
     }
 
@@ -817,8 +827,14 @@
       input.value = "";
       area.scrollTop = area.scrollHeight;
       saveChat();
+
       setTimeout(() => {
-        const replies = ["Thanks for your message! I'll check it soon.","Good question — let me explain...","Yes, that's correct. Well done!","Please refer to page 45 in the notes."];
+        const replies = [
+          "Thanks for your message! I'll check it soon.",
+          "Good question — let me explain...",
+          "Yes, that's correct. Well done!",
+          "Please refer to page 45 in the notes."
+        ];
         const reply = replies[Math.floor(Math.random() * replies.length)];
         const lectMsg = document.createElement("div");
         lectMsg.className = "chat-message lecturer";
@@ -833,7 +849,7 @@
       if (e.key === "Enter") sendChatMessage();
     });
 
-    console.log("Lumina app ready — left collapsible sidebar");
+    console.log("Lumina app ready — modern sidebar icons & fully functional tabs");
   </script>
 </body>
 </html>
