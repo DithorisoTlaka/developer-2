@@ -100,26 +100,18 @@
       width: var(--sidebar-collapsed);
       background: var(--surface);
       border-right: 1px solid var(--border);
-      transition: width 0.3s ease;
+      transition: width 0.35s ease;
       overflow: hidden;
       z-index: 100;
     }
 
-    .sidebar-left.expanded { width: var(--sidebar-expanded); }
-
-    .sidebar-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      z-index: 101;
+    .sidebar-left:hover {
+      width: var(--sidebar-expanded);
     }
 
-    .sidebar-content { padding: 5rem 0 2rem; }
+    .sidebar-content {
+      padding: 5rem 0 2rem;
+    }
 
     .tab-link {
       display: flex;
@@ -134,7 +126,10 @@
     }
 
     .tab-link:hover,
-    .tab-link.active { background: rgba(99,102,241,0.12); color: white; }
+    .tab-link.active {
+      background: rgba(99,102,241,0.12);
+      color: white;
+    }
 
     .tab-link .icon { font-size: 1.4rem; min-width: 24px; text-align: center; }
 
@@ -142,10 +137,12 @@
       margin-left: var(--sidebar-collapsed);
       flex: 1;
       padding: 2.5rem;
-      transition: margin-left 0.3s ease;
+      transition: margin-left 0.35s ease;
     }
 
-    .sidebar-left.expanded ~ .main-view { margin-left: var(--sidebar-expanded); }
+    .sidebar-left:hover ~ .main-view {
+      margin-left: var(--sidebar-expanded);
+    }
 
     .dashboard-header {
       display: flex;
@@ -187,9 +184,9 @@
 
     @media (max-width: 900px) {
       .sidebar-left { width: var(--sidebar-collapsed); }
-      .sidebar-left.expanded { width: var(--sidebar-expanded); }
+      .sidebar-left:hover { width: var(--sidebar-expanded); }
       .main-view { margin-left: var(--sidebar-collapsed); }
-      .sidebar-left.expanded ~ .main-view { margin-left: var(--sidebar-expanded); }
+      .sidebar-left:hover ~ .main-view { margin-left: var(--sidebar-expanded); }
     }
   </style>
 </head>
@@ -277,9 +274,6 @@
   <div id="dashboard">
     <div class="dashboard-wrapper">
       <aside class="sidebar-left" id="sidebar">
-        <button class="sidebar-toggle" onclick="toggleSidebar()">
-          <i class="ri-menu-line"></i>
-        </button>
         <div class="sidebar-content">
           <a href="#" class="tab-link active" data-tab="overview" onclick="showTab(event, 'overview')">
             <i class="ri-dashboard-line icon"></i> Overview
@@ -359,13 +353,15 @@
     import {
       getFirestore,
       doc,
-      getDoc
+      getDoc,
+      setDoc
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
     import {
       getDatabase,
       ref,
-      onValue
+      onValue,
+      set
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
     const firebaseConfig = {
@@ -381,14 +377,14 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-    const rtdb = getDatabase(app);
+    const firestore = getFirestore(app);
+    const database = getDatabase(app);
     const googleProvider = new GoogleAuthProvider();
 
     async function isStudentAllowed(email) {
       if (!email) return false;
       const normalized = email.toLowerCase().trim();
-      const docRef = doc(db, "allowed_students", normalized);
+      const docRef = doc(firestore, "allowed_students", normalized);
       const docSnap = await getDoc(docRef);
       return docSnap.exists();
     }
@@ -409,36 +405,23 @@
       }
     }
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('expanded');
-    }
+    // Save user basic info to Realtime Database once after login/signup
+    async function saveUserToDatabase(user) {
+      if (!user) return;
+      const userRef = ref(database, `users/${user.uid}`);
+      const name = user.displayName || user.email?.split('@')[0] || 'Learner';
 
-    // Load assignments from Realtime Database
-    function loadAssignments() {
-      const assignmentsRef = ref(rtdb, 'assignments');
-      onValue(assignmentsRef, (snapshot) => {
-        const listEl = document.getElementById('assignmentsList');
-        listEl.innerHTML = '';
-
-        if (!snapshot.exists() || Object.keys(snapshot.val() || {}).length === 0) {
-          listEl.innerHTML = '<div class="empty-state">No assignments posted yet.</div>';
-          return;
+      // Only set if not already exists (to avoid overwriting)
+      onValue(userRef, (snapshot) => {
+        if (!snapshot.exists()) {
+          set(userRef, {
+            uid: user.uid,
+            email: user.email,
+            displayName: name,
+            createdAt: new Date().toISOString()
+          });
         }
-
-        const assignments = snapshot.val();
-        Object.keys(assignments).forEach(key => {
-          const ass = assignments[key];
-          const item = document.createElement('div');
-          item.className = 'assignment-item';
-          item.innerHTML = `
-            <div class="assignment-title">${ass.title || 'Untitled Assignment'}</div>
-            <div class="assignment-due">Due: ${ass.dueDate || 'No due date'}</div>
-            ${ass.description ? `<p>${ass.description}</p>` : ''}
-          `;
-          listEl.appendChild(item);
-        });
-      });
+      }, { onlyOnce: true });
     }
 
     // ── UI Switching ─────────────────────────────────────────────
@@ -454,8 +437,8 @@
       const name = user.displayName || user.email?.split('@')[0] || 'Learner';
       document.getElementById('userDisplayName').textContent = name;
 
-      // Load assignments when dashboard is shown
-      loadAssignments();
+      // Save user info to RTDB
+      saveUserToDatabase(user);
     }
 
     onAuthStateChanged(auth, (user) => {
