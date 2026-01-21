@@ -70,7 +70,7 @@
 
     .btn {
       padding: 0.75rem 1.75rem;
-      border-radius: 12px;
+      border-radius: 9999px;
       font-weight: 500;
       text-decoration: none;
       transition: all 0.25s ease;
@@ -103,7 +103,6 @@
       color: var(--primary);
     }
 
-    /* Modal styles */
     .modal {
       display: none;
       position: fixed;
@@ -167,13 +166,6 @@
       box-shadow: 0 0 0 3px var(--glow);
     }
 
-    .auth-options {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
     .divider {
       text-align: center;
       color: var(--text-muted);
@@ -187,7 +179,6 @@
       margin-top: 0.5rem;
     }
 
-    /* Rest of your existing styles (hero, features, footer) remain unchanged */
     .hero { padding: 8rem 0 10rem; text-align: center; }
     .hero h1 {
       font-size: clamp(3.5rem, 8vw, 6.5rem);
@@ -238,7 +229,6 @@
       <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#">For Teachers</a>
-        <a href="#">Pricing</a>
         <button class="btn btn-outline" onclick="openLoginModal()">Login</button>
         <a href="#" class="btn btn-primary">Get Started</a>
       </div>
@@ -250,7 +240,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2>Login to Lumina</h2>
-        <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+        <button class="close-btn" onclick="closeLoginModal()">×</button>
       </div>
 
       <button class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1rem;" onclick="signInWithGoogle()">
@@ -280,12 +270,13 @@
     </div>
   </div>
 
-  <!-- Hero & Features & Footer remain the same as before -->
   <section class="hero container">
     <h1>Learn smarter.<br/>Anywhere. Anytime.</h1>
     <p>A next-generation learning platform designed for students who want clarity, focus, and real progress.</p>
     <div class="hero-buttons">
-      <a href="#" class="btn btn-primary" style="font-size:1.2rem; padding:1rem 2.5rem;">Start Learning Now</a>
+      <button onclick="openLoginModal()" class="btn btn-primary" style="font-size:1.2rem; padding:1rem 2.5rem;">
+        Start Learning Now
+      </button>
       <a href="#" class="btn btn-outline" style="font-size:1.2rem; padding:1rem 2.5rem;">See how it works</a>
     </div>
   </section>
@@ -293,13 +284,36 @@
   <section class="features container" id="features">
     <h2 class="section-title">Why students choose Lumina</h2>
     <div class="feature-grid">
-      <!-- Your existing feature cards here (unchanged) -->
-      <div class="feature-card"><div class="feature-icon">✦</div><h3>Clean & Focused Interface</h3><p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Instant Access Anywhere</h3><p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p></div>
-      <div class="feature-card"><div class="feature-icon">🧠</div><h3>Smart Progress Tracking</h3><p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p></div>
-      <div class="feature-card"><div class="feature-icon">📚</div><h3>Resources That Actually Help</h3><p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p></div>
-      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Private & Secure</h3><p>Your data stays yours. Built with modern security standards from day one.</p></div>
-      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Perfection</h3><p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p></div>
+      <div class="feature-card">
+        <div class="feature-icon">✦</div>
+        <h3>Clean & Focused Interface</h3>
+        <p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Access Anywhere</h3>
+        <p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Smart Progress Tracking</h3>
+        <p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Resources That Actually Help</h3>
+        <p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Private & Secure</h3>
+        <p>Your data stays yours. Built with modern security standards from day one.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3>Light & Dark Perfection</h3>
+        <p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p>
+      </div>
     </div>
   </section>
 
@@ -307,7 +321,7 @@
     <p>© 2026 Lumina Learning • Built with care for students</p>
   </footer>
 
-  <!-- Firebase SDK v10+ modular imports -->
+  <!-- Firebase SDK (v10+ modular) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { 
@@ -331,9 +345,6 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Optional: force account selection
-    // googleProvider.setCustomParameters({ prompt: 'select_account' });
-
     window.signInWithGoogle = async () => {
       try {
         const result = await signInWithPopup(auth, googleProvider);
@@ -341,17 +352,16 @@
         console.log("Google login success:", user.displayName, user.email);
         alert(`Welcome, ${user.displayName || 'student'}!`);
         closeLoginModal();
-        // TODO: redirect to dashboard → window.location.href = "/dashboard.html";
+        // → Replace alert with: window.location.href = "/dashboard.html";
       } catch (error) {
         console.error("Google login error:", error.code, error.message);
         document.getElementById("errorMessage").textContent = "Google login failed. Please try again.";
       }
     };
 
-    // Email/Password login
     document.getElementById("emailLoginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       const errorEl = document.getElementById("errorMessage");
 
@@ -361,17 +371,17 @@
         console.log("Email login success:", user.email);
         alert(`Welcome back!`);
         closeLoginModal();
-        // TODO: redirect
+        // → Replace alert with: window.location.href = "/dashboard.html";
       } catch (error) {
         console.error("Email login error:", error.code, error.message);
         let msg = "Login failed. Please check your credentials.";
         if (error.code === "auth/user-not-found") msg = "No account found with this email.";
         if (error.code === "auth/wrong-password") msg = "Incorrect password.";
+        if (error.code === "auth/invalid-email") msg = "Invalid email format.";
         errorEl.textContent = msg;
       }
     });
 
-    // Modal controls
     window.openLoginModal = () => {
       document.getElementById("loginModal").style.display = "flex";
       document.getElementById("errorMessage").textContent = "";
@@ -381,14 +391,13 @@
       document.getElementById("loginModal").style.display = "none";
     };
 
-    // Close modal when clicking outside
     document.getElementById("loginModal").addEventListener("click", (e) => {
       if (e.target === document.getElementById("loginModal")) {
         closeLoginModal();
       }
     });
 
-    console.log("Lumina auth ready");
+    console.log("Lumina landing page & auth ready");
   </script>
 
 </body>
