@@ -20,6 +20,7 @@
       --border: rgba(226, 232, 240, 0.8);
       --glow: rgba(99, 102, 241, 0.15);
       --error: #ef4444;
+      --success: #10b981;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -150,7 +151,7 @@
       color: var(--text);
     }
 
-    input {
+    input, textarea {
       width: 100%;
       padding: 0.9rem 1.2rem;
       border: 1px solid var(--border);
@@ -160,7 +161,7 @@
       transition: border-color 0.2s;
     }
 
-    input:focus {
+    input:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px var(--glow);
@@ -214,16 +215,161 @@
 
     footer { padding: 5rem 0 3rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
 
-    @media (max-width: 768px) {
-      .hero { padding: 6rem 0 8rem; }
-      .hero h1 { font-size: 3.8rem; }
-      .nav-links { gap: 1.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    /* ──────────────────────────────────────────────── */
+    /*               Dashboard Styles                   */
+    /* ──────────────────────────────────────────────── */
+    #dashboard {
+      display: none;
+      padding: 2rem 0;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .welcome {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 1.8rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .card h3 {
+      margin-bottom: 1.2rem;
+      font-size: 1.3rem;
+      color: var(--primary);
+    }
+
+    .assignment-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .assignment-item:last-child {
+      border-bottom: none;
+    }
+
+    .assignment-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .assignment-text.completed {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.8;
+    }
+
+    .due {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    .material-item {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .material-item:hover {
+      background: rgba(99,102,241,0.05);
+    }
+
+    .material-item.opened {
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    .material-item:last-child {
+      border-bottom: none;
+    }
+
+    .chat-area {
+      height: 340px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      overflow-y: auto;
+      background: rgba(99,102,241,0.02);
+    }
+
+    .chat-message {
+      margin-bottom: 1rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 16px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .chat-message.user {
+      background: var(--primary);
+      color: white;
+      margin-left: auto;
+    }
+
+    .chat-message.lecturer {
+      background: #e2e8f0;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+    }
+
+    .submit-btn {
+      padding: 0.9rem 1.6rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+
+    .today {
+      background: rgba(99,102,241,0.08);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      margin: 0.3rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <header class="container">
+  <header class="container" id="landingHeader">
     <nav>
       <div class="logo">Lumina</div>
       <div class="nav-links">
@@ -235,7 +381,7 @@
     </nav>
   </header>
 
-  <!-- Login Modal -->
+  <!-- Login Modal (unchanged) -->
   <div id="loginModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -270,7 +416,27 @@
     </div>
   </div>
 
-  <section class="hero container">
+  <!-- Submit Assignment Modal -->
+  <div id="submitModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Submit Assignment</h2>
+        <button class="close-btn" onclick="closeSubmitModal()">×</button>
+      </div>
+      <form id="submitForm">
+        <div class="form-group">
+          <label for="submissionText">Your submission (text / link)</label>
+          <textarea id="submissionText" rows="5" placeholder="Paste your work, link, or type here..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Landing page sections (unchanged) -->
+  <section class="hero container" id="heroSection">
     <h1>Learn smarter.<br/>Anywhere. Anytime.</h1>
     <p>A next-generation learning platform designed for students who want clarity, focus, and real progress.</p>
     <div class="hero-buttons">
@@ -284,51 +450,80 @@
   <section class="features container" id="features">
     <h2 class="section-title">Why students choose Lumina</h2>
     <div class="feature-grid">
-      <div class="feature-card">
-        <div class="feature-icon">✦</div>
-        <h3>Clean & Focused Interface</h3>
-        <p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>Instant Access Anywhere</h3>
-        <p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🧠</div>
-        <h3>Smart Progress Tracking</h3>
-        <p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📚</div>
-        <h3>Resources That Actually Help</h3>
-        <p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <h3>Private & Secure</h3>
-        <p>Your data stays yours. Built with modern security standards from day one.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🌙</div>
-        <h3>Light & Dark Perfection</h3>
-        <p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p>
-      </div>
+      <div class="feature-card"><div class="feature-icon">✦</div><h3>Clean & Focused Interface</h3><p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Instant Access Anywhere</h3><p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p></div>
+      <div class="feature-card"><div class="feature-icon">🧠</div><h3>Smart Progress Tracking</h3><p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p></div>
+      <div class="feature-card"><div class="feature-icon">📚</div><h3>Resources That Actually Help</h3><p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Private & Secure</h3><p>Your data stays yours. Built with modern security standards from day one.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Perfection</h3><p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p></div>
     </div>
   </section>
 
-  <footer class="container">
+  <footer class="container" id="landingFooter">
     <p>© 2026 Lumina Learning • Built with care for students</p>
   </footer>
 
-  <!-- Firebase SDK (v10+ modular) -->
+  <!-- Dashboard -->
+  <div id="dashboard" class="container">
+    <div class="dashboard-header">
+      <div class="welcome">Welcome back, <span id="userName">Student</span></div>
+      <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Assignments -->
+      <div class="card">
+        <h3>Assignments</h3>
+        <div id="assignmentsList">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Learning Materials -->
+      <div class="card">
+        <h3>Learning Materials</h3>
+        <div id="materialsList">
+          <div class="material-item" data-id="1">Physics – Mechanics Notes (PDF)</div>
+          <div class="material-item" data-id="2">Video: Introduction to Organic Chemistry</div>
+          <div class="material-item" data-id="3">Flashcards – Biology Cell Structure</div>
+        </div>
+      </div>
+
+      <!-- Exam Timetable -->
+      <div class="card">
+        <h3>Exam Timetable</h3>
+        <div id="timetable">
+          <p data-date="2026-02-10">Feb 10, 2026 – Mathematics (09:00–11:00)</p>
+          <p data-date="2026-02-12">Feb 12, 2026 – Physical Sciences (08:30–11:00)</p>
+          <p data-date="2026-02-15">Feb 15, 2026 – English Home Language (08:00–11:00)</p>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div class="card">
+        <h3>Chat with Lecturer</h3>
+        <div class="chat-area" id="chatArea">
+          <div class="chat-message lecturer">Good morning class! Please submit your assignments by tomorrow evening.</div>
+          <div class="chat-message lecturer">Any questions about quadratic equations?</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="Type your message..." />
+          <button class="submit-btn" onclick="sendChatMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase & App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { 
       getAuth, 
       GoogleAuthProvider, 
       signInWithPopup,
-      signInWithEmailAndPassword 
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut as firebaseSignOut
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -345,17 +540,44 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
+    // ────────────────────────────────────────────────
+    //  UI Switch
+    // ────────────────────────────────────────────────
+    function showDashboard(user) {
+      document.getElementById("landingHeader").style.display = "none";
+      document.getElementById("heroSection").style.display = "none";
+      document.getElementById("features").style.display = "none";
+      document.getElementById("landingFooter").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+
+      const name = user.displayName || user.email.split('@')[0] || "Student";
+      document.getElementById("userName").textContent = name;
+
+      initDashboard();
+    }
+
+    function showLanding() {
+      document.getElementById("landingHeader").style.display = "block";
+      document.getElementById("heroSection").style.display = "block";
+      document.getElementById("features").style.display = "block";
+      document.getElementById("landingFooter").style.display = "block";
+      document.getElementById("dashboard").style.display = "none";
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) showDashboard(user);
+      else showLanding();
+    });
+
+    // ────────────────────────────────────────────────
+    //  Auth Functions (unchanged)
+    // ────────────────────────────────────────────────
     window.signInWithGoogle = async () => {
       try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        console.log("Google login success:", user.displayName, user.email);
-        alert(`Welcome, ${user.displayName || 'student'}!`);
+        await signInWithPopup(auth, googleProvider);
         closeLoginModal();
-        // → Replace alert with: window.location.href = "/dashboard.html";
       } catch (error) {
-        console.error("Google login error:", error.code, error.message);
-        document.getElementById("errorMessage").textContent = "Google login failed. Please try again.";
+        document.getElementById("errorMessage").textContent = "Google login failed.";
       }
     };
 
@@ -363,41 +585,170 @@
       e.preventDefault();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      const errorEl = document.getElementById("errorMessage");
-
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log("Email login success:", user.email);
-        alert(`Welcome back!`);
+        await signInWithEmailAndPassword(auth, email, password);
         closeLoginModal();
-        // → Replace alert with: window.location.href = "/dashboard.html";
       } catch (error) {
-        console.error("Email login error:", error.code, error.message);
-        let msg = "Login failed. Please check your credentials.";
-        if (error.code === "auth/user-not-found") msg = "No account found with this email.";
+        let msg = "Login failed.";
+        if (error.code === "auth/user-not-found") msg = "No account found.";
         if (error.code === "auth/wrong-password") msg = "Incorrect password.";
-        if (error.code === "auth/invalid-email") msg = "Invalid email format.";
-        errorEl.textContent = msg;
+        document.getElementById("errorMessage").textContent = msg;
       }
     });
 
-    window.openLoginModal = () => {
-      document.getElementById("loginModal").style.display = "flex";
-      document.getElementById("errorMessage").textContent = "";
+    window.signOut = () => firebaseSignOut(auth);
+
+    // Modal helpers
+    window.openLoginModal = () => document.getElementById("loginModal").style.display = "flex";
+    window.closeLoginModal = () => document.getElementById("loginModal").style.display = "none";
+    document.getElementById("loginModal").onclick = e => { if (e.target === e.currentTarget) closeLoginModal(); };
+
+    // ────────────────────────────────────────────────
+    //  Dashboard Interactivity
+    // ────────────────────────────────────────────────
+    let currentAssignmentId = null;
+
+    function initDashboard() {
+      loadAssignments();
+      highlightTodayExam();
+      initMaterials();
+      loadChat();
+    }
+
+    // Assignments
+    function loadAssignments() {
+      const list = document.getElementById("assignmentsList");
+      list.innerHTML = "";
+
+      const assignments = [
+        { id:1, title: "Mathematics – Quadratic Equations", due: "Tomorrow, 23:59" },
+        { id:2, title: "English – Essay on Climate Change", due: "Jan 28, 2026" }
+      ];
+
+      assignments.forEach(asg => {
+        const saved = localStorage.getItem(`assign-${asg.id}`);
+        const isCompleted = saved === "completed";
+
+        const div = document.createElement("div");
+        div.className = "assignment-item";
+        div.innerHTML = `
+          <input type="checkbox" ${isCompleted ? "checked" : ""} onchange="toggleAssignment(${asg.id}, this.checked)">
+          <div>
+            <span class="${isCompleted ? 'assignment-text completed' : 'assignment-text'}">${asg.title}</span>
+            <div class="due">${asg.due}</div>
+          </div>
+          <button class="btn btn-primary" style="margin-left:auto; font-size:0.9rem; padding:0.5rem 1rem;" onclick="openSubmitModal(${asg.id})">
+            Submit
+          </button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    window.toggleAssignment = (id, checked) => {
+      localStorage.setItem(`assign-${id}`, checked ? "completed" : "");
+      loadAssignments();
     };
 
-    window.closeLoginModal = () => {
-      document.getElementById("loginModal").style.display = "none";
+    window.openSubmitModal = (id) => {
+      currentAssignmentId = id;
+      document.getElementById("submitModal").style.display = "flex";
+      document.getElementById("submissionText").value = "";
     };
 
-    document.getElementById("loginModal").addEventListener("click", (e) => {
-      if (e.target === document.getElementById("loginModal")) {
-        closeLoginModal();
+    window.closeSubmitModal = () => {
+      document.getElementById("submitModal").style.display = "none";
+    };
+
+    document.getElementById("submitForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const text = document.getElementById("submissionText").value.trim();
+      if (text) {
+        alert(`Assignment ${currentAssignmentId} submitted!\n\nContent:\n${text.substring(0,100)}${text.length>100?"...":""}`);
+        // In real app → send to Firebase Storage / Firestore
+        closeSubmitModal();
       }
     });
 
-    console.log("Lumina landing page & auth ready");
+    // Materials
+    function initMaterials() {
+      document.querySelectorAll(".material-item").forEach(el => {
+        const id = el.dataset.id;
+        const opened = localStorage.getItem(`material-${id}`) === "opened";
+        if (opened) el.classList.add("opened");
+
+        el.addEventListener("click", () => {
+          el.classList.toggle("opened");
+          localStorage.setItem(`material-${id}`, el.classList.contains("opened") ? "opened" : "");
+        });
+      });
+    }
+
+    // Timetable highlight today
+    function highlightTodayExam() {
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      document.querySelectorAll("#timetable p").forEach(p => {
+        if (p.dataset.date === today) {
+          p.classList.add("today");
+          p.innerHTML = `<strong>Today!</strong> ${p.innerHTML}`;
+        }
+      });
+    }
+
+    // Chat
+    function loadChat() {
+      const area = document.getElementById("chatArea");
+      const saved = localStorage.getItem("chatMessages");
+      if (saved) {
+        area.innerHTML = saved;
+      }
+      area.scrollTop = area.scrollHeight;
+    }
+
+    function saveChat() {
+      const area = document.getElementById("chatArea");
+      localStorage.setItem("chatMessages", area.innerHTML);
+    }
+
+    window.sendChatMessage = () => {
+      const input = document.getElementById("chatInput");
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const area = document.getElementById("chatArea");
+      const userMsg = document.createElement("div");
+      userMsg.className = "chat-message user";
+      userMsg.textContent = msg;
+      area.appendChild(userMsg);
+
+      input.value = "";
+      area.scrollTop = area.scrollHeight;
+      saveChat();
+
+      // Fake lecturer reply after delay
+      setTimeout(() => {
+        const replies = [
+          "Thanks for your message! I'll check it soon.",
+          "Good question — let me explain...",
+          "Yes, that's correct. Well done!",
+          "Please refer to page 45 in the notes."
+        ];
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+
+        const lectMsg = document.createElement("div");
+        lectMsg.className = "chat-message lecturer";
+        lectMsg.textContent = reply;
+        area.appendChild(lectMsg);
+        area.scrollTop = area.scrollHeight;
+        saveChat();
+      }, 1800 + Math.random() * 1200);
+    };
+
+    document.getElementById("chatInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") sendChatMessage();
+    });
+
+    console.log("Lumina app with interactive dashboard ready");
   </script>
 
 </body>
