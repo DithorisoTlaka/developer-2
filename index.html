@@ -3,27 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lumina • Neural Access Point</title>
+  <title>Lumina — Access</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #060b14;
-      --neon-cyan: #00f0ff;
-      --neon-purple: #c300ff;
-      --neon-pink: #ff0099;
-      --surface: rgba(12, 18, 32, 0.72);
-      --surface-border: rgba(0, 240, 255, 0.22);
-      --text: #e5fbff;
-      --text-muted: #a0d8ff;
-      --glow-cyan: 0 0 28px rgba(0, 240, 255, 0.55);
-      --glow-purple: 0 0 32px rgba(195, 0, 255, 0.45);
-      --pulse: pulse-glow 4s ease-in-out infinite alternate;
+      --bg:          #0a0e17;
+      --surface:     #11151f;
+      --text:        #e5e7eb;
+      --text-muted:  #9ca3af;
+      --border:      #1f2937;
+      --primary:     #6366f1;
+      --primary-dark:#4f46e5;
+      --glow:        rgba(99, 102, 241, 0.18);
     }
 
     * {
@@ -33,134 +28,63 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      overflow: hidden;
-      background-image:
-        radial-gradient(circle at 20% 40%, rgba(0,240,255,0.11) 0%, transparent 45%),
-        radial-gradient(circle at 80% 60%, rgba(195,0,255,0.09) 0%, transparent 50%);
-    }
-
-    /* Floating data particles */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .particle {
-      position: absolute;
-      background: var(--neon-cyan);
-      border-radius: 50%;
-      box-shadow: var(--glow-cyan);
-      animation: drift linear infinite;
-      opacity: 0.5;
-    }
-
-    @keyframes drift {
-      0%   { transform: translateY(110vh) scale(0.3); opacity: 0; }
-      15%  { opacity: 0.8; }
-      85%  { opacity: 0.8; }
-      100% { transform: translateY(-30vh) scale(0.1); opacity: 0; }
-    }
-
-    .container {
-      position: relative;
-      z-index: 10;
-      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
     }
 
-    .neural-panel {
+    .auth-container {
       background: var(--surface);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      border: 1px solid var(--surface-border);
-      border-radius: 28px;
-      padding: 3.8rem 3rem;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
       width: 100%;
-      max-width: 480px;
-      box-shadow:
-        var(--glow-cyan),
-        var(--glow-purple),
-        inset 0 0 80px rgba(0, 240, 255, 0.09);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .neural-panel::before {
-      content: '';
-      position: absolute;
-      inset: -3px;
-      background: linear-gradient(60deg, transparent 20%, var(--neon-cyan), transparent 40%, var(--neon-purple), transparent 60%, var(--neon-pink), transparent 80%);
-      background-size: 600% 600%;
-      animation: border-flow 18s linear infinite;
-      border-radius: 28px;
-      z-index: -1;
-      opacity: 0.35;
-    }
-
-    @keyframes border-flow {
-      0%   { background-position: 0% 50%; }
-      100% { background-position: 600% 50%; }
+      max-width: 420px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     .logo {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 4.2rem;
-      font-weight: 700;
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: -0.04em;
       text-align: center;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.6rem;
-      letter-spacing: -3px;
-      text-shadow: 0 0 50px rgba(0,240,255,0.6);
-      animation: pulse 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; text-shadow: 0 0 50px rgba(0,240,255,0.6); }
-      50%      { opacity: 0.92; text-shadow: 0 0 70px rgba(195,0,255,0.7); }
+      margin-bottom: 0.5rem;
+      color: white;
     }
 
     .subtitle {
       text-align: center;
       color: var(--text-muted);
-      font-size: 1.18rem;
-      margin-bottom: 2.8rem;
-      font-weight: 300;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      font-size: 0.95rem;
+      margin-bottom: 2.2rem;
     }
 
-    .mode-tabs {
+    .tabs {
       display: flex;
-      margin-bottom: 2.2rem;
-      border-bottom: 1px solid rgba(0,240,255,0.18);
+      margin-bottom: 1.8rem;
+      border-bottom: 1px solid var(--border);
     }
 
     .tab {
       flex: 1;
       background: none;
       border: none;
-      padding: 1.1rem 0;
-      font-size: 1.1rem;
+      padding: 0.9rem 0;
+      font-size: 0.97rem;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.35s;
+      font-weight: 500;
+      transition: color 0.2s;
       position: relative;
     }
 
     .tab.active {
-      color: var(--neon-cyan);
-      font-weight: 500;
+      color: white;
     }
 
     .tab.active::after {
@@ -169,243 +93,225 @@
       bottom: -1px;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-      box-shadow: 0 0 18px var(--neon-cyan);
+      height: 2px;
+      background: var(--primary);
     }
 
     .form-field {
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.4rem;
     }
 
     label {
       display: block;
-      margin-bottom: 0.7rem;
+      margin-bottom: 0.5rem;
       color: var(--text-muted);
-      font-size: 0.98rem;
-      font-weight: 400;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
 
     input {
       width: 100%;
-      padding: 1.1rem 1.4rem;
-      background: rgba(8, 14, 28, 0.65);
-      border: 1px solid rgba(0,240,255,0.28);
-      border-radius: 14px;
+      padding: 0.9rem 1.1rem;
+      background: #0f1622;
+      border: 1px solid var(--border);
+      border-radius: 8px;
       color: white;
-      font-size: 1.05rem;
-      transition: all 0.3s;
+      font-size: 0.97rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     input:focus {
       outline: none;
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 24px rgba(0,240,255,0.4);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--glow);
     }
 
     .btn {
       width: 100%;
-      padding: 1.25rem;
-      margin: 1rem 0 0.6rem;
+      padding: 1rem;
+      margin: 0.6rem 0;
       border: none;
-      border-radius: 14px;
-      font-size: 1.1rem;
+      border-radius: 8px;
+      font-size: 0.97rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.35s;
+      transition: all 0.2s;
     }
 
     .btn-primary {
-      background: linear-gradient(90deg, var(--neon-cyan), #00b7ff);
-      color: #000;
-      box-shadow: 0 0 35px rgba(0,240,255,0.6);
+      background: var(--primary);
+      color: white;
     }
 
     .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 55px rgba(0,240,255,0.85);
+      background: var(--primary-dark);
     }
 
     .btn-google {
-      background: white;
-      color: #111;
+      background: #ffffff;
+      color: #111827;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.9rem;
+      gap: 0.7rem;
     }
 
     .btn-google:hover {
-      background: #f0f0f0;
-      box-shadow: 0 0 25px rgba(255,255,255,0.3);
+      background: #f3f4f6;
     }
 
     .divider {
       display: flex;
       align-items: center;
       text-align: center;
-      margin: 2rem 0;
+      margin: 1.6rem 0;
       color: var(--text-muted);
+      font-size: 0.85rem;
     }
 
     .divider::before,
     .divider::after {
       content: '';
       flex: 1;
-      border-bottom: 1px solid rgba(0,240,255,0.25);
+      border-bottom: 1px solid var(--border);
     }
 
     .divider span {
-      padding: 0 1.8rem;
-      font-size: 0.95rem;
+      padding: 0 1.2rem;
     }
 
-    .toggle-link {
+    .toggle {
       text-align: center;
-      margin-top: 1.6rem;
+      margin-top: 1.2rem;
       color: var(--text-muted);
-      font-size: 0.98rem;
+      font-size: 0.92rem;
     }
 
-    .toggle-link a {
-      color: var(--neon-cyan);
+    .toggle a {
+      color: var(--primary);
       text-decoration: none;
       font-weight: 500;
     }
 
-    .toggle-link a:hover {
+    .toggle a:hover {
       text-decoration: underline;
-      text-shadow: 0 0 12px var(--neon-cyan);
     }
 
-    @media (max-width: 500px) {
-      .neural-panel { padding: 2.8rem 2rem; }
-      .logo { font-size: 3.4rem; }
-      .subtitle { font-size: 1rem; }
+    @media (max-width: 480px) {
+      .auth-container {
+        padding: 2rem 1.5rem;
+      }
+      .logo {
+        font-size: 2.1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="particles" id="particles"></div>
+  <div class="auth-container">
+    <div class="logo">Lumina</div>
+    <div class="subtitle">Your learning space</div>
 
-  <div class="container">
-    <div class="neural-panel">
-      <div class="logo">LUMINA</div>
-      <div class="subtitle">Neural Access • 2026</div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchMode('login')">Sign in</button>
+      <button class="tab" onclick="switchMode('signup')">Create account</button>
+    </div>
 
-      <div class="mode-tabs">
-        <button class="tab active" onclick="switchMode('login')">Sign In</button>
-        <button class="tab" onclick="switchMode('signup')">Create Profile</button>
+    <!-- Sign In -->
+    <form id="loginForm" class="auth-form">
+      <div class="form-field">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="form-field">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
       </div>
 
-      <!-- ── Login ──────────────────────────────────────────────── -->
-      <form id="loginForm" class="auth-form">
-        <div class="form-field">
-          <label for="loginEmail">Neural Identifier</label>
-          <input type="email" id="loginEmail" placeholder="student@neural.edu" required autocomplete="email" />
-        </div>
-        <div class="form-field">
-          <label for="loginPassword">Quantum Key</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
-        </div>
+      <button type="submit" class="btn btn-primary">Sign in</button>
 
-        <button type="submit" class="btn btn-primary">Establish Connection</button>
+      <div class="divider"><span>or</span></div>
 
-        <div class="divider"><span>NEURAL BRIDGE</span></div>
+      <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.51h5.84c-.25 1.31-.98 2.42-2.07 3.16v2.63h3.35c1.96-1.81 3.1-4.47 3.1-7.8z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-1.01 7.28-2.74l-3.35-2.63c-1.01.68-2.29 1.08-3.93 1.08-3.02 0-5.58-2.04-6.49-4.79H.96v2.67C2.77 20.39 6.62 23 12 23z"/><path fill="#FBBC05" d="M5.51 14.21c-.23-.68-.36-1.41-.36-2.21s.13-1.53.36-2.21V7.34H.96C.35 8.85 0 10.39 0 12s.35 3.15.96 4.66l4.55-2.45z"/><path fill="#EA4335" d="M12 4.98c1.64 0 3.11.56 4.27 1.66l3.19-3.19C17.46 1.01 14.97 0 12 0 6.62 0 2.77 2.61 0.96 6.34l4.55 2.45C6.42 6.02 8.98 4.98 12 4.98z"/></svg>
+        Continue with Google
+      </button>
+    </form>
 
-        <button type="button" class="btn btn-google" onclick="connectGoogle()">
-          <i class="ri-google-fill"></i> Sync with Google Grid
-        </button>
-      </form>
-
-      <!-- ── Sign Up ────────────────────────────────────────────── -->
-      <form id="signupForm" class="auth-form" style="display:none;">
-        <div class="form-field">
-          <label for="signupEmail">Neural Identifier</label>
-          <input type="email" id="signupEmail" placeholder="you@future.edu" required autocomplete="email" />
-        </div>
-        <div class="form-field">
-          <label for="signupPassword">Create Quantum Key</label>
-          <input type="password" id="signupPassword" placeholder="8+ characters" required autocomplete="new-password" />
-        </div>
-        <div class="form-field">
-          <label for="signupConfirm">Confirm Key</label>
-          <input type="password" id="signupConfirm" placeholder="Repeat key" required autocomplete="new-password" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Activate Neural Core</button>
-
-        <div class="divider"><span>NEURAL BRIDGE</span></div>
-
-        <button type="button" class="btn btn-google" onclick="connectGoogle()">
-          <i class="ri-google-fill"></i> Join via Google Grid
-        </button>
-      </form>
-
-      <div class="toggle-link" id="toSignup">
-        New signal detected? <a href="#" onclick="switchMode('signup'); return false;">Activate Profile</a>
+    <!-- Sign Up -->
+    <form id="signupForm" class="auth-form" style="display:none;">
+      <div class="form-field">
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
       </div>
-      <div class="toggle-link" id="toLogin" style="display:none;">
-        Already synced? <a href="#" onclick="switchMode('login'); return false;">Sign In</a>
+      <div class="form-field">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="••••••••" required autocomplete="new-password" />
       </div>
+      <div class="form-field">
+        <label for="signupConfirm">Confirm password</label>
+        <input type="password" id="signupConfirm" placeholder="••••••••" required autocomplete="new-password" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Create account</button>
+
+      <div class="divider"><span>or</span></div>
+
+      <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.51h5.84c-.25 1.31-.98 2.42-2.07 3.16v2.63h3.35c1.96-1.81 3.1-4.47 3.1-7.8z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-1.01 7.28-2.74l-3.35-2.63c-1.01.68-2.29 1.08-3.93 1.08-3.02 0-5.58-2.04-6.49-4.79H.96v2.67C2.77 20.39 6.62 23 12 23z"/><path fill="#FBBC05" d="M5.51 14.21c-.23-.68-.36-1.41-.36-2.21s.13-1.53.36-2.21V7.34H.96C.35 8.85 0 10.39 0 12s.35 3.15.96 4.66l4.55-2.45z"/><path fill="#EA4335" d="M12 4.98c1.64 0 3.11.56 4.27 1.66l3.19-3.19C17.46 1.01 14.97 0 12 0 6.62 0 2.77 2.61 0.96 6.34l4.55 2.45C6.42 6.02 8.98 4.98 12 4.98z"/></svg>
+        Continue with Google
+      </button>
+    </form>
+
+    <div class="toggle" id="toggleSignup">
+      Don't have an account? <a href="#" onclick="switchMode('signup'); return false;">Sign up</a>
+    </div>
+    <div class="toggle" id="toggleLogin" style="display:none;">
+      Already have an account? <a href="#" onclick="switchMode('login'); return false;">Sign in</a>
     </div>
   </div>
 
   <script>
-    // Floating particles
-    function spawnParticles() {
-      const container = document.getElementById('particles');
-      for (let i = 0; i < 70; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const sz = Math.random() * 5 + 1.2;
-        p.style.width = p.style.height = `${sz}px`;
-        p.style.left = `${Math.random() * 100}vw`;
-        p.style.animationDuration = `${Math.random() * 25 + 18}s`;
-        p.style.animationDelay = `${Math.random() * 12}s`;
-        container.appendChild(p);
-      }
-    }
-    spawnParticles();
-
-    // Mode switch
     function switchMode(mode) {
-      document.querySelectorAll('.auth-form').forEach(f => f.style.display = 'none');
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
 
       if (mode === 'login') {
         document.getElementById('loginForm').style.display = 'block';
-        document.querySelector('.tab:nth-child(1)').classList.add('active');
-        document.getElementById('toSignup').style.display = 'block';
-        document.getElementById('toLogin').style.display = 'none';
+        document.querySelector('.tab:first-child').classList.add('active');
+        document.getElementById('toggleSignup').style.display = 'block';
+        document.getElementById('toggleLogin').style.display = 'none';
       } else {
         document.getElementById('signupForm').style.display = 'block';
-        document.querySelector('.tab:nth-child(2)').classList.add('active');
-        document.getElementById('toSignup').style.display = 'none';
-        document.getElementById('toLogin').style.display = 'block';
+        document.querySelector('.tab:last-child').classList.add('active');
+        document.getElementById('toggleSignup').style.display = 'none';
+        document.getElementById('toggleLogin').style.display = 'block';
       }
     }
 
-    // Form handlers (placeholders — replace with real Firebase logic)
+    // Placeholder actions — replace with real auth logic (Firebase etc.)
     document.getElementById('loginForm').addEventListener('submit', e => {
       e.preventDefault();
-      alert('Authenticating neural signature...');
-      // firebase.signInWithEmailAndPassword(...)
+      alert('Signing in...');
+      // firebase signInWithEmailAndPassword(...)
     });
 
     document.getElementById('signupForm').addEventListener('submit', e => {
       e.preventDefault();
       const pw = document.getElementById('signupPassword').value;
       const confirm = document.getElementById('signupConfirm').value;
-      if (pw !== confirm) return alert("Quantum keys do not match.");
-      alert('Initializing neural profile...');
-      // firebase.createUserWithEmailAndPassword(...)
+      if (pw !== confirm) {
+        alert("Passwords don't match");
+        return;
+      }
+      alert('Creating account...');
+      // firebase createUserWithEmailAndPassword(...)
     });
 
-    window.connectGoogle = () => {
-      alert('Opening quantum tunnel to Google Grid...');
-      // firebase.signInWithPopup(auth, googleProvider)
+    window.signInWithGoogle = () => {
+      alert('Continuing with Google...');
+      // firebase signInWithPopup(...)
     };
   </script>
 </body>
