@@ -49,43 +49,59 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 2.5rem 2rem;
+      padding: 3rem 2.5rem;
       width: 100%;
       max-width: 420px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      text-align: center;
     }
 
-    .logo { font-size: 2.4rem; font-weight: 600; letter-spacing: -0.04em; text-align: center; margin-bottom: 0.5rem; color: white; }
-    .subtitle { text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2.2rem; }
+    .logo {
+      font-size: 3.2rem;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      margin-bottom: 1rem;
+      color: white;
+    }
 
-    .tabs { display: flex; margin-bottom: 1.8rem; border-bottom: 1px solid var(--border); }
-    .tab { flex: 1; background: none; border: none; padding: 0.9rem 0; font-size: 0.97rem; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: color 0.2s; position: relative; }
-    .tab.active { color: white; }
-    .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--primary); }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
 
-    .form-field { margin-bottom: 1.4rem; }
-    label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
-    input { width: 100%; padding: 0.9rem 1.1rem; background: #0f1622; border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 0.97rem; transition: border-color 0.2s, box-shadow 0.2s; }
-    input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--glow); }
+    .btn {
+      width: 100%;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
 
-    .btn { width: 100%; padding: 1rem; margin: 0.6rem 0; border: none; border-radius: 9999px; font-size: 0.97rem; font-weight: 500; cursor: pointer; transition: all 0.2s; position: relative; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-dark); }
-    .btn-google { background: #ffffff; color: #111827; display: flex; align-items: center; justify-content: center; gap: 0.7rem; }
-    .btn-google:hover { background: #f3f4f6; }
+    .btn-google {
+      background: #ffffff;
+      color: #111827;
+    }
 
-    .btn-loading::after { content: ""; display: inline-block; width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-left: 8px; vertical-align: middle; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-google:hover {
+      background: #f3f4f6;
+      transform: translateY(-1px);
+    }
 
-    .divider { display: flex; align-items: center; text-align: center; margin: 1.6rem 0; color: var(--text-muted); font-size: 0.85rem; }
-    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
-    .divider span { padding: 0 1.2rem; }
-
-    .toggle { text-align: center; margin-top: 1.2rem; color: var(--text-muted); font-size: 0.92rem; }
-    .toggle a { color: var(--primary); text-decoration: none; font-weight: 500; }
-    .toggle a:hover { text-decoration: underline; }
-
-    .error-msg { color: var(--error); font-size: 0.85rem; margin: 0.8rem 0; text-align: center; }
+    .error-msg {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+      min-height: 1.2rem;
+    }
 
     /* ── DASHBOARD ─────────────────────────────────────── */
     #dashboard { display: none; }
@@ -243,81 +259,23 @@
 </head>
 <body>
 
-  <!-- AUTH PAGE -->
+  <!-- AUTH PAGE (Google-only) -->
   <div id="authPage">
     <div class="auth-container">
       <div class="logo">Lumina</div>
-      <div class="subtitle">Your learning space</div>
-
-      <div class="tabs">
-        <button class="tab active" onclick="switchMode('login')">Sign in</button>
-        <button class="tab" onclick="switchMode('signup')">Create account</button>
-      </div>
+      <div class="subtitle">Sign in with Google to continue</div>
 
       <div id="errorMessage" class="error-msg"></div>
 
-      <!-- Sign In -->
-      <form id="loginForm">
-        <div class="form-field">
-          <label for="loginEmail">Email</label>
-          <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
-        </div>
-        <div class="form-field">
-          <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
-
-        <div class="divider"><span>or</span></div>
-
-        <button type="button" class="btn btn-google" id="googleLoginBtn" onclick="signInWithGoogle()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
-            <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
-            <path d="M5.68 14.47C5.25 13.17 5 11.61 5 10C5 8.39 5.25 6.83 5.68 5.53V2.4H2.06C0.72 5.09 0 8 0 11C0 13.99 0.72 16.91 2.06 19.6L5.68 14.47Z" fill="#FBBC05"/>
-            <path d="M12 4.98C13.64 4.98 15.11 5.54 16.27 6.64L19.46 3.45C17.46 1.59 14.97 0.5 12 0.5C7.78 0.5 3.98 2.58 2.06 5.9L5.68 10C6.57 7.25 9.07 5.22 12 5.22V4.98Z" fill="#EA4335"/>
-          </svg>
-          Continue with Google
-        </button>
-      </form>
-
-      <!-- Sign Up -->
-      <form id="signupForm" style="display:none;">
-        <div class="form-field">
-          <label for="signupEmail">Email</label>
-          <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
-        </div>
-        <div class="form-field">
-          <label for="signupPassword">Password</label>
-          <input type="password" id="signupPassword" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
-        </div>
-        <div class="form-field">
-          <label for="signupConfirm">Confirm Password</label>
-          <input type="password" id="signupConfirm" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="signupBtn">Create account</button>
-
-        <div class="divider"><span>or</span></div>
-
-        <button type="button" class="btn btn-google" id="googleSignupBtn" onclick="signInWithGoogle()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
-            <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
-            <path d="M5.68 14.47C5.25 13.17 5 11.61 5 10C5 8.39 5.25 6.83 5.68 5.53V2.4H2.06C0.72 5.09 0 8 0 11C0 13.99 0.72 16.91 2.06 19.6L5.68 14.47Z" fill="#FBBC05"/>
-            <path d="M12 4.98C13.64 4.98 15.11 5.54 16.27 6.64L19.46 3.45C17.46 1.59 14.97 0.5 12 0.5C7.78 0.5 3.98 2.58 2.06 5.9L5.68 10C6.57 7.25 9.07 5.22 12 5.22V4.98Z" fill="#EA4335"/>
-          </svg>
-          Continue with Google
-        </button>
-      </form>
-
-      <div class="toggle" id="toggleSignup">
-        Don't have an account? <a href="#" onclick="switchMode('signup'); return false;">Sign up</a>
-      </div>
-      <div class="toggle" id="toggleLogin" style="display:none;">
-        Already have an account? <a href="#" onclick="switchMode('login'); return false;">Sign in</a>
-      </div>
+      <button class="btn btn-google" id="googleBtn" onclick="signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
+          <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
+          <path d="M5.68 14.47C5.25 13.17 5 11.61 5 10C5 8.39 5.25 6.83 5.68 5.53V2.4H2.06C0.72 5.09 0 8 0 11C0 13.99 0.72 16.91 2.06 19.6L5.68 14.47Z" fill="#FBBC05"/>
+          <path d="M12 4.98C13.64 4.98 15.11 5.54 16.27 6.64L19.46 3.45C17.46 1.59 14.97 0.5 12 0.5C7.78 0.5 3.98 2.58 2.06 5.9L5.68 10C6.57 7.25 9.07 5.22 12 5.22V4.98Z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
     </div>
   </div>
 
@@ -399,23 +357,14 @@
       getAuth,
       GoogleAuthProvider,
       signInWithPopup,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
       onAuthStateChanged,
       signOut
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
     import {
-      getFirestore,
-      doc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-    import {
       getDatabase,
       ref,
       onValue,
-      set,
       push,
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
@@ -433,7 +382,6 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const firestore = getFirestore(app);
     const database = getDatabase(app);
     const googleProvider = new GoogleAuthProvider();
 
@@ -449,7 +397,6 @@
           const data = snapshot.val();
           if (!data) return resolve(false);
 
-          // Support both array and object formats
           let invitedEmails = [];
           if (Array.isArray(data)) {
             invitedEmails = data;
@@ -463,19 +410,6 @@
           resolve(exists);
         }, { onlyOnce: true });
       });
-    }
-
-    function setButtonLoading(btn, isLoading) {
-      if (isLoading) {
-        btn.disabled = true;
-        btn.classList.add('btn-loading');
-        btn.dataset.originalText = btn.innerHTML;
-        btn.innerHTML = 'Checking...';
-      } else {
-        btn.disabled = false;
-        btn.classList.remove('btn-loading');
-        if (btn.dataset.originalText) btn.innerHTML = btn.dataset.originalText;
-      }
     }
 
     // ── UI Switching ─────────────────────────────────────────────
@@ -499,7 +433,7 @@
         if (!invited) {
           await signOut(auth);
           document.getElementById('errorMessage').textContent = 
-            'Access denied: Your email is not in the invited users list.';
+            'Access denied: Your Google account is not invited.';
           showAuth();
           return;
         }
@@ -582,85 +516,14 @@
       }
     });
 
-    // ── Form Handlers with invitedusers check ────────────────────
-    document.getElementById('loginForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      const errorEl = document.getElementById('errorMessage');
-      const btn = document.getElementById('loginBtn');
-
-      errorEl.textContent = '';
-      setButtonLoading(btn, true);
-
-      const invited = await isInvitedUser(email);
-      if (!invited) {
-        errorEl.textContent = 'Your account has not been invited.';
-        setButtonLoading(btn, false);
-        return;
-      }
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        errorEl.textContent =
-          err.code === 'auth/wrong-password' ? 'Incorrect password' :
-          err.code === 'auth/user-not-found' ? 'Account not found' :
-          'Login failed. Please try again.';
-      } finally {
-        setButtonLoading(btn, false);
-      }
-    });
-
-    document.getElementById('signupForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = document.getElementById('signupEmail').value.trim();
-      const password = document.getElementById('signupPassword').value;
-      const confirm = document.getElementById('signupConfirm').value;
-      const errorEl = document.getElementById('errorMessage');
-      const btn = document.getElementById('signupBtn');
-
-      errorEl.textContent = '';
-
-      if (password !== confirm) {
-        errorEl.textContent = 'Passwords do not match';
-        return;
-      }
-
-      if (password.length < 6) {
-        errorEl.textContent = 'Password must be at least 6 characters';
-        return;
-      }
-
-      setButtonLoading(btn, true);
-
-      const invited = await isInvitedUser(email);
-      if (!invited) {
-        errorEl.textContent = 'This email has not been invited.';
-        setButtonLoading(btn, false);
-        return;
-      }
-
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        errorEl.textContent =
-          err.code === 'auth/email-already-in-use' ? 'This email is already registered' :
-          err.code === 'auth/weak-password' ? 'Password is too weak' :
-          'Sign up failed. Please try again.';
-      } finally {
-        setButtonLoading(btn, false);
-      }
-    });
-
+    // ── Google Sign-In Only ──────────────────────────────────────
     window.signInWithGoogle = async () => {
       const errorEl = document.getElementById('errorMessage');
-      const btnLogin = document.getElementById('googleLoginBtn');
-      const btnSignup = document.getElementById('googleSignupBtn');
+      const btn = document.getElementById('googleBtn');
 
-      errorEl.textContent = 'Checking invitation...';
-      setButtonLoading(btnLogin, true);
-      setButtonLoading(btnSignup, true);
+      errorEl.textContent = 'Connecting...';
+      btn.disabled = true;
+      btn.classList.add('btn-loading');
 
       try {
         const result = await signInWithPopup(auth, googleProvider);
@@ -672,34 +535,16 @@
           errorEl.textContent = 'Your Google account has not been invited.';
           return;
         }
+        // If invited → showDashboard() will be triggered by onAuthStateChanged
       } catch (err) {
-        errorEl.textContent = 'Google sign-in failed or account not invited.';
+        errorEl.textContent = 'Google sign-in failed. Please try again.';
       } finally {
-        setButtonLoading(btnLogin, false);
-        setButtonLoading(btnSignup, false);
+        btn.disabled = false;
+        btn.classList.remove('btn-loading');
       }
     };
 
     window.signOutUser = () => signOut(auth);
-
-    window.switchMode = function(mode) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.getElementById('errorMessage').textContent = '';
-
-      if (mode === 'login') {
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('signupForm').style.display = 'none';
-        document.querySelector('.tab:first-child').classList.add('active');
-        document.getElementById('toggleSignup').style.display = 'block';
-        document.getElementById('toggleLogin').style.display = 'none';
-      } else {
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('signupForm').style.display = 'block';
-        document.querySelector('.tab:last-child').classList.add('active');
-        document.getElementById('toggleSignup').style.display = 'none';
-        document.getElementById('toggleLogin').style.display = 'block';
-      }
-    };
   </script>
 </body>
 </html>
