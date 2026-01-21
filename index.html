@@ -125,23 +125,43 @@
       gap: 0.8rem;
     }
 
-    .btn-google {
-      background: #ffffff;
-      color: #111827;
-      border: 1px solid #e5e7eb;
-      opacity: 0;
-      animation: fadeInUp 0.6s forwards;
-      animation-delay: 0.5s;
-    }
+    /* Replace your existing .btn-google styles with this */
+    
+.btn-google {
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  opacity: 0;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.5s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
 
-    .btn-google:hover {
-      background: #f3f4f6;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
+.btn-google::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: rotate(30deg);
+  transition: none;
+  animation: shimmer 4s infinite;
+}
 
-    .btn-google:active { transform: translateY(0); }
+.btn-google:hover {
+  background: #ffffff;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+  border-color: var(--primary);
+}
 
+.btn-google:active {
+  transform: translateY(-1px) scale(0.98);
+}
     .error-msg {
       color: var(--error);
       font-size: 0.9rem;
@@ -149,6 +169,12 @@
       min-height: 1.2rem;
     }
 
+    /* Add these keyframes at the bottom of your <style> section */
+@keyframes shimmer {
+  0% { left: -60%; }
+  15% { left: 120%; }
+  100% { left: 120%; }
+}
     /* ── DASHBOARD ─────────────────────────────────────── */
     #dashboard { display: none; }
 
@@ -326,6 +352,7 @@
       .sidebar-left:hover { width: var(--sidebar-expanded); }
       .main-view { margin-left: var(--sidebar-collapsed); }
     }
+    
   </style>
 </head>
 <body data-theme="dark">
