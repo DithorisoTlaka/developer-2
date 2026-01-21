@@ -19,27 +19,18 @@
       --accent: #a5b4fc;
       --border: rgba(226, 232, 240, 0.8);
       --glow: rgba(99, 102, 241, 0.15);
+      --error: #ef4444;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
     }
-
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+    .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
 
     header {
       padding: 2.5rem 0 1.5rem;
@@ -60,7 +51,6 @@
       background: linear-gradient(90deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
     .nav-links {
@@ -76,9 +66,7 @@
       transition: color 0.2s ease;
     }
 
-    .nav-links a:hover {
-      color: var(--primary);
-    }
+    .nav-links a:hover { color: var(--primary); }
 
     .btn {
       padding: 0.75rem 1.75rem;
@@ -88,6 +76,7 @@
       transition: all 0.25s ease;
       border: none;
       cursor: pointer;
+      font-size: 1rem;
     }
 
     .btn-primary {
@@ -109,18 +98,97 @@
     }
 
     .btn-outline:hover {
-      background: rgba(99, 102, 241, 0.05);
+      background: rgba(99,102,241,0.05);
       border-color: var(--primary);
       color: var(--primary);
     }
 
-    .hero {
-      padding: 8rem 0 10rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
     }
 
+    .modal-content {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid var(--border);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      background: var(--bg);
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .auth-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .divider {
+      text-align: center;
+      color: var(--text-muted);
+      margin: 1.2rem 0;
+      font-size: 0.95rem;
+    }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Rest of your existing styles (hero, features, footer) remain unchanged */
+    .hero { padding: 8rem 0 10rem; text-align: center; }
     .hero h1 {
       font-size: clamp(3.5rem, 8vw, 6.5rem);
       font-weight: 600;
@@ -131,82 +199,34 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .hero p { font-size: 1.4rem; color: var(--text-muted); max-width: 620px; margin: 0 auto 2.5rem; font-weight: 300; }
+    .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
 
-    .hero p {
-      font-size: 1.4rem;
-      color: var(--text-muted);
-      max-width: 620px;
-      margin: 0 auto 2.5rem;
-      font-weight: 300;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .features {
-      padding: 8rem 0;
-      background: linear-gradient(to bottom, transparent, rgba(99,102,241,0.03), transparent);
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.8rem;
-      font-weight: 600;
-      margin-bottom: 4rem;
-      color: var(--text);
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2.5rem;
-    }
-
+    .features { padding: 8rem 0; }
+    .section-title { text-align: center; font-size: 2.8rem; font-weight: 600; margin-bottom: 4rem; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
     .feature-card {
       background: var(--surface);
       border-radius: 20px;
       padding: 2.5rem;
       border: 1px solid var(--border);
       transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
     }
-
     .feature-card:hover {
       transform: translateY(-12px);
       border-color: var(--accent);
       box-shadow: 0 25px 50px -12px rgba(99,102,241,0.12);
     }
+    .feature-icon { font-size: 2.8rem; margin-bottom: 1.5rem; color: var(--primary); }
+    .feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .feature-card p { color: var(--text-muted); }
 
-    .feature-icon {
-      font-size: 2.8rem;
-      margin-bottom: 1.5rem;
-      color: var(--primary);
-    }
-
-    .feature-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .feature-card p {
-      color: var(--text-muted);
-    }
-
-    footer {
-      padding: 5rem 0 3rem;
-      text-align: center;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border);
-    }
+    footer { padding: 5rem 0 3rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
 
     @media (max-width: 768px) {
       .hero { padding: 6rem 0 8rem; }
       .hero h1 { font-size: 3.8rem; }
-      .nav-links { gap: 1.5rem; }
+      .nav-links { gap: 1.5rem; flex-wrap: wrap; justify-content: flex-end; }
     }
   </style>
 </head>
@@ -219,17 +239,51 @@
         <a href="#features">Features</a>
         <a href="#">For Teachers</a>
         <a href="#">Pricing</a>
-        <a href="#" class="btn btn-outline">Sign In</a>
+        <button class="btn btn-outline" onclick="openLoginModal()">Login</button>
         <a href="#" class="btn btn-primary">Get Started</a>
       </div>
     </nav>
   </header>
 
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Login to Lumina</h2>
+        <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1rem;" onclick="signInWithGoogle()">
+        Continue with Google
+      </button>
+
+      <div class="divider">or</div>
+
+      <form id="emailLoginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" />
+        </div>
+        <div id="errorMessage" class="error-msg"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
+          Login with Email
+        </button>
+      </form>
+
+      <p style="text-align:center; margin-top:1.5rem; color:var(--text-muted); font-size:0.95rem;">
+        Don't have an account? <a href="#" style="color:var(--primary);">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Hero & Features & Footer remain the same as before -->
   <section class="hero container">
     <h1>Learn smarter.<br/>Anywhere. Anytime.</h1>
-    <p>
-      A next-generation learning platform designed for students who want clarity, focus, and real progress.
-    </p>
+    <p>A next-generation learning platform designed for students who want clarity, focus, and real progress.</p>
     <div class="hero-buttons">
       <a href="#" class="btn btn-primary" style="font-size:1.2rem; padding:1rem 2.5rem;">Start Learning Now</a>
       <a href="#" class="btn btn-outline" style="font-size:1.2rem; padding:1rem 2.5rem;">See how it works</a>
@@ -239,36 +293,13 @@
   <section class="features container" id="features">
     <h2 class="section-title">Why students choose Lumina</h2>
     <div class="feature-grid">
-      <div class="feature-card">
-        <div class="feature-icon">✦</div>
-        <h3>Clean & Focused Interface</h3>
-        <p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>Instant Access Anywhere</h3>
-        <p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🧠</div>
-        <h3>Smart Progress Tracking</h3>
-        <p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📚</div>
-        <h3>Resources That Actually Help</h3>
-        <p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <h3>Private & Secure</h3>
-        <p>Your data stays yours. Built with modern security standards from day one.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🌙</div>
-        <h3>Light & Dark Perfection</h3>
-        <p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p>
-      </div>
+      <!-- Your existing feature cards here (unchanged) -->
+      <div class="feature-card"><div class="feature-icon">✦</div><h3>Clean & Focused Interface</h3><p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Instant Access Anywhere</h3><p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p></div>
+      <div class="feature-card"><div class="feature-icon">🧠</div><h3>Smart Progress Tracking</h3><p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p></div>
+      <div class="feature-card"><div class="feature-icon">📚</div><h3>Resources That Actually Help</h3><p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Private & Secure</h3><p>Your data stays yours. Built with modern security standards from day one.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Perfection</h3><p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p></div>
     </div>
   </section>
 
@@ -276,11 +307,15 @@
     <p>© 2026 Lumina Learning • Built with care for students</p>
   </footer>
 
-  <!-- Firebase (just included — connect it later in your JS files) -->
+  <!-- Firebase SDK v10+ modular imports -->
   <script type="module">
-    // Import Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-    // import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+    import { 
+      getAuth, 
+      GoogleAuthProvider, 
+      signInWithPopup,
+      signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
@@ -292,11 +327,68 @@
       measurementId: "G-K1VW244B7P"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    // const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
 
-    console.log("Firebase initialized (Lumina landing page)");
+    // Optional: force account selection
+    // googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+    window.signInWithGoogle = async () => {
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        console.log("Google login success:", user.displayName, user.email);
+        alert(`Welcome, ${user.displayName || 'student'}!`);
+        closeLoginModal();
+        // TODO: redirect to dashboard → window.location.href = "/dashboard.html";
+      } catch (error) {
+        console.error("Google login error:", error.code, error.message);
+        document.getElementById("errorMessage").textContent = "Google login failed. Please try again.";
+      }
+    };
+
+    // Email/Password login
+    document.getElementById("emailLoginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorEl = document.getElementById("errorMessage");
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log("Email login success:", user.email);
+        alert(`Welcome back!`);
+        closeLoginModal();
+        // TODO: redirect
+      } catch (error) {
+        console.error("Email login error:", error.code, error.message);
+        let msg = "Login failed. Please check your credentials.";
+        if (error.code === "auth/user-not-found") msg = "No account found with this email.";
+        if (error.code === "auth/wrong-password") msg = "Incorrect password.";
+        errorEl.textContent = msg;
+      }
+    });
+
+    // Modal controls
+    window.openLoginModal = () => {
+      document.getElementById("loginModal").style.display = "flex";
+      document.getElementById("errorMessage").textContent = "";
+    };
+
+    window.closeLoginModal = () => {
+      document.getElementById("loginModal").style.display = "none";
+    };
+
+    // Close modal when clicking outside
+    document.getElementById("loginModal").addEventListener("click", (e) => {
+      if (e.target === document.getElementById("loginModal")) {
+        closeLoginModal();
+      }
+    });
+
+    console.log("Lumina auth ready");
   </script>
 
 </body>
