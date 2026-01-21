@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --bg: #f8fafc;
@@ -21,22 +21,31 @@
       --glow: rgba(99, 102, 241, 0.15);
       --error: #ef4444;
       --success: #10b981;
+      --sidebar-collapsed: 72px;
+      --sidebar-expanded: 380px;
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
       min-height: 100vh;
     }
-    .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
 
     header {
-      padding: 2.5rem 0 1.5rem;
-      position: relative;
-      z-index: 10;
+      padding: 2rem 0 1.5rem;
     }
 
     nav {
@@ -48,36 +57,18 @@
     .logo {
       font-size: 1.75rem;
       font-weight: 600;
-      letter-spacing: -0.05em;
       background: linear-gradient(90deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover { color: var(--primary); }
-
     .btn {
       padding: 0.75rem 1.75rem;
       border-radius: 9999px;
       font-weight: 500;
-      text-decoration: none;
-      transition: all 0.25s ease;
-      border: none;
       cursor: pointer;
-      font-size: 1rem;
+      border: none;
+      transition: all 0.25s;
     }
 
     .btn-primary {
@@ -88,8 +79,7 @@
 
     .btn-primary:hover {
       background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px var(--glow);
+      transform: translateY(-1px);
     }
 
     .btn-outline {
@@ -99,162 +89,103 @@
     }
 
     .btn-outline:hover {
-      background: rgba(99,102,241,0.05);
       border-color: var(--primary);
       color: var(--primary);
     }
 
-    .modal {
-      display: none;
+    .app-wrapper {
+      display: flex;
+      min-height: calc(100vh - 100px);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2.5rem 3rem;
+      transition: margin-right 0.4s ease;
+    }
+
+    .sidebar {
       position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--sidebar-collapsed);
       background: var(--surface);
-      border-radius: 20px;
-      padding: 2.5rem;
-      width: 100%;
-      max-width: 420px;
-      border: 1px solid var(--border);
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+      border-left: 1px solid var(--border);
+      box-shadow: -6px 0 24px rgba(0,0,0,0.08);
+      transition: width 0.4s ease;
+      overflow: hidden;
+      z-index: 100;
     }
 
-    .modal-header {
+    .sidebar:hover,
+    .sidebar.expanded {
+      width: var(--sidebar-expanded);
+    }
+
+    .sidebar-inner {
+      height: 100%;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+    }
+
+    .sidebar-tabs {
+      padding-top: 5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-button {
+      display: flex;
       align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 1.8rem;
+      gap: 1rem;
+      padding: 1.1rem 1.3rem;
       color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
       font-weight: 500;
-      color: var(--text);
+      transition: all 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
     }
 
-    input, textarea {
-      width: 100%;
-      padding: 0.9rem 1.2rem;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem;
-      background: var(--bg);
-      transition: border-color 0.2s;
+    .tab-button:hover,
+    .tab-button.active {
+      background: rgba(99,102,241,0.07);
+      color: var(--primary);
     }
 
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--glow);
-    }
-
-    .divider {
+    .tab-button .icon {
+      font-size: 1.5rem;
+      min-width: 32px;
       text-align: center;
-      color: var(--text-muted);
-      margin: 1.2rem 0;
-      font-size: 0.95rem;
     }
 
-    .error-msg {
-      color: var(--error);
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-    }
-
-    .hero { padding: 8rem 0 10rem; text-align: center; }
-    .hero h1 {
-      font-size: clamp(3.5rem, 8vw, 6.5rem);
-      font-weight: 600;
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(120deg, #0f172a, #334155, #64748b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero p { font-size: 1.4rem; color: var(--text-muted); max-width: 620px; margin: 0 auto 2.5rem; font-weight: 300; }
-    .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
-
-    .features { padding: 8rem 0; }
-    .section-title { text-align: center; font-size: 2.8rem; font-weight: 600; margin-bottom: 4rem; }
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
-    .feature-card {
-      background: var(--surface);
-      border-radius: 20px;
-      padding: 2.5rem;
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-    }
-    .feature-card:hover {
-      transform: translateY(-12px);
-      border-color: var(--accent);
-      box-shadow: 0 25px 50px -12px rgba(99,102,241,0.12);
-    }
-    .feature-icon { font-size: 2.8rem; margin-bottom: 1.5rem; color: var(--primary); }
-    .feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-    .feature-card p { color: var(--text-muted); }
-
-    footer { padding: 5rem 0 3rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
-
-    /* ──────────────────────────────────────────────── */
-    /*               Dashboard Styles                   */
-    /* ──────────────────────────────────────────────── */
-    #dashboard {
+    .tab-content {
+      flex: 1;
+      padding: 1.8rem;
+      overflow-y: auto;
       display: none;
-      padding: 2rem 0;
     }
 
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .welcome {
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+    .tab-content.active {
+      display: block;
     }
 
     .card {
       background: var(--surface);
       border-radius: 16px;
-      padding: 1.8rem;
+      padding: 1.6rem;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      margin-bottom: 1.6rem;
     }
 
     .card h3 {
       margin-bottom: 1.2rem;
-      font-size: 1.3rem;
       color: var(--primary);
+      font-size: 1.25rem;
     }
 
     .assignment-item {
@@ -263,10 +194,6 @@
       gap: 1rem;
       padding: 1rem 0;
       border-bottom: 1px solid var(--border);
-    }
-
-    .assignment-item:last-child {
-      border-bottom: none;
     }
 
     .assignment-item input[type="checkbox"] {
@@ -278,7 +205,7 @@
     .assignment-text.completed {
       text-decoration: line-through;
       color: var(--text-muted);
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .due {
@@ -295,7 +222,7 @@
     }
 
     .material-item:hover {
-      background: rgba(99,102,241,0.05);
+      background: rgba(99,102,241,0.04);
     }
 
     .material-item.opened {
@@ -303,12 +230,8 @@
       font-weight: 500;
     }
 
-    .material-item:last-child {
-      border-bottom: none;
-    }
-
     .chat-area {
-      height: 340px;
+      height: 360px;
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.2rem;
@@ -321,7 +244,7 @@
       margin-bottom: 1rem;
       padding: 0.9rem 1.3rem;
       border-radius: 16px;
-      max-width: 80%;
+      max-width: 85%;
       word-wrap: break-word;
     }
 
@@ -342,13 +265,13 @@
 
     .chat-input-area input {
       flex: 1;
-      padding: 0.9rem 1.2rem;
+      padding: 0.9rem 1.3rem;
       border: 1px solid var(--border);
       border-radius: 9999px;
     }
 
     .submit-btn {
-      padding: 0.9rem 1.6rem;
+      padding: 0.9rem 1.5rem;
       border-radius: 9999px;
       background: var(--primary);
       color: white;
@@ -357,251 +280,165 @@
 
     .today {
       background: rgba(99,102,241,0.08);
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem;
       border-radius: 8px;
-      margin: 0.3rem 0;
+      margin: 0.4rem 0;
     }
 
-    @media (max-width: 900px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 440px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: var(--sidebar-collapsed); }
+      .sidebar:hover,
+      .sidebar.expanded { width: 340px; }
+      .main-content { padding: 1.5rem 2rem; }
     }
   </style>
 </head>
 <body>
 
-  <header class="container" id="landingHeader">
+  <header class="container">
     <nav>
       <div class="logo">Lumina</div>
-      <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#">For Teachers</a>
-        <button class="btn btn-outline" onclick="openLoginModal()">Login</button>
-        <a href="#" class="btn btn-primary">Get Started</a>
+      <div>
+        <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
       </div>
     </nav>
   </header>
 
-  <!-- Login Modal (unchanged) -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Login to Lumina</h2>
-        <button class="close-btn" onclick="closeLoginModal()">×</button>
-      </div>
-
-      <button class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1rem;" onclick="signInWithGoogle()">
-        Continue with Google
-      </button>
-
-      <div class="divider">or</div>
-
-      <form id="emailLoginForm">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" required placeholder="you@example.com" />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" required placeholder="••••••••" />
-        </div>
-        <div id="errorMessage" class="error-msg"></div>
-        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
-          Login with Email
-        </button>
-      </form>
-
-      <p style="text-align:center; margin-top:1.5rem; color:var(--text-muted); font-size:0.95rem;">
-        Don't have an account? <a href="#" style="color:var(--primary);">Sign up</a>
+  <div class="app-wrapper">
+    <main class="main-content">
+      <h1 style="font-size: 2.6rem; margin-bottom: 1.5rem;">Welcome to your Dashboard</h1>
+      <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 720px;">
+        Hover over the right side of the screen to access your assignments, learning materials, exam timetable, and lecturer chat.
       </p>
-    </div>
+      <!-- You can add welcome cards, progress overview, upcoming deadlines, etc. here later -->
+    </main>
+
+    <!-- Collapsible Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-tabs">
+          <button class="tab-button active" data-tab="assignments" onclick="openTab('assignments')">
+            <span class="icon">📝</span>
+            <span>Assignments</span>
+          </button>
+          <button class="tab-button" data-tab="materials" onclick="openTab('materials')">
+            <span class="icon">📚</span>
+            <span>Materials</span>
+          </button>
+          <button class="tab-button" data-tab="timetable" onclick="openTab('timetable')">
+            <span class="icon">🗓️</span>
+            <span>Timetable</span>
+          </button>
+          <button class="tab-button" data-tab="chat" onclick="openTab('chat')">
+            <span class="icon">💬</span>
+            <span>Chat</span>
+          </button>
+        </div>
+
+        <div id="assignments" class="tab-content active">
+          <div class="card">
+            <h3>Assignments</h3>
+            <div id="assignmentsList"></div>
+          </div>
+        </div>
+
+        <div id="materials" class="tab-content">
+          <div class="card">
+            <h3>Learning Materials</h3>
+            <div id="materialsList">
+              <div class="material-item" data-id="1">Physics – Mechanics Notes (PDF)</div>
+              <div class="material-item" data-id="2">Video: Introduction to Organic Chemistry</div>
+              <div class="material-item" data-id="3">Flashcards – Biology Cell Structure</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="timetable" class="tab-content">
+          <div class="card">
+            <h3>Exam Timetable</h3>
+            <div id="timetable">
+              <p data-date="2026-02-10">Feb 10, 2026 – Mathematics (09:00–11:00)</p>
+              <p data-date="2026-02-12">Feb 12, 2026 – Physical Sciences (08:30–11:00)</p>
+              <p data-date="2026-02-15">Feb 15, 2026 – English Home Language (08:00–11:00)</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="chat" class="tab-content">
+          <div class="card">
+            <h3>Chat with Lecturer</h3>
+            <div class="chat-area" id="chatArea"></div>
+            <div class="chat-input-area">
+              <input type="text" id="chatInput" placeholder="Type your message..." />
+              <button class="submit-btn" onclick="sendChatMessage()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
 
   <!-- Submit Assignment Modal -->
   <div id="submitModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
         <h2>Submit Assignment</h2>
-        <button class="close-btn" onclick="closeSubmitModal()">×</button>
+        <button style="background:none; border:none; font-size:2.2rem; cursor:pointer;" onclick="closeSubmitModal()">×</button>
       </div>
       <form id="submitForm">
-        <div class="form-group">
-          <label for="submissionText">Your submission (text / link)</label>
-          <textarea id="submissionText" rows="5" placeholder="Paste your work, link, or type here..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;">
-          Submit
-        </button>
+        <label for="submissionText" style="display:block; margin-bottom:0.6rem; font-weight:500;">Your submission (text, link, etc.)</label>
+        <textarea id="submissionText" rows="7" placeholder="Paste your answers, Google Drive link, or type here..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1.4rem; padding:0.9rem;">Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- Landing page sections (unchanged) -->
-  <section class="hero container" id="heroSection">
-    <h1>Learn smarter.<br/>Anywhere. Anytime.</h1>
-    <p>A next-generation learning platform designed for students who want clarity, focus, and real progress.</p>
-    <div class="hero-buttons">
-      <button onclick="openLoginModal()" class="btn btn-primary" style="font-size:1.2rem; padding:1rem 2.5rem;">
-        Start Learning Now
-      </button>
-      <a href="#" class="btn btn-outline" style="font-size:1.2rem; padding:1rem 2.5rem;">See how it works</a>
-    </div>
-  </section>
-
-  <section class="features container" id="features">
-    <h2 class="section-title">Why students choose Lumina</h2>
-    <div class="feature-grid">
-      <div class="feature-card"><div class="feature-icon">✦</div><h3>Clean & Focused Interface</h3><p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Instant Access Anywhere</h3><p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p></div>
-      <div class="feature-card"><div class="feature-icon">🧠</div><h3>Smart Progress Tracking</h3><p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p></div>
-      <div class="feature-card"><div class="feature-icon">📚</div><h3>Resources That Actually Help</h3><p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p></div>
-      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Private & Secure</h3><p>Your data stays yours. Built with modern security standards from day one.</p></div>
-      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Perfection</h3><p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p></div>
-    </div>
-  </section>
-
-  <footer class="container" id="landingFooter">
-    <p>© 2026 Lumina Learning • Built with care for students</p>
-  </footer>
-
-  <!-- Dashboard -->
-  <div id="dashboard" class="container">
-    <div class="dashboard-header">
-      <div class="welcome">Welcome back, <span id="userName">Student</span></div>
-      <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
-    </div>
-
-    <div class="dashboard-grid">
-      <!-- Assignments -->
-      <div class="card">
-        <h3>Assignments</h3>
-        <div id="assignmentsList">
-          <!-- Filled by JS -->
-        </div>
-      </div>
-
-      <!-- Learning Materials -->
-      <div class="card">
-        <h3>Learning Materials</h3>
-        <div id="materialsList">
-          <div class="material-item" data-id="1">Physics – Mechanics Notes (PDF)</div>
-          <div class="material-item" data-id="2">Video: Introduction to Organic Chemistry</div>
-          <div class="material-item" data-id="3">Flashcards – Biology Cell Structure</div>
-        </div>
-      </div>
-
-      <!-- Exam Timetable -->
-      <div class="card">
-        <h3>Exam Timetable</h3>
-        <div id="timetable">
-          <p data-date="2026-02-10">Feb 10, 2026 – Mathematics (09:00–11:00)</p>
-          <p data-date="2026-02-12">Feb 12, 2026 – Physical Sciences (08:30–11:00)</p>
-          <p data-date="2026-02-15">Feb 15, 2026 – English Home Language (08:00–11:00)</p>
-        </div>
-      </div>
-
-      <!-- Chat -->
-      <div class="card">
-        <h3>Chat with Lecturer</h3>
-        <div class="chat-area" id="chatArea">
-          <div class="chat-message lecturer">Good morning class! Please submit your assignments by tomorrow evening.</div>
-          <div class="chat-message lecturer">Any questions about quadratic equations?</div>
-        </div>
-        <div class="chat-input-area">
-          <input type="text" id="chatInput" placeholder="Type your message..." />
-          <button class="submit-btn" onclick="sendChatMessage()">Send</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Firebase & App Logic -->
+  <!-- Firebase & Dashboard Logic -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-    import { 
-      getAuth, 
-      GoogleAuthProvider, 
-      signInWithPopup,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut as firebaseSignOut
-    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
-      authDomain: "learnermanagementsystem-f3b6a.firebaseapp.com",
-      projectId: "learnermanagementsystem-f3b6a",
-      storageBucket: "learnermanagementsystem-f3b6a.firebasestorage.app",
-      messagingSenderId: "173549259244",
-      appId: "1:173549259244:web:f8722018a989c484a7d8c9",
-      measurementId: "G-K1VW244B7P"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const googleProvider = new GoogleAuthProvider();
-
     // ────────────────────────────────────────────────
-    //  UI Switch
+    //  Firebase setup (minimal – replace with your real init if needed)
     // ────────────────────────────────────────────────
-    function showDashboard(user) {
-      document.getElementById("landingHeader").style.display = "none";
-      document.getElementById("heroSection").style.display = "none";
-      document.getElementById("features").style.display = "none";
-      document.getElementById("landingFooter").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    // import { getAuth, ... } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    // const app = initializeApp(firebaseConfig);
+    // const auth = getAuth(app);
 
-      const name = user.displayName || user.email.split('@')[0] || "Student";
-      document.getElementById("userName").textContent = name;
-
+    // For demo – we pretend user is logged in
+    document.addEventListener("DOMContentLoaded", () => {
       initDashboard();
-    }
-
-    function showLanding() {
-      document.getElementById("landingHeader").style.display = "block";
-      document.getElementById("heroSection").style.display = "block";
-      document.getElementById("features").style.display = "block";
-      document.getElementById("landingFooter").style.display = "block";
-      document.getElementById("dashboard").style.display = "none";
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) showDashboard(user);
-      else showLanding();
     });
 
     // ────────────────────────────────────────────────
-    //  Auth Functions (unchanged)
+    //  Sidebar Tabs
     // ────────────────────────────────────────────────
-    window.signInWithGoogle = async () => {
-      try {
-        await signInWithPopup(auth, googleProvider);
-        closeLoginModal();
-      } catch (error) {
-        document.getElementById("errorMessage").textContent = "Google login failed.";
-      }
-    };
+    function openTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
 
-    document.getElementById("emailLoginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        closeLoginModal();
-      } catch (error) {
-        let msg = "Login failed.";
-        if (error.code === "auth/user-not-found") msg = "No account found.";
-        if (error.code === "auth/wrong-password") msg = "Incorrect password.";
-        document.getElementById("errorMessage").textContent = msg;
-      }
-    });
-
-    window.signOut = () => firebaseSignOut(auth);
-
-    // Modal helpers
-    window.openLoginModal = () => document.getElementById("loginModal").style.display = "flex";
-    window.closeLoginModal = () => document.getElementById("loginModal").style.display = "none";
-    document.getElementById("loginModal").onclick = e => { if (e.target === e.currentTarget) closeLoginModal(); };
+      document.getElementById(tabId).classList.add('active');
+      document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+    }
 
     // ────────────────────────────────────────────────
     //  Dashboard Interactivity
@@ -610,38 +447,36 @@
 
     function initDashboard() {
       loadAssignments();
-      highlightTodayExam();
       initMaterials();
+      highlightTodayExam();
       loadChat();
     }
 
-    // Assignments
     function loadAssignments() {
-      const list = document.getElementById("assignmentsList");
-      list.innerHTML = "";
+      const container = document.getElementById("assignmentsList");
+      container.innerHTML = "";
 
       const assignments = [
-        { id:1, title: "Mathematics – Quadratic Equations", due: "Tomorrow, 23:59" },
-        { id:2, title: "English – Essay on Climate Change", due: "Jan 28, 2026" }
+        { id: 1, title: "Mathematics – Quadratic Equations", due: "Tomorrow, 23:59" },
+        { id: 2, title: "English – Essay on Climate Change", due: "Jan 28, 2026" }
       ];
 
       assignments.forEach(asg => {
-        const saved = localStorage.getItem(`assign-${asg.id}`);
-        const isCompleted = saved === "completed";
+        const isCompleted = localStorage.getItem(`assign-${asg.id}`) === "completed";
 
-        const div = document.createElement("div");
-        div.className = "assignment-item";
-        div.innerHTML = `
-          <input type="checkbox" ${isCompleted ? "checked" : ""} onchange="toggleAssignment(${asg.id}, this.checked)">
-          <div>
-            <span class="${isCompleted ? 'assignment-text completed' : 'assignment-text'}">${asg.title}</span>
+        const item = document.createElement("div");
+        item.className = "assignment-item";
+        item.innerHTML = `
+          <input type="checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleAssignment(${asg.id}, this.checked)">
+          <div style="flex:1;">
+            <span class="${isCompleted ? 'assignment-text completed' : ''}">${asg.title}</span>
             <div class="due">${asg.due}</div>
           </div>
-          <button class="btn btn-primary" style="margin-left:auto; font-size:0.9rem; padding:0.5rem 1rem;" onclick="openSubmitModal(${asg.id})">
+          <button class="btn btn-primary" style="font-size:0.9rem; padding:0.5rem 1.1rem;" onclick="openSubmitModal(${asg.id})">
             Submit
           </button>
         `;
-        list.appendChild(div);
+        container.appendChild(item);
       });
     }
 
@@ -664,29 +499,26 @@
       e.preventDefault();
       const text = document.getElementById("submissionText").value.trim();
       if (text) {
-        alert(`Assignment ${currentAssignmentId} submitted!\n\nContent:\n${text.substring(0,100)}${text.length>100?"...":""}`);
-        // In real app → send to Firebase Storage / Firestore
+        alert(`Assignment ${currentAssignmentId} submitted!\n\n${text.substring(0, 120)}${text.length > 120 ? "..." : ""}`);
         closeSubmitModal();
       }
     });
 
-    // Materials
     function initMaterials() {
-      document.querySelectorAll(".material-item").forEach(el => {
-        const id = el.dataset.id;
-        const opened = localStorage.getItem(`material-${id}`) === "opened";
-        if (opened) el.classList.add("opened");
-
-        el.addEventListener("click", () => {
-          el.classList.toggle("opened");
-          localStorage.setItem(`material-${id}`, el.classList.contains("opened") ? "opened" : "");
+      document.querySelectorAll("#materialsList .material-item").forEach(item => {
+        const id = item.dataset.id;
+        if (localStorage.getItem(`material-${id}`) === "opened") {
+          item.classList.add("opened");
+        }
+        item.addEventListener("click", () => {
+          item.classList.toggle("opened");
+          localStorage.setItem(`material-${id}`, item.classList.contains("opened") ? "opened" : "");
         });
       });
     }
 
-    // Timetable highlight today
     function highlightTodayExam() {
-      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const today = new Date().toISOString().split("T")[0];
       document.querySelectorAll("#timetable p").forEach(p => {
         if (p.dataset.date === today) {
           p.classList.add("today");
@@ -695,60 +527,61 @@
       });
     }
 
-    // Chat
     function loadChat() {
       const area = document.getElementById("chatArea");
       const saved = localStorage.getItem("chatMessages");
-      if (saved) {
-        area.innerHTML = saved;
-      }
+      area.innerHTML = saved || `
+        <div class="chat-message lecturer">Good morning class! Assignments due tomorrow evening.</div>
+        <div class="chat-message lecturer">Any questions about the material?</div>
+      `;
       area.scrollTop = area.scrollHeight;
     }
 
     function saveChat() {
-      const area = document.getElementById("chatArea");
-      localStorage.setItem("chatMessages", area.innerHTML);
+      localStorage.setItem("chatMessages", document.getElementById("chatArea").innerHTML);
     }
 
     window.sendChatMessage = () => {
       const input = document.getElementById("chatInput");
-      const msg = input.value.trim();
-      if (!msg) return;
+      const text = input.value.trim();
+      if (!text) return;
 
       const area = document.getElementById("chatArea");
-      const userMsg = document.createElement("div");
-      userMsg.className = "chat-message user";
-      userMsg.textContent = msg;
-      area.appendChild(userMsg);
-
-      input.value = "";
+      const msg = document.createElement("div");
+      msg.className = "chat-message user";
+      msg.textContent = text;
+      area.appendChild(msg);
       area.scrollTop = area.scrollHeight;
+      input.value = "";
       saveChat();
 
-      // Fake lecturer reply after delay
+      // Simulated lecturer reply
       setTimeout(() => {
         const replies = [
-          "Thanks for your message! I'll check it soon.",
-          "Good question — let me explain...",
+          "Thanks for your message — I'll take a look soon.",
+          "Good question. Check section 4.2 in the notes.",
           "Yes, that's correct. Well done!",
-          "Please refer to page 45 in the notes."
+          "Please refer to the example on page 45."
         ];
-        const reply = replies[Math.floor(Math.random() * replies.length)];
-
-        const lectMsg = document.createElement("div");
-        lectMsg.className = "chat-message lecturer";
-        lectMsg.textContent = reply;
-        area.appendChild(lectMsg);
+        const reply = document.createElement("div");
+        reply.className = "chat-message lecturer";
+        reply.textContent = replies[Math.floor(Math.random() * replies.length)];
+        area.appendChild(reply);
         area.scrollTop = area.scrollHeight;
         saveChat();
-      }, 1800 + Math.random() * 1200);
+      }, 1200 + Math.random() * 1400);
     };
 
     document.getElementById("chatInput").addEventListener("keypress", e => {
-      if (e.key === "Enter") sendChatMessage();
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendChatMessage();
+      }
     });
 
-    console.log("Lumina app with interactive dashboard ready");
+    // For demo: pretend user is logged in
+    // In real app → call initDashboard() after successful login
+    console.log("Lumina dashboard ready");
   </script>
 
 </body>
