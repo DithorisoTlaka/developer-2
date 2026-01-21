@@ -50,6 +50,23 @@
       color: var(--text);
       min-height: 100vh;
       transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ────────────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes logoGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(99, 102, 241, 0); }
+      50% { text-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
     }
 
     /* ── AUTH PAGE ─────────────────────────────────────── */
@@ -59,32 +76,37 @@
       justify-content: center;
       min-height: 100vh;
       padding: 1.5rem;
+      background: radial-gradient(circle at top right, var(--glow), transparent);
     }
 
     .auth-container {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 3rem 2.5rem;
+      border-radius: 24px;
+      padding: 3.5rem 2.5rem;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
       text-align: center;
-      transition: all 0.3s;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .logo {
-      font-size: 3.2rem;
+      font-size: 3.5rem;
       font-weight: 700;
       letter-spacing: -0.05em;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       color: var(--text);
+      animation: logoGlow 4s infinite ease-in-out;
     }
 
     .subtitle {
       color: var(--text-muted);
       font-size: 1.1rem;
       margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeIn 0.8s forwards;
+      animation-delay: 0.3s;
     }
 
     .btn {
@@ -96,7 +118,7 @@
       font-size: 1.05rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -107,11 +129,18 @@
       background: #ffffff;
       color: #111827;
       border: 1px solid #e5e7eb;
+      opacity: 0;
+      animation: fadeInUp 0.6s forwards;
+      animation-delay: 0.5s;
     }
 
     .btn-google:hover {
       background: #f3f4f6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
+
+    .btn-google:active { transform: translateY(0); }
 
     .error-msg {
       color: var(--error);
@@ -127,27 +156,20 @@
 
     .sidebar-left {
       position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
+      top: 0; left: 0; bottom: 0;
       width: var(--sidebar-collapsed);
       background: var(--surface);
       border-right: 1px solid var(--border);
-      transition: width 0.35s ease, background 0.3s;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
       overflow: hidden;
       z-index: 100;
       display: flex;
       flex-direction: column;
     }
 
-    .sidebar-left:hover {
-      width: var(--sidebar-expanded);
-    }
+    .sidebar-left:hover { width: var(--sidebar-expanded); }
 
-    .sidebar-content {
-      padding: 5rem 0 2rem;
-      flex: 1;
-    }
+    .sidebar-content { padding: 5rem 0 2rem; flex: 1; }
 
     .sidebar-bottom {
       padding: 1rem;
@@ -170,8 +192,7 @@
       white-space: nowrap;
     }
 
-    .tab-link:hover,
-    .tab-link.active {
+    .tab-link:hover, .tab-link.active {
       background: rgba(99,102,241,0.12);
       color: var(--text);
     }
@@ -182,18 +203,17 @@
       margin-left: var(--sidebar-collapsed);
       flex: 1;
       padding: 2.5rem;
-      transition: margin-left 0.35s ease, background 0.3s;
+      transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
     }
 
-    .sidebar-left:hover ~ .main-view {
-      margin-left: var(--sidebar-expanded);
-    }
+    .sidebar-left:hover ~ .main-view { margin-left: var(--sidebar-expanded); }
 
     .dashboard-header {
       margin-bottom: 2.5rem;
       padding-bottom: 1.5rem;
       border-bottom: 1px solid var(--border);
       text-align: center;
+      animation: fadeIn 1s ease;
     }
 
     .welcome { font-size: 1.9rem; font-weight: 600; }
@@ -205,6 +225,7 @@
       padding: 1.8rem;
       margin-bottom: 2rem;
       transition: all 0.3s;
+      animation: fadeInUp 0.5s ease-out;
     }
 
     .card h2 { margin-bottom: 1rem; color: var(--primary); }
@@ -212,20 +233,7 @@
     .assignment-item, .material-item, .timetable-item {
       padding: 1.5rem 0;
       border-bottom: 1px solid var(--border);
-    }
-
-    .assignment-item:last-child { border-bottom: none; }
-
-    .assignment-title, .material-title {
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-      font-size: 1.1rem;
-    }
-
-    .assignment-due {
-      color: var(--error);
-      font-size: 0.9rem;
-      font-weight: 500;
+      animation: fadeIn 0.5s ease forwards;
     }
 
     .submission-area {
@@ -251,11 +259,10 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: 0.2s;
     }
+    .btn-submit:hover { background: var(--primary-dark); }
 
-    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Chat Area Styles */
     #chatArea {
       height: 320px;
       border: 1px solid var(--border);
@@ -272,95 +279,47 @@
       border-radius: 12px;
       max-width: 80%;
       word-wrap: break-word;
+      animation: fadeInUp 0.3s ease;
     }
 
-    .chat-message.user {
-      background: var(--primary);
-      color: white;
-      margin-left: auto;
-    }
+    .chat-message.user { background: var(--primary); color: white; margin-left: auto; }
+    .chat-message.other { background: rgba(30,41,59,0.6); }
 
-    .chat-message.other {
-      background: rgba(30,41,59,0.6);
-    }
-
-    .chat-input-area {
-      display: flex;
-      gap: 0.8rem;
-    }
-
+    .chat-input-area { display: flex; gap: 0.8rem; }
     .chat-input-area input {
-      flex: 1;
-      padding: 0.9rem 1.2rem;
-      border: 1px solid var(--border);
-      border-radius: 9999px;
-      background: var(--input-bg);
-      color: var(--text);
+      flex: 1; padding: 0.9rem 1.2rem;
+      border: 1px solid var(--border); border-radius: 9999px;
+      background: var(--input-bg); color: var(--text);
     }
 
     .chat-input-area button {
-      padding: 0.9rem 1.6rem;
-      border-radius: 9999px;
-      background: var(--primary);
-      color: white;
-      border: none;
+      padding: 0.9rem 1.6rem; border-radius: 9999px;
+      background: var(--primary); color: white; border: none;
     }
 
-    /* Modern Theme Toggle Switch (Smaller) */
-    .theme-switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 22px;
-      margin-left: 0.8rem;
-    }
-
+    /* Modern Theme Toggle Switch */
+    .theme-switch { position: relative; display: inline-block; width: 44px; height: 22px; margin-left: 0.8rem; }
     .theme-switch input { opacity: 0; width: 0; height: 0; }
-
     .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #4b5563;
-      transition: .4s;
-      border-radius: 22px;
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #4b5563; transition: .4s; border-radius: 22px;
     }
-
     .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
+      position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background-color: white; transition: .4s; border-radius: 50%;
     }
-
     input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(22px); }
 
     /* Modern Sign Out Button */
     .btn-logout {
-      margin-top: 0.5rem;
-      width: calc(100% - 20px);
-      margin-left: 10px;
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      background: transparent;
-      color: var(--error);
-      border: 1px solid transparent;
-      border-radius: 8px;
-      justify-content: flex-start;
-      transition: all 0.2s;
+      margin-top: 0.5rem; width: calc(100% - 20px); margin-left: 10px;
+      padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 500;
+      background: transparent; color: var(--error); border: 1px solid transparent;
+      border-radius: 8px; justify-content: flex-start; transition: all 0.2s;
+      cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
     }
-
-    .btn-logout:hover {
-      background: rgba(248, 113, 113, 0.1);
-      border-color: rgba(248, 113, 113, 0.2);
-    }
+    .btn-logout:hover { background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.2); }
 
     @media (max-width: 900px) {
       .sidebar-left { width: var(--sidebar-collapsed); }
@@ -374,7 +333,7 @@
   <div id="authPage">
     <div class="auth-container">
       <div class="logo">Lumina</div>
-      <div class="subtitle">Sign in with Google to continue</div>
+      <div class="subtitle">Elevate your learning experience</div>
       <div id="errorMessage" class="error-msg"></div>
       <button class="btn btn-google" id="googleBtn" onclick="signInWithGoogle()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -414,7 +373,7 @@
             <input type="checkbox" id="themeToggle">
             <span class="slider"></span>
           </label>
-          <button class="btn btn-logout" onclick="signOutUser()">
+          <button class="btn-logout" onclick="signOutUser()">
             <i class="ri-logout-box-line"></i> Sign Out
           </button>
         </div>
@@ -428,7 +387,7 @@
         <div id="overview" class="tab-content" style="display:block;">
           <div class="card">
             <h2>Dashboard Overview</h2>
-            <p>Your account is active. You can now access assignments, materials, timetable and chat.</p>
+            <p>Your account is active. Explore your dashboard via the sidebar.</p>
           </div>
         </div>
 
@@ -502,7 +461,7 @@
     themeToggle.checked = savedTheme === 'light';
     themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'light' : 'dark'));
 
-    // ── Auth & Security ──────────────────────────────────────────────
+    // ── Auth Logic ───────────────────────────────────────────────
     async function isAllowedLearner(email) {
       if (!email) return false;
       const normalizedEmail = email.toLowerCase().trim();
@@ -537,7 +496,7 @@
       }
     });
 
-    // ── Navigation ──────────────────────────────────────────────────
+    // ── Tab Navigation ──────────────────────────────────────────────────
     window.showTab = function(e, tabId) {
       e.preventDefault();
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
@@ -553,13 +512,12 @@
       if (tabId === 'timetable') loadTimetable();
     };
 
-    // ── Assignments & Submissions ───────────────────────────────────
+    // ── Features Logic ───────────────────────────────────
     function loadAssignments() {
       const listEl = document.getElementById('assignmentsList');
       onValue(ref(database, 'assignments'), (snapshot) => {
         listEl.innerHTML = '';
         if (!snapshot.exists()) return listEl.innerHTML = '<div class="empty-state">No assignments.</div>';
-        
         snapshot.forEach((child) => {
           const ass = child.val();
           const id = child.key;
@@ -570,7 +528,7 @@
             <div class="assignment-due">Due: ${ass.dueDate || 'N/A'}</div>
             <p class="assignment-desc">${ass.description || ''}</p>
             <div class="submission-area">
-              <input type="text" id="input-${id}" placeholder="Paste your submission link here...">
+              <input type="text" id="input-${id}" placeholder="Paste submission link...">
               <button class="btn-submit" onclick="submitAssignment('${id}')">Submit</button>
             </div>
             <div id="status-${id}" style="font-size:0.8rem; margin-top:0.5rem; color:var(--success)"></div>
@@ -582,10 +540,8 @@
 
     window.submitAssignment = function(assignmentId) {
       const input = document.getElementById(`input-${assignmentId}`);
-      const status = document.getElementById(`status-${assignmentId}`);
       const link = input.value.trim();
       if (!link) return alert("Please enter a link");
-
       const submissionRef = ref(database, `submissions/${assignmentId}/${auth.currentUser.uid}`);
       set(submissionRef, {
         studentName: auth.currentUser.displayName,
@@ -593,17 +549,16 @@
         submissionLink: link,
         timestamp: serverTimestamp()
       }).then(() => {
-        status.textContent = "✓ Submitted successfully!";
+        document.getElementById(`status-${assignmentId}`).textContent = "✓ Submitted!";
         input.value = "";
       });
     };
 
-    // ── Learning Materials ──────────────────────────────────────────
     function loadMaterials() {
       const listEl = document.getElementById('materialsList');
       onValue(ref(database, 'materials'), (snapshot) => {
         listEl.innerHTML = '';
-        if (!snapshot.exists()) return listEl.innerHTML = '<div class="empty-state">No materials uploaded yet.</div>';
+        if (!snapshot.exists()) return listEl.innerHTML = '<div class="empty-state">No materials.</div>';
         snapshot.forEach(child => {
           const m = child.val();
           const item = document.createElement('div');
@@ -611,36 +566,31 @@
           item.innerHTML = `
             <div class="material-title">${m.title}</div>
             <p style="color:var(--text-muted); font-size:0.9rem;">${m.description || ''}</p>
-            <a href="${m.link}" target="_blank" style="color:var(--primary); text-decoration:none; font-size:0.9rem; display:block; margin-top:0.5rem;">
-              <i class="ri-external-link-line"></i> View Resource
-            </a>
+            <a href="${m.link}" target="_blank" style="color:var(--primary); text-decoration:none; font-size:0.9rem; display:block; margin-top:0.5rem;">View Resource</a>
           `;
           listEl.appendChild(item);
         });
       });
     }
 
-    // ── Timetable ───────────────────────────────────────────────────
     function loadTimetable() {
       const listEl = document.getElementById('timetableList');
       onValue(ref(database, 'timetable'), (snapshot) => {
         listEl.innerHTML = '';
-        if (!snapshot.exists()) return listEl.innerHTML = '<div class="empty-state">No timetable available.</div>';
+        if (!snapshot.exists()) return listEl.innerHTML = '<div class="empty-state">No schedule.</div>';
         snapshot.forEach(child => {
           const t = child.val();
           const item = document.createElement('div');
           item.className = 'timetable-item';
           item.innerHTML = `
-            <div style="font-weight:600;">${t.day || 'Scheduled Task'}</div>
-            <div style="color:var(--primary);">${t.time || ''} — ${t.subject || ''}</div>
-            <div style="font-size:0.85rem; color:var(--text-muted)">${t.location || ''}</div>
+            <div style="font-weight:600;">${t.day}</div>
+            <div style="color:var(--primary);">${t.time} — ${t.subject}</div>
           `;
           listEl.appendChild(item);
         });
       });
     }
 
-    // ── Chat ────────────────────────────────────────────────────────
     function loadChat() {
       const chatArea = document.getElementById('chatArea');
       chatUnsubscribe = onValue(ref(database, 'lecturer_chat/messages'), (snapshot) => {
