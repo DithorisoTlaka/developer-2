@@ -7,8 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Modern icon library - Remix Icon -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
 
   <style>
@@ -25,7 +23,7 @@
       --error: #ef4444;
       --success: #10b981;
       --sidebar-collapsed: 72px;
-      --sidebar-expanded: 340px;
+      --sidebar-expanded: 300px;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -38,13 +36,9 @@
       min-height: 100vh;
     }
 
-    .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
+    .container { max-width:1280px; margin:0 auto; padding:0 1.5rem; }
 
-    header {
-      padding: 2.5rem 0 1.5rem;
-      position: relative;
-      z-index: 10;
-    }
+    header { padding: 2rem 0 1rem; position: relative; z-index: 10; }
 
     nav {
       display: flex;
@@ -53,9 +47,9 @@
     }
 
     .logo {
-      font-size: 1.75rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       background: linear-gradient(90deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -63,7 +57,7 @@
 
     .nav-links {
       display: flex;
-      gap: 2.5rem;
+      gap: 2rem;
       align-items: center;
     }
 
@@ -71,32 +65,30 @@
       color: var(--text-muted);
       text-decoration: none;
       font-weight: 500;
-      transition: color 0.2s ease;
+      transition: color 0.2s;
     }
 
     .nav-links a:hover { color: var(--primary); }
 
     .btn {
-      padding: 0.75rem 1.75rem;
+      padding: 0.7rem 1.6rem;
       border-radius: 9999px;
       font-weight: 500;
-      text-decoration: none;
-      transition: all 0.25s ease;
-      border: none;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      transition: all 0.25s;
+      border: none;
     }
 
     .btn-primary {
       background: var(--primary);
       color: white;
-      box-shadow: 0 10px 25px var(--glow);
+      box-shadow: 0 8px 20px var(--glow);
     }
 
     .btn-primary:hover {
       background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px var(--glow);
+      transform: translateY(-1px);
     }
 
     .btn-outline {
@@ -106,7 +98,7 @@
     }
 
     .btn-outline:hover {
-      background: rgba(99,102,241,0.05);
+      background: rgba(99,102,241,0.04);
       border-color: var(--primary);
       color: var(--primary);
     }
@@ -115,8 +107,8 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(15,23,42,0.65);
+      backdrop-filter: blur(6px);
       z-index: 1000;
       align-items: center;
       justify-content: center;
@@ -124,12 +116,12 @@
 
     .modal-content {
       background: var(--surface);
-      border-radius: 20px;
-      padding: 2.5rem;
+      border-radius: 16px;
+      padding: 2rem;
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       border: 1px solid var(--border);
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
     }
 
     .modal-header {
@@ -142,30 +134,27 @@
     .close-btn {
       background: none;
       border: none;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       color: var(--text-muted);
       cursor: pointer;
     }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
+    .form-group { margin-bottom: 1.4rem; }
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.45rem;
       font-weight: 500;
-      color: var(--text);
     }
 
     input, textarea {
       width: 100%;
-      padding: 0.9rem 1.2rem;
+      padding: 0.85rem 1.1rem;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
       background: var(--bg);
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
     input:focus, textarea:focus {
@@ -178,67 +167,62 @@
       text-align: center;
       color: var(--text-muted);
       margin: 1.2rem 0;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     .error-msg {
       color: var(--error);
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
     }
 
-    .hero { padding: 8rem 0 10rem; text-align: center; }
+    .hero { padding: 7rem 0 9rem; text-align: center; }
 
     .hero h1 {
-      font-size: clamp(3.5rem, 8vw, 6.5rem);
-      font-weight: 600;
+      font-size: clamp(3.2rem, 7.5vw, 6rem);
+      font-weight: 700;
       line-height: 0.95;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(120deg, #0f172a, #334155, #64748b);
+      letter-spacing: -0.03em;
+      margin-bottom: 1.4rem;
+      background: linear-gradient(110deg, #0f172a, #475569);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .hero p { font-size: 1.4rem; color: var(--text-muted); max-width: 620px; margin: 0 auto 2.5rem; font-weight: 300; }
+    .hero p { font-size: 1.35rem; color: var(--text-muted); max-width: 580px; margin: 0 auto 2.2rem; }
 
-    .hero-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .hero-buttons { display: flex; gap: 1.3rem; justify-content: center; flex-wrap: wrap; }
 
-    .features { padding: 8rem 0; }
+    .features { padding: 7rem 0; }
 
-    .section-title { text-align: center; font-size: 2.8rem; font-weight: 600; margin-bottom: 4rem; }
+    .section-title { text-align: center; font-size: 2.6rem; font-weight: 600; margin-bottom: 3.5rem; }
 
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
 
     .feature-card {
       background: var(--surface);
-      border-radius: 20px;
-      padding: 2.5rem;
+      border-radius: 16px;
+      padding: 2.2rem;
       border: 1px solid var(--border);
-      transition: all 0.3s ease;
+      transition: all 0.28s ease;
     }
 
     .feature-card:hover {
-      transform: translateY(-12px);
+      transform: translateY(-10px);
       border-color: var(--accent);
-      box-shadow: 0 25px 50px -12px rgba(99,102,241,0.12);
+      box-shadow: 0 20px 40px -10px rgba(99,102,241,0.1);
     }
 
-    .feature-icon { font-size: 2.8rem; margin-bottom: 1.5rem; color: var(--primary); }
+    .feature-icon { font-size: 2.6rem; margin-bottom: 1.3rem; color: var(--primary); }
 
-    .feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1.45rem; margin-bottom: 0.9rem; }
 
     .feature-card p { color: var(--text-muted); }
 
-    footer { padding: 5rem 0 3rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+    footer { padding: 4rem 0 2.5rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
 
-    /* ──────────────────────────────────────────────── */
-    /*               DASHBOARD LAYOUT                   */
-    /* ──────────────────────────────────────────────── */
-    #dashboard {
-      display: none;
-      min-height: calc(100vh - 120px);
-    }
+    /* ── DASHBOARD ─────────────────────────────────────── */
+    #dashboard { display: none; min-height: calc(100vh - 100px); }
 
     .dashboard-wrapper {
       display: flex;
@@ -253,18 +237,18 @@
       width: var(--sidebar-collapsed);
       background: var(--surface);
       border-right: 1px solid var(--border);
-      box-shadow: 4px 0 20px rgba(0,0,0,0.05);
-      transition: width 0.35s ease;
+      transition: width 0.4s ease;
       overflow: hidden;
       z-index: 90;
     }
 
-    .sidebar-left:hover {
+    .sidebar-left:hover,
+    .sidebar-left.expanded {
       width: var(--sidebar-expanded);
     }
 
     .sidebar-content {
-      padding-top: 5rem;
+      padding: 5.5rem 0 2rem;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -273,59 +257,58 @@
     .tab-link {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 1.1rem 1.4rem;
+      gap: 1.1rem;
+      padding: 1rem 1.3rem;
       color: var(--text-muted);
       font-weight: 500;
       text-decoration: none;
-      transition: all 0.2s;
+      transition: all 0.22s;
       white-space: nowrap;
       cursor: pointer;
+      position: relative;
     }
 
     .tab-link:hover,
     .tab-link.active {
-      background: rgba(99,102,241,0.07);
       color: var(--primary);
+      background: rgba(99,102,241,0.08);
     }
 
-    .tab-link .icon {
-      font-size: 1.6rem;
-      min-width: 32px;
-      text-align: center;
+    .tab-link.active {
+      background: rgba(99,102,241,0.12);
+      border-left: 4px solid var(--primary);
+      font-weight: 600;
     }
+
+    .tab-link .icon { font-size: 1.55rem; min-width: 32px; text-align: center; }
 
     .main-view {
       margin-left: var(--sidebar-collapsed);
       flex: 1;
-      padding: 2.5rem 3rem;
-      transition: margin-left 0.35s ease;
+      padding: 2rem 2.5rem;
+      transition: margin-left 0.4s ease;
     }
 
-    .sidebar-left:hover ~ .main-view {
+    .sidebar-left:hover ~ .main-view,
+    .sidebar-left.expanded ~ .main-view {
       margin-left: var(--sidebar-expanded);
     }
 
-    .tab-pane {
-      display: none;
-    }
-
-    .tab-pane.active {
-      display: block;
-    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
 
     .card {
       background: var(--surface);
-      border-radius: 16px;
-      padding: 1.8rem;
+      border-radius: 14px;
+      padding: 1.6rem;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.03);
     }
 
     .card h3 {
-      margin-bottom: 1.2rem;
-      font-size: 1.35rem;
+      margin-bottom: 1.1rem;
+      font-size: 1.3rem;
       color: var(--primary);
     }
 
@@ -333,15 +316,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
+      margin-bottom: 2.2rem;
+      padding-bottom: 1.3rem;
       border-bottom: 1px solid var(--border);
     }
 
-    .welcome {
-      font-size: 1.9rem;
-      font-weight: 600;
-    }
+    .welcome { font-size: 1.85rem; font-weight: 600; }
 
     .assignment-item {
       display: flex;
@@ -350,6 +330,8 @@
       padding: 1rem 0;
       border-bottom: 1px solid var(--border);
     }
+
+    .assignment-item:last-child { border-bottom: none; }
 
     .assignment-item input[type="checkbox"] {
       width: 18px;
@@ -360,56 +342,49 @@
     .assignment-text.completed {
       text-decoration: line-through;
       color: var(--text-muted);
-      opacity: 0.8;
+      opacity: 0.75;
     }
 
-    .due {
-      color: var(--error);
-      font-size: 0.9rem;
-      margin-top: 0.2rem;
-    }
+    .due { color: var(--error); font-size: 0.88rem; margin-top: 0.2rem; }
+
+    .submitted { color: var(--success); font-weight: 500; font-size: 0.9rem; }
 
     .material-item {
-      padding: 1rem 0;
+      padding: 1.1rem 0;
       border-bottom: 1px solid var(--border);
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.18s;
     }
 
-    .material-item:hover {
-      background: rgba(99,102,241,0.05);
-    }
+    .material-item:hover { background: rgba(99,102,241,0.04); }
 
     .material-item.opened {
       color: var(--success);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .material-item a {
       color: var(--primary);
       text-decoration: none;
-      font-weight: 500;
     }
 
-    .material-item a:hover {
-      text-decoration: underline;
-    }
+    .material-item a:hover { text-decoration: underline; }
 
     .chat-area {
-      height: 420px;
+      height: 400px;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.2rem;
+      padding: 1.1rem;
       margin-bottom: 1rem;
       overflow-y: auto;
-      background: rgba(99,102,241,0.02);
+      background: rgba(99,102,241,0.015);
     }
 
     .chat-message {
       margin-bottom: 1rem;
-      padding: 0.9rem 1.3rem;
+      padding: 0.85rem 1.3rem;
       border-radius: 16px;
-      max-width: 80%;
+      max-width: 78%;
       word-wrap: break-word;
     }
 
@@ -419,24 +394,19 @@
       margin-left: auto;
     }
 
-    .chat-message.lecturer {
-      background: #e2e8f0;
-    }
+    .chat-message.lecturer { background: #e2e8f0; }
 
-    .chat-input-area {
-      display: flex;
-      gap: 0.8rem;
-    }
+    .chat-input-area { display: flex; gap: 0.8rem; }
 
     .chat-input-area input {
       flex: 1;
-      padding: 0.9rem 1.2rem;
+      padding: 0.85rem 1.3rem;
       border: 1px solid var(--border);
       border-radius: 9999px;
     }
 
     .submit-btn {
-      padding: 0.9rem 1.6rem;
+      padding: 0.85rem 1.5rem;
       border-radius: 9999px;
       background: var(--primary);
       color: white;
@@ -457,26 +427,30 @@
     }
 
     th, td {
-      padding: 12px 15px;
+      padding: 11px 14px;
       text-align: left;
       border-bottom: 1px solid var(--border);
     }
 
     th {
-      background: rgba(99,102,241,0.05);
+      background: rgba(99,102,241,0.04);
       font-weight: 600;
       color: var(--primary);
     }
 
     @media (max-width: 900px) {
       .main-view { margin-left: 0; padding: 1.5rem; }
-      .sidebar-left:hover { width: var(--sidebar-expanded); }
-      .sidebar-left:hover ~ .main-view { margin-left: var(--sidebar-expanded); }
+      .sidebar-left { width: var(--sidebar-collapsed); }
+      .sidebar-left:hover,
+      .sidebar-left.expanded { width: var(--sidebar-expanded); }
+      .sidebar-left:hover ~ .main-view,
+      .sidebar-left.expanded ~ .main-view { margin-left: var(--sidebar-expanded); }
     }
   </style>
 </head>
 <body>
 
+  <!-- Landing Header -->
   <header class="container" id="landingHeader">
     <nav>
       <div class="logo">Lumina</div>
@@ -496,7 +470,7 @@
         <h2>Login to Lumina</h2>
         <button class="close-btn" onclick="closeLoginModal()">×</button>
       </div>
-      <button class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1rem;" onclick="signInWithGoogle()">
+      <button class="btn btn-primary" style="width:100%; padding:1rem; font-size:1.05rem;" onclick="signInWithGoogle()">
         Continue with Google
       </button>
       <div class="divider">or</div>
@@ -510,11 +484,11 @@
           <input type="password" id="password" required placeholder="••••••••" />
         </div>
         <div id="errorMessage" class="error-msg"></div>
-        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.8rem;">
           Login with Email
         </button>
       </form>
-      <p style="text-align:center; margin-top:1.5rem; color:var(--text-muted); font-size:0.95rem;">
+      <p style="text-align:center; margin-top:1.4rem; color:var(--text-muted); font-size:0.92rem;">
         Don't have an account? <a href="#" style="color:var(--primary);">Sign up</a>
       </p>
     </div>
@@ -530,165 +504,126 @@
       <form id="submitForm">
         <div class="form-group">
           <label for="submissionText">Your submission (text / link)</label>
-          <textarea id="submissionText" rows="5" placeholder="Paste your work, link, or type here..."></textarea>
+          <textarea id="submissionText" rows="6" placeholder="Paste your work, Google Drive link, or type here..."></textarea>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;">
-          Submit
+          Submit Assignment
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Landing Content -->
+  <!-- Hero / Landing -->
   <section class="hero container" id="heroSection">
     <h1>Learn smarter.<br/>Anywhere. Anytime.</h1>
-    <p>A next-generation learning platform designed for students who want clarity, focus, and real progress.</p>
+    <p>A focused learning platform built for students who want clarity, structure, and real progress.</p>
     <div class="hero-buttons">
-      <button onclick="openLoginModal()" class="btn btn-primary" style="font-size:1.2rem; padding:1rem 2.5rem;">
+      <button onclick="openLoginModal()" class="btn btn-primary" style="font-size:1.15rem; padding:1rem 2.4rem;">
         Start Learning Now
       </button>
-      <a href="#" class="btn btn-outline" style="font-size:1.2rem; padding:1rem 2.5rem;">See how it works</a>
+      <a href="#" class="btn btn-outline" style="font-size:1.15rem; padding:1rem 2.4rem;">See how it works</a>
     </div>
   </section>
 
   <section class="features container" id="features">
     <h2 class="section-title">Why students choose Lumina</h2>
     <div class="feature-grid">
-      <div class="feature-card"><div class="feature-icon">✦</div><h3>Clean & Focused Interface</h3><p>Zero clutter. Just your courses, progress, notes, and upcoming deadlines — beautifully presented.</p></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Instant Access Anywhere</h3><p>Works flawlessly on phone, tablet, laptop. Your learning travels with you.</p></div>
-      <div class="feature-card"><div class="feature-icon">🧠</div><h3>Smart Progress Tracking</h3><p>See exactly where you stand — visual streaks, mastery levels, and gentle nudges when you need them.</p></div>
-      <div class="feature-card"><div class="feature-icon">📚</div><h3>Resources That Actually Help</h3><p>Integrated notes, flashcards, summaries, and AI-powered explanations — all in one place.</p></div>
-      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Private & Secure</h3><p>Your data stays yours. Built with modern security standards from day one.</p></div>
-      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Perfection</h3><p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p></div>
+      <div class="feature-card"><div class="feature-icon">✦</div><h3>Clean & Focused</h3><p>No clutter — just your courses, deadlines, and progress.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Works Everywhere</h3><p>Phone, tablet, laptop — your learning follows you.</p></div>
+      <div class="feature-card"><div class="feature-icon">🧠</div><h3>Smart Tracking</h3><p>Streaks, mastery levels, gentle reminders.</p></div>
+      <div class="feature-card"><div class="feature-icon">📚</div><h3>Helpful Resources</h3><p>Notes, flashcards, summaries, AI explanations — all in one place.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Private & Secure</h3><p>Your data stays yours. Modern security by default.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Mode</h3><p>Easy on the eyes — day or night.</p></div>
     </div>
   </section>
 
   <footer class="container" id="landingFooter">
-    <p>© 2026 Lumina Learning • Built with care for students</p>
+    <p>© 2026 Lumina Learning • Made for students</p>
   </footer>
 
-  <!-- ──────────────────────────────────────────────── -->
-  <!--                   DASHBOARD                      -->
-  <!-- ──────────────────────────────────────────────── -->
+  <!-- ── DASHBOARD ─────────────────────────────────────── -->
   <div id="dashboard" class="container">
     <div class="dashboard-wrapper">
-      <!-- Left collapsible sidebar with modern icons -->
-      <aside class="sidebar-left">
+      <aside class="sidebar-left" id="sidebar">
         <div class="sidebar-content">
           <div class="tab-link active" data-tab="assignments" onclick="showTab('assignments')">
-            <i class="ri-task-line icon"></i>
-            <span>Assignments</span>
+            <i class="ri-task-line icon"></i><span>Assignments</span>
           </div>
           <div class="tab-link" data-tab="materials" onclick="showTab('materials')">
-            <i class="ri-book-2-line icon"></i>
-            <span>Materials</span>
+            <i class="ri-book-2-line icon"></i><span>Materials</span>
           </div>
           <div class="tab-link" data-tab="timetable" onclick="showTab('timetable')">
-            <i class="ri-calendar-schedule-line icon"></i>
-            <span>Timetable</span>
+            <i class="ri-calendar-schedule-line icon"></i><span>Timetable</span>
           </div>
           <div class="tab-link" data-tab="chat" onclick="showTab('chat')">
-            <i class="ri-chat-3-line icon"></i>
-            <span>Lecturer Chat</span>
+            <i class="ri-chat-3-line icon"></i><span>Lecturer Chat</span>
           </div>
         </div>
       </aside>
 
-      <!-- Main content area -->
       <main class="main-view">
         <div class="dashboard-header">
           <div class="welcome">Welcome back, <span id="userName">Student</span></div>
           <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
         </div>
 
-        <!-- Tab contents -->
+        <!-- Assignments Tab -->
         <div id="assignments" class="tab-pane active">
           <div class="card">
-            <h3>Assignments</h3>
+            <h3>Current Assignments</h3>
             <div id="assignmentsList"></div>
           </div>
         </div>
 
+        <!-- Materials Tab -->
         <div id="materials" class="tab-pane">
           <div class="card">
             <h3>Learning Materials</h3>
             <div class="material-list">
-              <div class="material-item">
+              <div class="material-item" data-id="qp-2025">
                 <strong>Previous Question Papers</strong><br>
-                <a href="#" target="_blank">2025 June Exam – Mathematics (PDF)</a><br>
-                <a href="#" target="_blank">2025 November Exam – Physical Sciences (PDF)</a><br>
-                <a href="#" target="_blank">2024 Supplementary – English Home Language (PDF)</a>
+                <a href="#" target="_blank">2025 June – Mathematics (PDF)</a><br>
+                <a href="#" target="_blank">2025 Nov – Physical Sciences (PDF)</a>
               </div>
-              <div class="material-item">
+              <div class="material-item" data-id="study-guides">
                 <strong>Study Guides</strong><br>
-                <a href="#" target="_blank">Life Sciences Grade 12 Study Guide 2026</a><br>
-                <a href="#" target="_blank">Accounting Grade 12 Study Guide – Term 1–4</a><br>
-                <a href="#" target="_blank">Geography Mapwork Guide & Tips</a>
+                <a href="#" target="_blank">Life Sciences Grade 12 – 2026</a><br>
+                <a href="#" target="_blank">Accounting Term 1–4 Guide</a>
               </div>
-              <div class="material-item">
-                <strong>Online Videos & Tutorials</strong><br>
-                <a href="https://www.youtube.com/watch?v=example1" target="_blank">Khan Academy – Calculus Basics</a><br>
-                <a href="https://www.youtube.com/watch?v=example2" target="_blank">Crash Course Chemistry – Organic Compounds</a><br>
-                <a href="https://www.youtube.com/watch?v=example3" target="_blank">Mindset Learn – Grade 12 Accounting</a>
+              <div class="material-item" data-id="videos">
+                <strong>Videos & Tutorials</strong><br>
+                <a href="https://youtube.com/..." target="_blank">Khan Academy – Calculus</a><br>
+                <a href="https://youtube.com/..." target="_blank">Mindset Learn – Grade 12 Accounting</a>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Timetable Tab -->
         <div id="timetable" class="tab-pane">
           <div class="card">
             <h3>Exam Timetable – 2026</h3>
             <table>
               <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Subject</th>
-                  <th>Paper</th>
-                </tr>
+                <tr><th>Date</th><th>Time</th><th>Subject</th><th>Paper</th></tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>5 October 2026</td>
-                  <td>08:00 – 11:00</td>
-                  <td>Mathematics</td>
-                  <td>Paper 1</td>
-                </tr>
-                <tr>
-                  <td>7 October 2026</td>
-                  <td>08:00 – 11:00</td>
-                  <td>Physical Sciences</td>
-                  <td>Paper 1</td>
-                </tr>
-                <tr>
-                  <td>9 October 2026</td>
-                  <td>08:00 – 11:00</td>
-                  <td>English Home Language</td>
-                  <td>Paper 1</td>
-                </tr>
-                <tr>
-                  <td>12 October 2026</td>
-                  <td>08:00 – 11:00</td>
-                  <td>Life Sciences</td>
-                  <td>Paper 1</td>
-                </tr>
-                <tr class="today">
-                  <td>21 January 2026</td>
-                  <td>09:00 – 12:00</td>
-                  <td>Accounting</td>
-                  <td>Mid-year Trial Paper 2</td>
-                </tr>
+                <tr><td>5 October 2026</td><td>08:00 – 11:00</td><td>Mathematics</td><td>Paper 1</td></tr>
+                <tr><td>7 October 2026</td><td>08:00 – 11:00</td><td>Physical Sciences</td><td>Paper 1</td></tr>
+                <tr><td>9 October 2026</td><td>08:00 – 11:00</td><td>English Home Language</td><td>Paper 1</td></tr>
+                <tr class="today"><td>21 January 2026</td><td>09:00 – 12:00</td><td>Accounting</td><td>Mid-year Trial Paper 2</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
+        <!-- Chat Tab -->
         <div id="chat" class="tab-pane">
           <div class="card">
             <h3>Chat with Lecturer</h3>
             <div class="chat-area" id="chatArea"></div>
             <div class="chat-input-area">
-              <input type="text" id="chatInput" placeholder="Type your message..." />
+              <input type="text" id="chatInput" placeholder="Ask anything..." />
               <button class="submit-btn" onclick="sendChatMessage()">Send</button>
             </div>
           </div>
@@ -697,7 +632,7 @@
     </div>
   </div>
 
-  <!-- Firebase & App Logic -->
+  <!-- Firebase & Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import {
@@ -723,6 +658,7 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
+    // ── UI Switching ────────────────────────────────────
     function showDashboard(user) {
       document.getElementById("landingHeader").style.display = "none";
       document.getElementById("heroSection").style.display = "none";
@@ -730,11 +666,10 @@
       document.getElementById("landingFooter").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
 
-      const name = user.displayName || user.email.split('@')[0] || "Student";
+      const name = user.displayName || user.email?.split('@')[0] || "Student";
       document.getElementById("userName").textContent = name;
 
       initDashboard();
-      showTab('assignments'); // default open tab
     }
 
     function showLanding() {
@@ -745,7 +680,7 @@
       document.getElementById("dashboard").style.display = "none";
     }
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, user => {
       if (user) showDashboard(user);
       else showLanding();
     });
@@ -754,22 +689,22 @@
       try {
         await signInWithPopup(auth, googleProvider);
         closeLoginModal();
-      } catch (error) {
-        document.getElementById("errorMessage").textContent = "Google login failed.";
+      } catch (err) {
+        document.getElementById("errorMessage").textContent = "Google sign-in failed.";
       }
     };
 
-    document.getElementById("emailLoginForm").addEventListener("submit", async (e) => {
+    document.getElementById("emailLoginForm").addEventListener("submit", async e => {
       e.preventDefault();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       try {
         await signInWithEmailAndPassword(auth, email, password);
         closeLoginModal();
-      } catch (error) {
+      } catch (err) {
         let msg = "Login failed.";
-        if (error.code === "auth/user-not-found") msg = "No account found.";
-        if (error.code === "auth/wrong-password") msg = "Incorrect password.";
+        if (err.code === "auth/user-not-found") msg = "No account found.";
+        if (err.code === "auth/wrong-password") msg = "Incorrect password.";
         document.getElementById("errorMessage").textContent = msg;
       }
     });
@@ -782,63 +717,74 @@
       if (e.target === document.getElementById("loginModal")) closeLoginModal();
     };
 
-    // ────────────────────────────────────────────────
-    // Tab switching – fully functional
-    // ────────────────────────────────────────────────
+    // ── Tab System ──────────────────────────────────────
     function showTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-      document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
 
       document.getElementById(tabId).classList.add('active');
       document.querySelector(`.tab-link[data-tab="${tabId}"]`).classList.add('active');
     }
 
-    // ────────────────────────────────────────────────
-    // Dashboard interactivity
-    // ────────────────────────────────────────────────
+    // ── Dashboard Logic ─────────────────────────────────
     let currentAssignmentId = null;
 
     function initDashboard() {
       loadAssignments();
-      highlightTodayExam();
       initMaterials();
       loadChat();
+      showTab('assignments');
     }
 
     function loadAssignments() {
       const list = document.getElementById("assignmentsList");
       list.innerHTML = "";
+
       const assignments = [
-        { id:1, title: "Mathematics – Quadratic Equations", due: "Tomorrow, 23:59" },
-        { id:2, title: "English – Essay on Climate Change", due: "Jan 28, 2026" }
+        { id: 1, title: "Mathematics – Quadratic Equations", due: "Tomorrow, 23:59" },
+        { id: 2, title: "English – Essay on Climate Change", due: "Jan 28, 2026" },
+        { id: 3, title: "Physical Sciences – Lab Report", due: "Feb 4, 2026" }
       ];
+
+      if (assignments.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:2.5rem 0;">No assignments yet.</p>';
+        return;
+      }
+
       assignments.forEach(asg => {
-        const saved = localStorage.getItem(`assign-${asg.id}`);
-        const isCompleted = saved === "completed";
-        const div = document.createElement("div");
-        div.className = "assignment-item";
-        div.innerHTML = `
-          <input type="checkbox" ${isCompleted ? "checked" : ""} onchange="toggleAssignment(${asg.id}, this.checked)">
-          <div>
-            <span class="${isCompleted ? 'assignment-text completed' : 'assignment-text'}">${asg.title}</span>
+        const completed = localStorage.getItem(`asg-${asg.id}-done`) === "true";
+        const submitted = localStorage.getItem(`asg-${asg.id}-submitted`) === "true";
+
+        const item = document.createElement("div");
+        item.className = "assignment-item";
+        item.innerHTML = `
+          <input type="checkbox" ${completed ? "checked" : ""} onchange="toggleAssignment(${asg.id}, this.checked)">
+          <div style="flex:1;">
+            <span class="${completed ? 'assignment-text completed' : 'assignment-text'}">${asg.title}</span>
             <div class="due">${asg.due}</div>
+            ${submitted ? '<div class="submitted">✓ Submitted</div>' : ''}
           </div>
-          <button class="btn btn-primary" style="margin-left:auto; font-size:0.9rem; padding:0.5rem 1rem;" onclick="openSubmitModal(${asg.id})">
-            Submit
-          </button>
+          ${!submitted ? `
+            <button class="btn btn-primary" style="font-size:0.9rem; padding:0.5rem 1.1rem;" onclick="openSubmitModal(${asg.id})">
+              Submit
+            </button>
+          ` : `
+            <span class="submitted">Submitted</span>
+          `}
         `;
-        list.appendChild(div);
+        list.appendChild(item);
       });
     }
 
     window.toggleAssignment = (id, checked) => {
-      localStorage.setItem(`assign-${id}`, checked ? "completed" : "");
+      localStorage.setItem(`asg-${id}-done`, checked);
       loadAssignments();
     };
 
-    window.openSubmitModal = (id) => {
+    window.openSubmitModal = id => {
       currentAssignmentId = id;
       document.getElementById("submitModal").style.display = "flex";
+      document.getElementById("submissionText").value = "";
     };
 
     window.closeSubmitModal = () => {
@@ -848,57 +794,51 @@
     document.getElementById("submitForm").addEventListener("submit", e => {
       e.preventDefault();
       const text = document.getElementById("submissionText").value.trim();
-      if (text) {
-        alert(`Assignment ${currentAssignmentId} submitted!\n\nContent:\n${text.substring(0,100)}${text.length>100?"...":""}`);
-        closeSubmitModal();
-      }
+      if (!text) return alert("Please write something before submitting.");
+
+      localStorage.setItem(`asg-${currentAssignmentId}-submitted`, "true");
+      localStorage.setItem(`asg-${currentAssignmentId}-content`, text);
+      alert("Assignment submitted successfully!");
+      closeSubmitModal();
+      loadAssignments();
     });
 
     function initMaterials() {
       document.querySelectorAll(".material-item").forEach(el => {
         const id = el.dataset.id;
-        const opened = localStorage.getItem(`material-${id}`) === "opened";
-        if (opened) el.classList.add("opened");
-        el.addEventListener("click", () => {
-          el.classList.toggle("opened");
-          localStorage.setItem(`material-${id}`, el.classList.contains("opened") ? "opened" : "");
-        });
-      });
-    }
+        if (!id) return;
 
-    function highlightTodayExam() {
-      const today = new Date().toISOString().split("T")[0];
-      document.querySelectorAll("#timetable p").forEach(p => {
-        if (p.dataset.date === today) {
-          p.classList.add("today");
-          p.innerHTML = `<strong>Today!</strong> ${p.innerHTML}`;
+        if (localStorage.getItem(`mat-${id}`) === "opened") {
+          el.classList.add("opened");
         }
+
+        el.addEventListener("click", e => {
+          if (e.target.tagName === "A") return; // don't toggle when clicking links
+          el.classList.toggle("opened");
+          localStorage.setItem(`mat-${id}`, el.classList.contains("opened") ? "opened" : "");
+        });
       });
     }
 
     function loadChat() {
       const area = document.getElementById("chatArea");
-      const saved = localStorage.getItem("chatMessages");
-      if (saved) {
-        area.innerHTML = saved;
-      } else {
-        area.innerHTML = `
-          <div class="chat-message lecturer">Good morning class! Please submit your assignments by tomorrow evening.</div>
-          <div class="chat-message lecturer">Any questions about quadratic equations?</div>
-        `;
-      }
+      const saved = localStorage.getItem("chatHistory");
+      area.innerHTML = saved || `
+        <div class="chat-message lecturer">Good morning! Assignments due tomorrow evening.</div>
+        <div class="chat-message lecturer">Questions about quadratics? Feel free to ask.</div>
+      `;
       area.scrollTop = area.scrollHeight;
     }
 
     function saveChat() {
-      const area = document.getElementById("chatArea");
-      localStorage.setItem("chatMessages", area.innerHTML);
+      localStorage.setItem("chatHistory", document.getElementById("chatArea").innerHTML);
     }
 
     window.sendChatMessage = () => {
       const input = document.getElementById("chatInput");
       const msg = input.value.trim();
       if (!msg) return;
+
       const area = document.getElementById("chatArea");
       const userMsg = document.createElement("div");
       userMsg.className = "chat-message user";
@@ -908,28 +848,29 @@
       area.scrollTop = area.scrollHeight;
       saveChat();
 
+      // Fake lecturer reply
       setTimeout(() => {
         const replies = [
-          "Thanks for your message! I'll check it soon.",
+          "Thanks! I'll take a look soon.",
           "Good question — let me explain...",
-          "Yes, that's correct. Well done!",
-          "Please refer to page 45 in the notes."
+          "Yes, that's right. Well done!",
+          "Check page 42–45 in the notes."
         ];
         const reply = replies[Math.floor(Math.random() * replies.length)];
-        const lectMsg = document.createElement("div");
-        lectMsg.className = "chat-message lecturer";
-        lectMsg.textContent = reply;
-        area.appendChild(lectMsg);
+        const lect = document.createElement("div");
+        lect.className = "chat-message lecturer";
+        lect.textContent = reply;
+        area.appendChild(lect);
         area.scrollTop = area.scrollHeight;
         saveChat();
-      }, 1800 + Math.random() * 1200);
+      }, 1400 + Math.random() * 1600);
     };
 
     document.getElementById("chatInput").addEventListener("keypress", e => {
       if (e.key === "Enter") sendChatMessage();
     });
 
-    console.log("Lumina app ready – updated tab contents");
+    console.log("Lumina dashboard ready — sidebar tabs fully functional");
   </script>
 </body>
 </html>
