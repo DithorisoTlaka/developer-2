@@ -388,26 +388,42 @@
     let chatUnsubscribe = null;
     let currentUser = null;
 
-    async function learners(email) {
+    // ── Check if user is in allowed learners list ────────────────────────────────
+    async function isAllowedLearner(email) {
       if (!email) return false;
-      const normalized = email.toLowerCase().trim();
-      return new Promise((resolve) => {
-        const invitedRef = ref(database, 'learners');
-        onValue(invitedRef, (snapshot) => {
-          const data = snapshot.val();
-          if (!data) return resolve(false);
+      const normalizedEmail = email.toLowerCase().trim();
 
-          let invitedEmails = [];
-          if (Array.isArray(data)) {
-            invitedEmails = data;
-          } else if (typeof data === 'object') {
-            invitedEmails = Object.values(data);
+      return new Promise((resolve) => {
+        const learnersRef = ref(database, 'learners');
+        onValue(learnersRef, (snapshot) => {
+          const data = snapshot.val();
+
+          if (!data) {
+            resolve(false);
+            return;
           }
 
-          const exists = invitedEmails.some(e => 
-            typeof e === 'string' && e.toLowerCase().trim() === normalized
-          );
-          resolve(exists);
+          let allowedEmails = [];
+
+          // Support both array format and object format
+          if (Array.isArray(data)) {
+            allowedEmails = data;
+          } else if (typeof data === 'object' && data !== null) {
+            allowedEmails = Object.values(data);
+          }
+
+          const isAllowed = allowedEmails.some(entry => {
+            if (typeof entry === 'string') {
+              return entry.toLowerCase().trim() === normalizedEmail;
+            }
+            // Also support objects like { email: "user@example.com", name: "..." }
+            if (typeof entry === 'object' && entry !== null && typeof entry.email === 'string') {
+              return entry.email.toLowerCase().trim() === normalizedEmail;
+            }
+            return false;
+          });
+
+          resolve(isAllowed);
         }, { onlyOnce: true });
       });
     }
@@ -429,11 +445,11 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const invited = await isInvitedUser(user.email);
-        if (!invited) {
+        const allowed = await isAllowedLearner(user.email);
+        if (!allowed) {
           await signOut(auth);
           document.getElementById('errorMessage').textContent = 
-            'Access denied: Your Google account is not invited.';
+            'Access denied: Your Google account is not on the allowed learners list.';
           showAuth();
           return;
         }
@@ -523,24 +539,23 @@
 
       errorEl.textContent = 'Connecting...';
       btn.disabled = true;
-      btn.classList.add('btn-loading');
 
       try {
         const result = await signInWithPopup(auth, googleProvider);
         const email = result.user.email;
 
-        const invited = await isInvitedUser(email);
-        if (!invited) {
+        const allowed = await isAllowedLearner(email);
+        if (!allowed) {
           await signOut(auth);
-          errorEl.textContent = 'Your Google account has not been invited.';
+          errorEl.textContent = 'Access denied: Your account is not on the allowed learners list.';
           return;
         }
-        // If invited → showDashboard() will be triggered by onAuthStateChanged
+        // If allowed → onAuthStateChanged will call showDashboard()
       } catch (err) {
         errorEl.textContent = 'Google sign-in failed. Please try again.';
+        console.error(err);
       } finally {
         btn.disabled = false;
-        btn.classList.remove('btn-loading');
       }
     };
 
