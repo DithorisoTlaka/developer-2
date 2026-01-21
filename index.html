@@ -745,10 +745,10 @@
       document.getElementById("dashboard").style.display = "none";
     }
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) showDashboard(user);
-      else showLanding();
-    });
+onAuthStateChanged(auth, (user) => {
+  showDashboard({ displayName: "Test User" }); // force dashboard
+  // else showLanding();
+});
 
     window.signInWithGoogle = async () => {
       try {
