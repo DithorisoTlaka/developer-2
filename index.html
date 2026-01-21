@@ -136,11 +136,12 @@
       padding: 1rem;
       margin: 0.6rem 0;
       border: none;
-      border-radius: 8px;
+      border-radius: 9999px;
       font-size: 0.97rem;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
+      position: relative;
     }
 
     .btn-primary {
@@ -163,6 +164,23 @@
 
     .btn-google:hover {
       background: #f3f4f6;
+    }
+
+    .btn-loading::after {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid white;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .divider {
@@ -210,9 +228,7 @@
     }
 
     /* ── DASHBOARD ─────────────────────────────────────── */
-    #dashboard {
-      display: none;
-    }
+    #dashboard { display: none; }
 
     .dashboard-wrapper {
       display: flex;
@@ -289,7 +305,7 @@
 </head>
 <body>
 
-  <!-- ── AUTHENTICATION PAGE ─────────────────────────────────────── -->
+  <!-- AUTH PAGE -->
   <div id="authPage">
     <div class="auth-container">
       <div class="logo">Lumina</div>
@@ -302,7 +318,7 @@
 
       <div id="errorMessage" class="error-msg"></div>
 
-      <!-- Sign In Form -->
+      <!-- Sign In -->
       <form id="loginForm">
         <div class="form-field">
           <label for="loginEmail">Email</label>
@@ -313,11 +329,11 @@
           <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
         </div>
 
-        <button type="submit" class="btn btn-primary">Sign in</button>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
 
         <div class="divider"><span>or</span></div>
 
-        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+        <button type="button" class="btn btn-google" id="googleLoginBtn" onclick="signInWithGoogle()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
             <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
@@ -328,7 +344,7 @@
         </button>
       </form>
 
-      <!-- Sign Up Form -->
+      <!-- Sign Up -->
       <form id="signupForm" style="display:none;">
         <div class="form-field">
           <label for="signupEmail">Email</label>
@@ -343,11 +359,11 @@
           <input type="password" id="signupConfirm" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
         </div>
 
-        <button type="submit" class="btn btn-primary">Create account</button>
+        <button type="submit" class="btn btn-primary" id="signupBtn">Create account</button>
 
         <div class="divider"><span>or</span></div>
 
-        <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+        <button type="button" class="btn btn-google" id="googleSignupBtn" onclick="signInWithGoogle()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25C22.56 11.47 22.49 10.69 22.36 10H12V14.51H18.2C17.95 15.99 17.05 17.23 15.79 18.09V21.09H19.33C21.49 19.09 22.56 15.92 22.56 12.25Z" fill="#4285F4"/>
             <path d="M12 23C14.97 23 17.46 22 19.33 20.09L15.79 18.09C14.79 18.81 13.49 19.25 12 19.25C9.07 19.25 6.57 17.22 5.68 14.47H2.06V17.6C3.98 20.92 7.78 23 12 23Z" fill="#34A853"/>
@@ -367,10 +383,9 @@
     </div>
   </div>
 
-  <!-- ── LEARNER DASHBOARD ───────────────────────────────────────── -->
+  <!-- DASHBOARD -->
   <div id="dashboard">
     <div class="dashboard-wrapper">
-      <!-- Sidebar -->
       <aside class="sidebar-left">
         <div class="sidebar-content">
           <a href="#" class="tab-link active" data-tab="overview" onclick="showTab(event, 'overview')">Overview</a>
@@ -381,53 +396,51 @@
         </div>
       </aside>
 
-      <!-- Main Content -->
       <main class="main-view">
         <div class="dashboard-header">
           <div class="welcome">Welcome back, <span id="userDisplayName">Learner</span></div>
           <button class="btn btn-primary" onclick="signOutUser()">Sign Out</button>
         </div>
 
-        <!-- Tab Contents -->
-        <div id="overview" class="tab-content active">
+        <div id="overview" class="tab-content" style="display:block;">
           <div class="card">
             <h2>Dashboard Overview</h2>
-            <p>Quick summary of your progress, upcoming deadlines, and recent activity.</p>
+            <p>Your account is active. You can now access assignments, materials, timetable and chat.</p>
           </div>
         </div>
 
         <div id="assignments" class="tab-content" style="display:none;">
           <div class="card">
             <h2>Assignments</h2>
-            <p>Your current assignments and submission status will appear here.</p>
+            <p>Your assignments will appear here once added by lecturers.</p>
           </div>
         </div>
 
         <div id="materials" class="tab-content" style="display:none;">
           <div class="card">
             <h2>Learning Materials</h2>
-            <p>Notes, videos, past papers and study guides.</p>
+            <p>Study resources will be visible here.</p>
           </div>
         </div>
 
         <div id="timetable" class="tab-content" style="display:none;">
           <div class="card">
-            <h2>Timetable & Exams</h2>
-            <p>Your class and exam schedule.</p>
+            <h2>Timetable</h2>
+            <p>Class and exam schedule.</p>
           </div>
         </div>
 
         <div id="chat" class="tab-content" style="display:none;">
           <div class="card">
             <h2>Lecturer Chat</h2>
-            <p>Send messages to your lecturers.</p>
+            <p>Communication with lecturers.</p>
           </div>
         </div>
       </main>
     </div>
   </div>
 
-  <!-- Firebase & Auth Logic -->
+  <!-- Firebase + Firestore logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import {
@@ -439,6 +452,12 @@
       onAuthStateChanged,
       signOut
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
@@ -452,9 +471,30 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // ── Show / Hide Pages ────────────────────────────────────
+    async function isStudentAllowed(email) {
+      if (!email) return false;
+      const normalized = email.toLowerCase().trim();
+      const docRef = doc(db, "allowed_students", normalized);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists();
+    }
+
+    function setButtonLoading(btn, isLoading) {
+      if (isLoading) {
+        btn.disabled = true;
+        btn.classList.add('btn-loading');
+        btn.innerHTML = btn.innerHTML.replace(/Sign in|Create account|Continue with Google/, 'Checking...');
+      } else {
+        btn.disabled = false;
+        btn.classList.remove('btn-loading');
+        // Reset text would require storing original text - simplified version here
+      }
+    }
+
+    // ── UI Switching ─────────────────────────────────────────────
     function showAuth() {
       document.getElementById('authPage').style.display = 'flex';
       document.getElementById('dashboard').style.display = 'none';
@@ -476,31 +516,43 @@
       }
     });
 
-    // ── Tab Navigation ───────────────────────────────────────
-    function showTab(e, tabId) {
+    // ── Tab Navigation ───────────────────────────────────────────
+    window.showTab = function(e, tabId) {
       e.preventDefault();
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
 
       document.getElementById(tabId).style.display = 'block';
       e.currentTarget.classList.add('active');
-    }
+    };
 
-    // ── Form Handlers ────────────────────────────────────────
+    // ── Form Handlers with pre-check ─────────────────────────────
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
       const errorEl = document.getElementById('errorMessage');
+      const btn = document.getElementById('loginBtn');
 
       errorEl.textContent = '';
+      setButtonLoading(btn, true);
+
+      const allowed = await isStudentAllowed(email);
+      if (!allowed) {
+        errorEl.textContent = 'Your account has not been registered by an administrator or lecturer.';
+        setButtonLoading(btn, false);
+        return;
+      }
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err) {
-        errorEl.textContent = err.code === 'auth/wrong-password' ? 'Incorrect password'
-                            : err.code === 'auth/user-not-found' ? 'No account found with this email'
-                            : 'Login failed. Please try again.';
+        errorEl.textContent =
+          err.code === 'auth/wrong-password' ? 'Incorrect password' :
+          err.code === 'auth/user-not-found' ? 'Account not found' :
+          'Login failed. Please try again.';
+      } finally {
+        setButtonLoading(btn, false);
       }
     });
 
@@ -510,6 +562,7 @@
       const password = document.getElementById('signupPassword').value;
       const confirm = document.getElementById('signupConfirm').value;
       const errorEl = document.getElementById('errorMessage');
+      const btn = document.getElementById('signupBtn');
 
       errorEl.textContent = '';
 
@@ -523,28 +576,57 @@
         return;
       }
 
+      setButtonLoading(btn, true);
+
+      const allowed = await isStudentAllowed(email);
+      if (!allowed) {
+        errorEl.textContent = 'This email has not been pre-registered by an administrator or lecturer.';
+        setButtonLoading(btn, false);
+        return;
+      }
+
       try {
         await createUserWithEmailAndPassword(auth, email, password);
       } catch (err) {
-        errorEl.textContent = err.code === 'auth/email-already-in-use' ? 'This email is already registered'
-                            : err.code === 'auth/weak-password' ? 'Password is too weak'
-                            : 'Sign up failed. Please try again.';
+        errorEl.textContent =
+          err.code === 'auth/email-already-in-use' ? 'This email is already registered' :
+          err.code === 'auth/weak-password' ? 'Password is too weak' :
+          'Sign up failed. Please try again.';
+      } finally {
+        setButtonLoading(btn, false);
       }
     });
 
     window.signInWithGoogle = async () => {
+      const errorEl = document.getElementById('errorMessage');
+      const btnLogin = document.getElementById('googleLoginBtn');
+      const btnSignup = document.getElementById('googleSignupBtn');
+
+      errorEl.textContent = 'Checking registration...';
+      setButtonLoading(btnLogin, true);
+      setButtonLoading(btnSignup, true);
+
       try {
-        await signInWithPopup(auth, googleProvider);
+        const result = await signInWithPopup(auth, googleProvider);
+        const email = result.user.email;
+
+        const allowed = await isStudentAllowed(email);
+        if (!allowed) {
+          await signOut(auth);
+          errorEl.textContent = 'Your Google account has not been pre-registered by an administrator or lecturer.';
+          return;
+        }
+        // allowed → already signed in, UI will update via onAuthStateChanged
       } catch (err) {
-        document.getElementById('errorMessage').textContent = 'Google sign-in failed';
+        errorEl.textContent = 'Google sign-in failed or account not pre-registered.';
+      } finally {
+        setButtonLoading(btnLogin, false);
+        setButtonLoading(btnSignup, false);
       }
     };
 
-    window.signOutUser = () => {
-      signOut(auth);
-    };
+    window.signOutUser = () => signOut(auth);
 
-    // ── Switch between login & signup ────────────────────────
     window.switchMode = function(mode) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.getElementById('errorMessage').textContent = '';
