@@ -182,6 +182,57 @@
       font-size: 1.1rem;
     }
 
+    /* Chat Area Styles */
+    #chatArea {
+      height: 320px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      overflow-y: auto;
+      background: #0d121b;
+    }
+
+    .chat-message {
+      margin-bottom: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .chat-message.user {
+      background: var(--primary);
+      color: white;
+      margin-left: auto;
+    }
+
+    .chat-message.other {
+      background: #1e293b;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      background: #0f1622;
+      color: white;
+    }
+
+    .chat-input-area button {
+      padding: 0.9rem 1.6rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+
     @media (max-width: 900px) {
       .sidebar-left { width: var(--sidebar-collapsed); }
       .sidebar-left:hover { width: var(--sidebar-expanded); }
@@ -330,14 +381,18 @@
         <div id="chat" class="tab-content" style="display:none;">
           <div class="card">
             <h2>Lecturer Chat</h2>
-            <p>Communication with lecturers.</p>
+            <div id="chatArea" class="chat-area"></div>
+            <div class="chat-input-area">
+              <input type="text" id="chatInput" placeholder="Type your message..." autocomplete="off" />
+              <button onclick="sendMessage()">Send</button>
+            </div>
           </div>
         </div>
       </main>
     </div>
   </div>
 
-  <!-- Firebase + Realtime Database + Firestore logic -->
+  <!-- Firebase + Realtime Database logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import {
@@ -353,15 +408,16 @@
     import {
       getFirestore,
       doc,
-      getDoc,
-      setDoc
+      getDoc
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
     import {
       getDatabase,
       ref,
       onValue,
-      set
+      set,
+      push,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
     const firebaseConfig = {
@@ -381,47 +437,45 @@
     const database = getDatabase(app);
     const googleProvider = new GoogleAuthProvider();
 
-    async function isStudentAllowed(email) {
+    let chatUnsubscribe = null;
+    let currentUser = null;
+
+    async function isInvitedUser(email) {
       if (!email) return false;
       const normalized = email.toLowerCase().trim();
-      const docRef = doc(firestore, "allowed_students", normalized);
-      const docSnap = await getDoc(docRef);
-      return docSnap.exists();
+      return new Promise((resolve) => {
+        const invitedRef = ref(database, 'invitedusers');
+        onValue(invitedRef, (snapshot) => {
+          const data = snapshot.val();
+          if (!data) return resolve(false);
+
+          // Support both array and object formats
+          let invitedEmails = [];
+          if (Array.isArray(data)) {
+            invitedEmails = data;
+          } else if (typeof data === 'object') {
+            invitedEmails = Object.values(data);
+          }
+
+          const exists = invitedEmails.some(e => 
+            typeof e === 'string' && e.toLowerCase().trim() === normalized
+          );
+          resolve(exists);
+        }, { onlyOnce: true });
+      });
     }
 
     function setButtonLoading(btn, isLoading) {
       if (isLoading) {
         btn.disabled = true;
         btn.classList.add('btn-loading');
-        const originalText = btn.innerHTML;
-        btn.dataset.originalText = originalText;
+        btn.dataset.originalText = btn.innerHTML;
         btn.innerHTML = 'Checking...';
       } else {
         btn.disabled = false;
         btn.classList.remove('btn-loading');
-        if (btn.dataset.originalText) {
-          btn.innerHTML = btn.dataset.originalText;
-        }
+        if (btn.dataset.originalText) btn.innerHTML = btn.dataset.originalText;
       }
-    }
-
-    // Save user basic info to Realtime Database once after login/signup
-    async function saveUserToDatabase(user) {
-      if (!user) return;
-      const userRef = ref(database, `users/${user.uid}`);
-      const name = user.displayName || user.email?.split('@')[0] || 'Learner';
-
-      // Only set if not already exists (to avoid overwriting)
-      onValue(userRef, (snapshot) => {
-        if (!snapshot.exists()) {
-          set(userRef, {
-            uid: user.uid,
-            email: user.email,
-            displayName: name,
-            createdAt: new Date().toISOString()
-          });
-        }
-      }, { onlyOnce: true });
     }
 
     // ── UI Switching ─────────────────────────────────────────────
@@ -431,18 +485,24 @@
     }
 
     function showDashboard(user) {
+      currentUser = user;
       document.getElementById('authPage').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
 
       const name = user.displayName || user.email?.split('@')[0] || 'Learner';
       document.getElementById('userDisplayName').textContent = name;
-
-      // Save user info to RTDB
-      saveUserToDatabase(user);
     }
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const invited = await isInvitedUser(user.email);
+        if (!invited) {
+          await signOut(auth);
+          document.getElementById('errorMessage').textContent = 
+            'Access denied: Your email is not in the invited users list.';
+          showAuth();
+          return;
+        }
         showDashboard(user);
       } else {
         showAuth();
@@ -457,9 +517,72 @@
 
       document.getElementById(tabId).style.display = 'block';
       e.currentTarget.classList.add('active');
+
+      if (tabId === 'chat') {
+        loadChat();
+      } else if (chatUnsubscribe) {
+        chatUnsubscribe();
+        chatUnsubscribe = null;
+      }
     };
 
-    // ── Form Handlers ────────────────────────────────────────────
+    // ── Real-time Lecturer Chat ──────────────────────────────────
+    function loadChat() {
+      const chatArea = document.getElementById('chatArea');
+      chatArea.innerHTML = '<div class="empty-state">Loading messages...</div>';
+
+      const messagesRef = ref(database, 'lecturer_chat/messages');
+
+      chatUnsubscribe = onValue(messagesRef, (snapshot) => {
+        chatArea.innerHTML = '';
+        if (!snapshot.exists()) {
+          chatArea.innerHTML = '<div class="empty-state">No messages yet. Be the first to say something!</div>';
+          return;
+        }
+
+        const messages = snapshot.val();
+        Object.entries(messages).forEach(([key, msg]) => {
+          const isCurrentUser = msg.uid === auth.currentUser?.uid;
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `chat-message ${isCurrentUser ? 'user' : 'other'}`;
+          messageDiv.innerHTML = `
+            <strong>${msg.name || 'Anonymous'}</strong><br>
+            ${msg.text}
+            <div style="font-size:0.75rem; opacity:0.7; margin-top:0.3rem;">
+              ${new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+            </div>
+          `;
+          chatArea.appendChild(messageDiv);
+        });
+
+        chatArea.scrollTop = chatArea.scrollHeight;
+      });
+    }
+
+    window.sendMessage = function() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text || !auth.currentUser) return;
+
+      const messagesRef = ref(database, 'lecturer_chat/messages');
+      push(messagesRef, {
+        uid: auth.currentUser.uid,
+        name: auth.currentUser.displayName || auth.currentUser.email?.split('@')[0] || 'Student',
+        text: text,
+        timestamp: serverTimestamp()
+      });
+
+      input.value = '';
+    };
+
+    document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // ── Form Handlers with invitedusers check ────────────────────
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
@@ -470,9 +593,9 @@
       errorEl.textContent = '';
       setButtonLoading(btn, true);
 
-      const allowed = await isStudentAllowed(email);
-      if (!allowed) {
-        errorEl.textContent = 'Your account has not been registered by an administrator or lecturer.';
+      const invited = await isInvitedUser(email);
+      if (!invited) {
+        errorEl.textContent = 'Your account has not been invited.';
         setButtonLoading(btn, false);
         return;
       }
@@ -511,9 +634,9 @@
 
       setButtonLoading(btn, true);
 
-      const allowed = await isStudentAllowed(email);
-      if (!allowed) {
-        errorEl.textContent = 'This email has not been pre-registered by an administrator or lecturer.';
+      const invited = await isInvitedUser(email);
+      if (!invited) {
+        errorEl.textContent = 'This email has not been invited.';
         setButtonLoading(btn, false);
         return;
       }
@@ -535,7 +658,7 @@
       const btnLogin = document.getElementById('googleLoginBtn');
       const btnSignup = document.getElementById('googleSignupBtn');
 
-      errorEl.textContent = 'Checking registration...';
+      errorEl.textContent = 'Checking invitation...';
       setButtonLoading(btnLogin, true);
       setButtonLoading(btnSignup, true);
 
@@ -543,14 +666,14 @@
         const result = await signInWithPopup(auth, googleProvider);
         const email = result.user.email;
 
-        const allowed = await isStudentAllowed(email);
-        if (!allowed) {
+        const invited = await isInvitedUser(email);
+        if (!invited) {
           await signOut(auth);
-          errorEl.textContent = 'Your Google account has not been pre-registered by an administrator or lecturer.';
+          errorEl.textContent = 'Your Google account has not been invited.';
           return;
         }
       } catch (err) {
-        errorEl.textContent = 'Google sign-in failed or account not pre-registered.';
+        errorEl.textContent = 'Google sign-in failed or account not invited.';
       } finally {
         setButtonLoading(btnLogin, false);
         setButtonLoading(btnSignup, false);
