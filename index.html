@@ -400,7 +400,6 @@
   </style>
 </head>
 <body>
-
   <header class="container" id="landingHeader">
     <nav>
       <div class="logo">Lumina</div>
@@ -412,7 +411,6 @@
       </div>
     </nav>
   </header>
-
   <!-- Login Modal -->
   <div id="loginModal" class="modal">
     <div class="modal-content">
@@ -443,7 +441,6 @@
       </p>
     </div>
   </div>
-
   <!-- Submit Assignment Modal -->
   <div id="submitModal" class="modal">
     <div class="modal-content">
@@ -462,7 +459,6 @@
       </form>
     </div>
   </div>
-
   <!-- Landing Content -->
   <section class="hero container" id="heroSection">
     <h1>Learn smarter.<br/>Anywhere. Anytime.</h1>
@@ -474,7 +470,6 @@
       <a href="#" class="btn btn-outline" style="font-size:1.2rem; padding:1rem 2.5rem;">See how it works</a>
     </div>
   </section>
-
   <section class="features container" id="features">
     <h2 class="section-title">Why students choose Lumina</h2>
     <div class="feature-grid">
@@ -486,17 +481,15 @@
       <div class="feature-card"><div class="feature-icon">🌙</div><h3>Light & Dark Perfection</h3><p>Beautiful in any lighting. Easy on the eyes during late-night study sessions.</p></div>
     </div>
   </section>
-
   <footer class="container" id="landingFooter">
     <p>© 2026 Lumina Learning • Built with care for students</p>
   </footer>
-
   <!-- ──────────────────────────────────────────────── -->
-  <!--                   DASHBOARD                      -->
+  <!-- DASHBOARD -->
   <!-- ──────────────────────────────────────────────── -->
   <div id="dashboard" class="container">
     <div class="dashboard-wrapper">
-      <!-- Left collapsible sidebar -->
+      <!-- Left collapsible sidebar with modern icons -->
       <aside class="sidebar-left">
         <div class="sidebar-content">
           <div class="tab-link active" data-tab="assignments" onclick="showTab('assignments')">
@@ -517,14 +510,12 @@
           </div>
         </div>
       </aside>
-
       <!-- Main content area -->
       <main class="main-view">
         <div class="dashboard-header">
           <div class="welcome">Welcome back, <span id="userName">Student</span></div>
           <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
         </div>
-
         <!-- Tab contents -->
         <div id="assignments" class="tab-pane active">
           <div class="card">
@@ -532,7 +523,6 @@
             <div id="assignmentsList"></div>
           </div>
         </div>
-
         <div id="materials" class="tab-pane">
           <div class="card">
             <h3>Learning Materials</h3>
@@ -558,7 +548,6 @@
             </div>
           </div>
         </div>
-
         <div id="timetable" class="tab-pane">
           <div class="card">
             <h3>Exam Timetable – 2026</h3>
@@ -606,7 +595,6 @@
             </table>
           </div>
         </div>
-
         <div id="chat" class="tab-pane">
           <div class="card">
             <h3>Chat with Lecturer</h3>
@@ -620,7 +608,6 @@
       </main>
     </div>
   </div>
-
   <!-- Firebase & App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -632,7 +619,6 @@
       onAuthStateChanged,
       signOut as firebaseSignOut
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
     const firebaseConfig = {
       apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
       authDomain: "learnermanagementsystem-f3b6a.firebaseapp.com",
@@ -642,25 +628,20 @@
       appId: "1:173549259244:web:f8722018a989c484a7d8c9",
       measurementId: "G-K1VW244B7P"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
-
     function showDashboard(user) {
       document.getElementById("landingHeader").style.display = "none";
       document.getElementById("heroSection").style.display = "none";
       document.getElementById("features").style.display = "none";
       document.getElementById("landingFooter").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
-
       const name = user.displayName || user.email.split('@')[0] || "Student";
       document.getElementById("userName").textContent = name;
-
       initDashboard();
       showTab('assignments'); // default open tab
     }
-
     function showLanding() {
       document.getElementById("landingHeader").style.display = "block";
       document.getElementById("heroSection").style.display = "block";
@@ -668,16 +649,10 @@
       document.getElementById("landingFooter").style.display = "block";
       document.getElementById("dashboard").style.display = "none";
     }
-
-    // TEMPORARY: Force show dashboard for testing (remove when auth is fully ready)
-    showDashboard({ displayName: "Dithoriso" });
-
-    // Comment out real auth listener during testing if needed
-    // onAuthStateChanged(auth, (user) => {
-    //   if (user) showDashboard(user);
-    //   else showLanding();
-    // });
-
+onAuthStateChanged(auth, (user) => {
+  showDashboard({ displayName: "Test User" }); // force dashboard
+  // else showLanding();
+});
     window.signInWithGoogle = async () => {
       try {
         await signInWithPopup(auth, googleProvider);
@@ -686,7 +661,6 @@
         document.getElementById("errorMessage").textContent = "Google login failed.";
       }
     };
-
     document.getElementById("emailLoginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("email").value.trim();
@@ -701,38 +675,31 @@
         document.getElementById("errorMessage").textContent = msg;
       }
     });
-
     window.signOut = () => firebaseSignOut(auth);
-
     window.openLoginModal = () => document.getElementById("loginModal").style.display = "flex";
     window.closeLoginModal = () => document.getElementById("loginModal").style.display = "none";
     document.getElementById("loginModal").onclick = e => {
       if (e.target === document.getElementById("loginModal")) closeLoginModal();
     };
-
     // ────────────────────────────────────────────────
     // Tab switching – fully functional
     // ────────────────────────────────────────────────
     function showTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
       document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
-
       document.getElementById(tabId).classList.add('active');
       document.querySelector(`.tab-link[data-tab="${tabId}"]`).classList.add('active');
     }
-
     // ────────────────────────────────────────────────
-    // Dashboard interactivity (unchanged)
+    // Dashboard interactivity
     // ────────────────────────────────────────────────
     let currentAssignmentId = null;
-
     function initDashboard() {
       loadAssignments();
       highlightTodayExam();
       initMaterials();
       loadChat();
     }
-
     function loadAssignments() {
       const list = document.getElementById("assignmentsList");
       list.innerHTML = "";
@@ -758,21 +725,17 @@
         list.appendChild(div);
       });
     }
-
     window.toggleAssignment = (id, checked) => {
       localStorage.setItem(`assign-${id}`, checked ? "completed" : "");
       loadAssignments();
     };
-
     window.openSubmitModal = (id) => {
       currentAssignmentId = id;
       document.getElementById("submitModal").style.display = "flex";
     };
-
     window.closeSubmitModal = () => {
       document.getElementById("submitModal").style.display = "none";
     };
-
     document.getElementById("submitForm").addEventListener("submit", e => {
       e.preventDefault();
       const text = document.getElementById("submissionText").value.trim();
@@ -781,7 +744,6 @@
         closeSubmitModal();
       }
     });
-
     function initMaterials() {
       document.querySelectorAll(".material-item").forEach(el => {
         const id = el.dataset.id;
@@ -793,7 +755,6 @@
         });
       });
     }
-
     function highlightTodayExam() {
       const today = new Date().toISOString().split("T")[0];
       document.querySelectorAll("#timetable p").forEach(p => {
@@ -803,7 +764,6 @@
         }
       });
     }
-
     function loadChat() {
       const area = document.getElementById("chatArea");
       const saved = localStorage.getItem("chatMessages");
@@ -817,12 +777,10 @@
       }
       area.scrollTop = area.scrollHeight;
     }
-
     function saveChat() {
       const area = document.getElementById("chatArea");
       localStorage.setItem("chatMessages", area.innerHTML);
     }
-
     window.sendChatMessage = () => {
       const input = document.getElementById("chatInput");
       const msg = input.value.trim();
@@ -835,7 +793,6 @@
       input.value = "";
       area.scrollTop = area.scrollHeight;
       saveChat();
-
       setTimeout(() => {
         const replies = [
           "Thanks for your message! I'll check it soon.",
@@ -852,12 +809,10 @@
         saveChat();
       }, 1800 + Math.random() * 1200);
     };
-
     document.getElementById("chatInput").addEventListener("keypress", e => {
       if (e.key === "Enter") sendChatMessage();
     });
-
-    console.log("Lumina app ready");
+    console.log("Lumina app ready – updated tab contents");
   </script>
 </body>
 </html>
