@@ -208,6 +208,36 @@
 
     .card h2 { margin-bottom: 1rem; color: var(--primary); }
 
+    .assignment-item {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .assignment-item:hover {
+      background: rgba(99,102,241,0.06);
+    }
+
+    .assignment-item:last-child { border-bottom: none; }
+
+    .assignment-title {
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      font-size: 1.1rem;
+    }
+
+    .assignment-due {
+      color: var(--error);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .assignment-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
     .empty-state {
       text-align: center;
       color: var(--text-muted);
@@ -273,21 +303,50 @@
       border: none;
     }
 
-    /* Theme Toggle Button */
-    .theme-toggle {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.8rem;
-      border-radius: 50%;
-      transition: all 0.2s;
+    /* Theme Toggle Switch */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 54px;
+      height: 28px;
     }
 
-    .theme-toggle:hover {
-      background: rgba(99,102,241,0.12);
-      color: var(--text);
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #4b5563;
+      transition: .4s;
+      border-radius: 28px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
     }
 
     @media (max-width: 900px) {
@@ -343,11 +402,14 @@
         </div>
 
         <div class="sidebar-bottom">
-          <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
-            <i class="ri-sun-line"></i>
-          </button>
+          <!-- Theme Toggle Switch -->
+          <label class="theme-switch" title="Toggle dark/light mode">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+          </label>
 
-          <button class="btn" style="background: rgba(239,68,68,0.15); color: #f87171;" onclick="signOutUser()">
+          <!-- Smaller Sign Out button -->
+          <button class="btn" style="padding: 0.7rem 1.2rem; font-size: 0.95rem; background: rgba(239,68,68,0.15); color: #f87171; justify-content: flex-start;" onclick="signOutUser()">
             <i class="ri-logout-box-line"></i> Sign Out
           </button>
         </div>
@@ -368,7 +430,9 @@
         <div id="assignments" class="tab-content" style="display:none;">
           <div class="card">
             <h2>Assignments</h2>
-            <div id="assignmentsList"></div>
+            <div id="assignmentsList">
+              <div class="empty-state">Loading assignments...</div>
+            </div>
           </div>
         </div>
 
@@ -445,18 +509,15 @@
     function setTheme(theme) {
       body.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
-      themeToggle.innerHTML = theme === 'light' 
-        ? '<i class="ri-moon-line"></i>' 
-        : '<i class="ri-sun-line"></i>';
     }
 
     // Load saved theme or default to dark
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(savedTheme);
+    themeToggle.checked = savedTheme === 'light';
 
-    themeToggle.addEventListener('click', () => {
-      const current = body.getAttribute('data-theme');
-      setTheme(current === 'dark' ? 'light' : 'dark');
+    themeToggle.addEventListener('change', () => {
+      setTheme(themeToggle.checked ? 'light' : 'dark');
     });
 
     // ── Check if user is in allowed learners list ────────────────────────────────
@@ -543,7 +604,45 @@
         chatUnsubscribe();
         chatUnsubscribe = null;
       }
+
+      if (tabId === 'assignments') {
+        loadAssignments();
+      }
     };
+
+    // ── Load Assignments from Firebase ───────────────────────────────
+    function loadAssignments() {
+      const listEl = document.getElementById('assignmentsList');
+      listEl.innerHTML = '<div class="empty-state">Loading assignments...</div>';
+
+      const assignmentsRef = ref(database, 'assignments');
+
+      onValue(assignmentsRef, (snapshot) => {
+        listEl.innerHTML = '';
+
+        if (!snapshot.exists()) {
+          listEl.innerHTML = '<div class="empty-state">No assignments available yet.</div>';
+          return;
+        }
+
+        const assignments = snapshot.val();
+        Object.entries(assignments).forEach(([key, ass]) => {
+          const item = document.createElement('div');
+          item.className = 'assignment-item';
+          item.innerHTML = `
+            <div class="assignment-title">${ass.title || 'Untitled Assignment'}</div>
+            ${ass.dueDate ? `<div class="assignment-due">Due: ${ass.dueDate}</div>` : ''}
+            ${ass.subject ? `<div style="color:var(--primary); font-size:0.95rem; margin-top:0.3rem;">${ass.subject}</div>` : ''}
+            ${ass.description ? `<div class="assignment-desc">${ass.description}</div>` : ''}
+          `;
+          listEl.appendChild(item);
+        });
+
+        if (listEl.children.length === 0) {
+          listEl.innerHTML = '<div class="empty-state">No assignments available yet.</div>';
+        }
+      });
+    }
 
     // ── Real-time Lecturer Chat ──────────────────────────────────
     function loadChat() {
@@ -616,7 +715,7 @@
         const allowed = await isAllowedLearner(email);
         if (!allowed) {
           await signOut(auth);
-          errorEl.textContent = 'Access denied: Your account is not on the allowed learners list.';
+          errorEl.textContent = 'Access denied.';
           return;
         }
       } catch (err) {
