@@ -82,7 +82,6 @@
       justify-content: center;
       min-height: 100vh;
       padding: 1.5rem;
-      /* Dimming the background */
       background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                   radial-gradient(circle at top right, var(--glow), transparent),
                   var(--bg);
@@ -254,6 +253,31 @@
       transition: all 0.3s;
     }
 
+    .course-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .subject-tag {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      border-radius: 8px;
+      margin: 0.5rem 0.5rem 0 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
     .assignment-item, .material-item, .timetable-item {
       padding: 1.5rem 0;
       border-bottom: 1px solid var(--border);
@@ -405,8 +429,15 @@
 
         <div id="overview" class="tab-content" style="display:block;">
           <div class="card">
-            <h2>Dashboard Overview</h2>
-            <p>Your account is active. Explore your dashboard via the sidebar.</p>
+            <h2>Academic Summary</h2>
+            <div id="courseContainer" style="margin-top: 1rem;"></div>
+            <div id="assignedSubjectsList" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                <p style="color:var(--text-muted)">Loading academic data...</p>
+            </div>
+          </div>
+          <div class="card">
+            <h2>System Updates</h2>
+            <p>Your learning environment is fully synced. Navigate through the sidebar to access your modules.</p>
           </div>
         </div>
 
@@ -480,28 +511,28 @@
     themeToggle.checked = savedTheme === 'light';
     themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'light' : 'dark'));
 
-    // ── Auth Logic ───────────────────────────────────────────────
-    async function isAllowedLearner(email) {
-      if (!email) return false;
+    // ── Auth & Data Loading ───────────────────────────────────────────────
+    async function getLearnerData(email) {
+      if (!email) return null;
       const normalizedEmail = email.toLowerCase().trim();
       return new Promise((resolve) => {
         onValue(ref(database, 'learners'), (snapshot) => {
           const data = snapshot.val();
-          if (!data) return resolve(false);
-          const allowedEmails = Array.isArray(data) ? data : Object.values(data);
-          const isAllowed = allowedEmails.some(entry => {
+          if (!data) return resolve(null);
+          const entries = Array.isArray(data) ? data : Object.values(data);
+          const found = entries.find(entry => {
             const entryEmail = typeof entry === 'string' ? entry : entry?.email;
             return entryEmail?.toLowerCase().trim() === normalizedEmail;
           });
-          resolve(isAllowed);
+          resolve(found);
         }, { onlyOnce: true });
       });
     }
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const allowed = await isAllowedLearner(user.email);
-        if (!allowed) {
+        const learnerEntry = await getLearnerData(user.email);
+        if (!learnerEntry) {
           await signOut(auth);
           document.getElementById('errorMessage').textContent = 'Access denied: Email not on allowed list.';
           return;
@@ -509,11 +540,43 @@
         document.getElementById('authPage').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('userDisplayName').textContent = user.displayName || 'Learner';
+        
+        // Display Course and Subjects
+        displayAcademicInfo(learnerEntry);
       } else {
         document.getElementById('authPage').style.display = 'flex';
         document.getElementById('dashboard').style.display = 'none';
       }
     });
+
+    function displayAcademicInfo(learner) {
+        const subjectsContainer = document.getElementById('assignedSubjectsList');
+        const courseContainer = document.getElementById('courseContainer');
+
+        // Handle Course Display
+        if (learner.course) {
+            courseContainer.innerHTML = `<span class="course-badge">${learner.course}</span><p style="font-size: 0.9rem; color: var(--text-muted);">Current Program</p>`;
+        } else {
+            courseContainer.innerHTML = `<p style="color:var(--text-muted)">No course assigned.</p>`;
+        }
+
+        // Handle Subjects Display
+        const subjects = learner.subjects;
+        if (!subjects) {
+            subjectsContainer.innerHTML = '<p style="color:var(--text-muted)">No modules assigned yet.</p>';
+            return;
+        }
+
+        let subjectsArray = [];
+        if (typeof subjects === 'string') {
+            subjectsArray = subjects.split(',').map(s => s.trim());
+        } else if (Array.isArray(subjects)) {
+            subjectsArray = subjects;
+        }
+
+        subjectsContainer.innerHTML = `<p style="margin-bottom:0.5rem; font-weight:500;">Registered Modules:</p>` + 
+                                       subjectsArray.map(sub => `<span class="subject-tag">${sub}</span>`).join('');
+    }
 
     // ── Tab Navigation ──────────────────────────────────────────────────
     window.showTab = function(e, tabId) {
