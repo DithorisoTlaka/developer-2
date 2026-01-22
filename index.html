@@ -690,7 +690,7 @@
 
     function loadChat() {
       const chatArea = document.getElementById('chatArea');
-      chatUnsubscribe = onValue(ref(database, 'lecturer_chat/messages'), (snapshot) => {
+      chatUnsubscribe = onValue(ref(database, 'chats'), (snapshot) => {
         chatArea.innerHTML = '';
         snapshot.forEach(child => {
           const msg = child.val();
