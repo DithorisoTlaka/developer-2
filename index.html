@@ -8,96 +8,132 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     :root {
-      --primary: #2563eb; --primary-light: #eff6ff; --success: #10b981; --bg: #f8fafc;
-      --card-bg: #ffffff; --text-main: #0f172a; --gray: #64748b; --border: #e2e8f0;
+      --primary: #2563eb; --primary-hover: #1d4ed8; --primary-light: #eff6ff;
+      --success: #10b981; --bg: #f8fafc; --card-bg: #ffffff;
+      --text-main: #0f172a; --gray: #64748b; --border: #e2e8f0;
+      --sidebar-w: 280px; --sidebar-collapsed: 80px;
     }
     body.dark-mode {
-      --bg: #020617; --card-bg: #0f172a; --text-main: #f8fafc; --border: #1e293b; --gray: #94a3b8;
+      --bg: #020617; --card-bg: #0f172a; --text-main: #f8fafc; --border: #1e293b; --gray: #94a3b8; --primary-light: #1e3a8a;
     }
-    * { box-sizing: border-box; transition: background-color .2s, border-color .2s; }
+    * { box-sizing: border-box; transition: background-color .2s, border-color .2s, width .3s cubic-bezier(0.4, 0, 0.2, 1); }
     body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: var(--text-main); height: 100vh; overflow: hidden; }
     
     .layout { display: flex; height: 100vh; }
-    aside { width: 280px; background: var(--card-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem 0; flex-shrink: 0; }
+
+    /* Collapsible Sidebar Styles */
+    aside { 
+      width: var(--sidebar-w); background: var(--card-bg); border-right: 1px solid var(--border); 
+      display: flex; flex-direction: column; padding: 1.5rem 0; flex-shrink: 0; position: relative;
+    }
+    aside.collapsed { width: var(--sidebar-collapsed); }
+    aside.collapsed .nav-text, aside.collapsed .logo-text, aside.collapsed #sidebar-chat { display: none; }
+    aside.collapsed .nav-link { justify-content: center; padding: 0.8rem; }
     
-    .nav-link { display: flex; align-items: center; padding: .8rem 1.2rem; color: var(--gray); text-decoration: none; font-weight: 500; cursor: pointer; gap: 12px; margin: 4px 12px; border-radius: 12px; font-size: 14px; }
+    .collapse-btn {
+      position: absolute; right: -12px; top: 20px; width: 24px; height: 24px; background: var(--primary);
+      color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: none; z-index: 10;
+    }
+
+    .nav-link { 
+      display: flex; align-items: center; padding: .8rem 1.2rem; color: var(--gray); text-decoration: none; 
+      font-weight: 500; cursor: pointer; gap: 12px; margin: 4px 12px; border-radius: 9999px; font-size: 14px; 
+    }
     .nav-link:hover { background: var(--bg); color: var(--primary); }
     .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
     
     main { flex: 1; overflow-y: auto; padding: 2.5rem; }
-    .card { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     
-    .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
-    .module-card { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 1.8rem; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); }
+    /* Pill Buttons & UI Elements */
+    button { 
+      background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; 
+      display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 9999px; padding: 0.75rem 1.5rem;
+    }
+    button:active { transform: scale(0.96); }
+    input, select { padding: .75rem 1.2rem; border-radius: 9999px; border: 1px solid var(--border); width: 100%; font-size: 14px; background: var(--bg); color: var(--text-main); }
+
+    /* Sidebar Chat */
+    #sidebar-chat {
+      margin: 1rem 12px; background: var(--bg); border-radius: 16px; flex: 1; display: flex; flex-direction: column;
+      max-height: 300px; border: 1px solid var(--border); overflow: hidden;
+    }
+    #chat-messages { flex: 1; overflow-y: auto; padding: 10px; font-size: 12px; }
+    .chat-msg { margin-bottom: 8px; padding: 8px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border); }
+    .chat-msg b { color: var(--primary); display: block; font-size: 10px; }
+
+    /* Dark Mode Toggle Switch */
+    .theme-switch {
+      display: flex; align-items: center; gap: 10px; margin: 10px 20px; padding: 8px; border-radius: 9999px;
+      background: var(--bg); cursor: pointer; border: 1px solid var(--border);
+    }
     
+    .module-card { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 1.8rem; border-radius: 24px; }
     .content-section { display: none; animation: fadeIn .3s ease; }
     .content-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { padding: 1.2rem; text-align: left; border-bottom: 1px solid var(--border); }
-    th { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; }
-
-    input, select, button { padding: .75rem; border-radius: 10px; border: 1px solid var(--border); width: 100%; font-size: 14px; }
-    button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    button:active { transform: scale(0.98); }
-
     #auth-screen { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg); }
-    .status-pill { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.2); }
   </style>
 </head>
 <body>
 
 <div id="auth-screen">
   <div class="card" style="max-width: 400px; width: 90%; text-align: center; padding: 3rem 2rem;">
-    <div style="background: var(--primary-light); width: 64px; height: 64px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-        <i data-lucide="graduation-cap" style="width: 32px; height: 32px; color: var(--primary);"></i>
-    </div>
-    <h2 style="margin-bottom: 0.5rem;">Learner Portal</h2>
-    <p style="color: var(--gray); font-size: 14px; margin-bottom: 2rem;">Sign in to access your course materials and assignments.</p>
-    <button id="loginBtn" style="padding: 1rem;"><i data-lucide="log-in"></i> Student Login</button>
+    <i data-lucide="graduation-cap" style="width: 64px; height: 64px; color: var(--primary); margin: 0 auto 1.5rem;"></i>
+    <h2 style="margin-bottom: 2rem;">Learner Portal</h2>
+    <button id="loginBtn" style="width:100%"><i data-lucide="log-in"></i> Student Login</button>
   </div>
 </div>
 
 <div class="layout" id="main-app" style="display:none">
-  <aside>
-    <div style="padding: 0 1.5rem 2rem; font-weight: 800; color: var(--primary); font-size: 1.25rem; display: flex; align-items: center; gap: 12px;">
-        <i data-lucide="layers"></i> LMS Learner
+  <aside id="sidebar">
+    <button class="collapse-btn" id="toggleSidebar"><i data-lucide="chevron-left" id="collapseIcon"></i></button>
+    
+    <div style="padding: 0 1.5rem 1.5rem; font-weight: 800; color: var(--primary); font-size: 1.25rem; display: flex; align-items: center; gap: 12px;">
+        <i data-lucide="layers"></i> <span class="logo-text">LMS Learner</span>
     </div>
+
+    <div class="theme-switch" id="themeToggle">
+        <i data-lucide="moon" style="width:16px"></i><span class="logo-text" style="font-size:12px; font-weight:600">Dark Mode</span>
+    </div>
+
     <nav>
-      <a class="nav-link active" data-target="home-sec"><i data-lucide="home"></i> Dashboard</a>
-      <a class="nav-link" data-target="course-sec"><i data-lucide="book-open"></i> Study Materials</a>
-      <a class="nav-link" data-target="task-sec"><i data-lucide="file-check"></i> My Assignments</a>
-      <a class="nav-link" data-target="time-sec"><i data-lucide="calendar"></i> Class Schedule</a>
+      <a class="nav-link active" data-target="home-sec"><i data-lucide="home"></i> <span class="nav-text">Dashboard</span></a>
+      <a class="nav-link" data-target="course-sec"><i data-lucide="book-open"></i> <span class="nav-text">Materials</span></a>
+      <a class="nav-link" data-target="task-sec"><i data-lucide="file-check"></i> <span class="nav-text">Assignments</span></a>
+      <a class="nav-link" data-target="time-sec"><i data-lucide="calendar"></i> <span class="nav-text">Schedule</span></a>
     </nav>
+
+    <div id="sidebar-chat">
+        <div style="padding: 8px 12px; font-weight: 700; font-size: 11px; border-bottom: 1px solid var(--border); background: var(--card-bg)">BROADCAST CHAT</div>
+        <div id="chat-messages"></div>
+        <div style="padding: 8px; display: flex; gap: 5px; border-top: 1px solid var(--border)">
+            <input type="text" id="chatInput" placeholder="Chat..." style="padding: 5px 10px; font-size: 12px;">
+            <button id="btnSendChat" style="padding: 5px; border-radius: 50%; width: 32px; height: 32px;"><i data-lucide="send" style="width:14px"></i></button>
+        </div>
+    </div>
+
     <div style="margin-top: auto; padding: 1rem;">
-        <button id="logoutBtn" style="background: transparent; color: var(--gray); border: 1px solid var(--border);"><i data-lucide="log-out"></i> Sign Out</button>
+        <button id="logoutBtn" style="background: transparent; color: var(--gray); border: 1px solid var(--border); width: 100%;"><i data-lucide="log-out"></i> <span class="nav-text">Sign Out</span></button>
     </div>
   </aside>
 
   <main>
-    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
-      <div>
-        <h1 id="welcome-msg" style="margin: 0; font-size: 1.75rem; font-weight: 800;">Hello!</h1>
-        <div id="student-qual" style="margin-top: 5px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;">
-            <i data-lucide="info" style="width: 16px;"></i> Identifying enrollment...
-        </div>
-      </div>
+    <header style="margin-bottom: 2.5rem;">
+        <h1 id="welcome-msg" style="margin: 0; font-weight: 800;">Hello!</h1>
+        <div id="student-qual" style="color: var(--primary); font-weight: 600; margin-top: 5px;">Identifying enrollment...</div>
     </header>
 
     <section id="home-sec" class="content-section active">
-      <h3 style="margin-bottom: 1rem;">My Modules</h3>
-      <div class="module-grid" id="module-grid">
-        </div>
+      <div class="module-grid" id="module-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;"></div>
     </section>
 
     <section id="course-sec" class="content-section">
       <div class="card">
-        <h3>Shared Learning Resources</h3>
-        <table>
-          <thead><tr><th>Resource Name</th><th>Access</th></tr></thead>
-          <tbody id="materials-list"></tbody>
-        </table>
+        <h3>Study Materials</h3>
+        <table style="width:100%; border-collapse:collapse"><tbody id="materials-list"></tbody></table>
       </div>
     </section>
 
@@ -106,23 +142,18 @@
         <h3>Assignment Inbox</h3>
         <div id="assignments-list"></div>
       </div>
-      
       <div class="card">
-        <h3>Submit Your Work</h3>
-        <p style="font-size: 13px; color: var(--gray); margin-bottom: 1.5rem;">Select your assignment and provide a link to your Cloud folder (Google Drive/Dropbox).</p>
+        <h3>Submit Work</h3>
         <select id="submit-task-name" style="margin-bottom: 1rem;"></select>
-        <input type="text" id="submit-link" placeholder="Paste link to your document here..." style="margin-bottom: 1rem;">
-        <button id="btnSubmitWork" style="background: var(--success);"><i data-lucide="send"></i> Submit Assignment</button>
+        <input type="text" id="submit-link" placeholder="Cloud Link (Drive/Dropbox)..." style="margin-bottom: 1rem;">
+        <button id="btnSubmitWork" style="background: var(--success); width: 100%;">Submit Assignment</button>
       </div>
     </section>
 
     <section id="time-sec" class="content-section">
         <div class="card">
-          <h3>Your Weekly Schedule</h3>
-          <table>
-            <thead><tr><th>Day</th><th>Time</th><th>Module</th></tr></thead>
-            <tbody id="timetable-list"></tbody>
-          </table>
+          <h3>Schedule</h3>
+          <table style="width:100%; border-collapse:collapse"><tbody id="timetable-list"></tbody></table>
         </div>
     </section>
   </main>
@@ -148,6 +179,23 @@
   const db = getDatabase(app);
   lucide.createIcons();
 
+  // COLLAPSE LOGIC
+  const sidebar = document.getElementById('sidebar');
+  const collapseBtn = document.getElementById('toggleSidebar');
+  const collapseIcon = document.getElementById('collapseIcon');
+
+  collapseBtn.onclick = () => {
+    sidebar.classList.toggle('collapsed');
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    collapseIcon.setAttribute('data-lucide', isCollapsed ? 'chevron-right' : 'chevron-left');
+    lucide.createIcons();
+  };
+
+  // DARK MODE LOGIC
+  document.getElementById('themeToggle').onclick = () => {
+    document.body.classList.toggle('dark-mode');
+  };
+
   const curriculum = {
     "BCom Accounting": ["Financial Accounting 101", "Business Management", "Commercial Law"],
     "BSc Computer Science": ["Intro to Programming", "Calculus 1", "Data Structures"],
@@ -158,106 +206,73 @@
   onAuthStateChanged(auth, user => {
     document.getElementById('auth-screen').style.display = user ? 'none' : 'flex';
     document.getElementById('main-app').style.display = user ? 'flex' : 'none';
-    if(user) {
-        syncLearnerProfile(user);
-    }
+    if(user) syncLearner(user);
   });
 
-  function syncLearnerProfile(user) {
-    document.getElementById('welcome-msg').textContent = `Hi, ${user.displayName.split(' ')[0] || 'Learner'}`;
+  function syncLearner(user) {
+    document.getElementById('welcome-msg').textContent = `Hi, ${user.displayName.split(' ')[0]}`;
     
-    // Check if user is in the 'learners' database created by Admin
+    // Chat Functionality
+    onValue(ref(db, 'chats'), snap => {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML = '';
+      snap.forEach(c => {
+        const d = c.val();
+        box.innerHTML += `<div class="chat-msg"><b>${d.user.split(' ')[0]}</b>${d.text}</div>`;
+      });
+      box.scrollTop = box.scrollHeight;
+    });
+
     onValue(ref(db, 'learners'), snap => {
-      let found = false;
-      snap.forEach(child => {
-        const student = child.val();
-        if(student.email.toLowerCase() === user.email.toLowerCase()) {
-          const qual = student.assignedQual;
-          document.getElementById('student-qual').innerHTML = `<i data-lucide="check-circle" style="color:var(--success); width:16px;"></i> Enrolled: ${qual}`;
-          renderModules(qual);
-          loadStudentContent(qual);
-          found = true;
-        }
-      });
-      if(!found) {
-        document.getElementById('student-qual').innerHTML = `<i data-lucide="alert-circle" style="color:var(--danger); width:16px;"></i> Not Enrolled. Contact Admin.`;
+      let q = null;
+      snap.forEach(c => { if(c.val().email.toLowerCase() === user.email.toLowerCase()) q = c.val().assignedQual; });
+      if(q) {
+        document.getElementById('student-qual').textContent = `Enrolled: ${q}`;
+        loadContent(q);
       }
-      lucide.createIcons();
     });
   }
 
-  function renderModules(qual) {
+  function loadContent(qual) {
     const mods = curriculum[qual] || [];
-    const grid = document.getElementById('module-grid');
-    grid.innerHTML = mods.map(m => `
-      <div class="module-card">
-        <div class="status-pill">Active Module</div>
-        <h2 style="margin: 15px 0 5px 0; font-size: 1.4rem;">${m}</h2>
-        <p style="font-size: 12px; opacity: 0.8;">Standard Curriculum 2026</p>
-      </div>
-    `).join('');
-  }
+    document.getElementById('module-grid').innerHTML = mods.map(m => `<div class="module-card"><h3>${m}</h3><p>2026 Core</p></div>`).join('');
 
-  function loadStudentContent(qual) {
-    // 1. Load Materials
     onValue(ref(db, 'materials'), snap => {
-      const list = document.getElementById('materials-list');
-      list.innerHTML = '';
-      snap.forEach(child => {
-        const d = child.val();
-        if(d.qual === qual) {
-          list.innerHTML += `<tr>
-            <td><div style="font-weight:600">${d.title}</div></td>
-            <td><a href="${d.link}" target="_blank" style="color:var(--primary); font-weight:600; text-decoration:none;">View File</a></td>
-          </tr>`;
-        }
-      });
+      const list = document.getElementById('materials-list'); list.innerHTML = '';
+      snap.forEach(c => { if(c.val().qual === qual) list.innerHTML += `<tr><td style="padding:15px; border-bottom:1px solid var(--border)"><b>${c.val().title}</b></td><td><a href="${c.val().link}" target="_blank">View</a></td></tr>`; });
     });
 
-    // 2. Load Assignments
     onValue(ref(db, 'assignments'), snap => {
-      const list = document.getElementById('assignments-list');
-      const select = document.getElementById('submit-task-name');
-      list.innerHTML = ''; select.innerHTML = '<option value="">-- Choose Assignment --</option>';
-      snap.forEach(child => {
-        const d = child.val();
-        if(d.qual === qual) {
-          list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div><div style="font-weight:600">${d.title}</div><div style="font-size:12px; color:var(--danger)">Due: ${d.dueDate}</div></div>
-            <i data-lucide="file-text" style="color:var(--gray)"></i>
-          </div>`;
-          select.innerHTML += `<option value="${d.title}">${d.title}</option>`;
+      const list = document.getElementById('assignments-list'); const sel = document.getElementById('submit-task-name');
+      list.innerHTML = ''; sel.innerHTML = '<option value="">Select Assignment</option>';
+      snap.forEach(c => { 
+        if(c.val().qual === qual) {
+            list.innerHTML += `<div class="card" style="margin-bottom:10px"><b>${c.val().title}</b><br><small>Due: ${c.val().dueDate}</small></div>`;
+            sel.innerHTML += `<option value="${c.val().title}">${c.val().title}</option>`;
         }
       });
-      lucide.createIcons();
     });
 
-    // 3. Load Timetable
     onValue(ref(db, 'timetable'), snap => {
-        const list = document.getElementById('timetable-list');
-        list.innerHTML = '';
-        snap.forEach(child => {
-            const d = child.val();
-            list.innerHTML += `<tr><td><b>${d.day}</b></td><td>${d.time}</td><td>${d.subject}</td></tr>`;
-        });
+        const list = document.getElementById('timetable-list'); list.innerHTML = '';
+        snap.forEach(c => { list.innerHTML += `<tr><td style="padding:10px"><b>${c.val().day}</b></td><td>${c.val().time}</td><td>${c.val().subject}</td></tr>`; });
     });
   }
+
+  document.getElementById('btnSendChat').onclick = async () => {
+    const text = document.getElementById('chatInput').value;
+    if(text) {
+      await push(ref(db, 'chats'), { user: auth.currentUser.displayName, text, ts: serverTimestamp() });
+      document.getElementById('chatInput').value = '';
+    }
+  };
 
   document.getElementById('btnSubmitWork').onclick = async () => {
     const link = document.getElementById('submit-link').value;
     const task = document.getElementById('submit-task-name').value;
     if(link && task) {
-      await push(ref(db, 'submissions'), {
-        studentName: auth.currentUser.displayName,
-        studentEmail: auth.currentUser.email,
-        assignmentTitle: task,
-        link: link,
-        timestamp: serverTimestamp()
-      });
-      alert("Assignment submitted successfully!");
-      document.getElementById('submit-link').value = '';
-    } else {
-        alert("Please select an assignment and provide a link.");
+      await push(ref(db, 'submissions'), { studentName: auth.currentUser.displayName, studentEmail: auth.currentUser.email, assignmentTitle: task, link: link, timestamp: serverTimestamp() });
+      alert("Submitted!");
     }
   };
 
