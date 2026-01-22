@@ -253,29 +253,46 @@
       transition: all 0.3s;
     }
 
-    .course-badge {
-      display: inline-block;
-      padding: 0.4rem 0.8rem;
-      background: var(--primary);
-      color: white;
-      border-radius: 6px;
-      font-size: 0.8rem;
+    /* ── CURRICULUM STYLES ── */
+    .qual-header {
+      font-size: 1.4rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
-    }
-
-    .subject-tag {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid var(--primary);
       color: var(--primary);
-      border-radius: 8px;
-      margin: 0.5rem 0.5rem 0 0;
+      margin-bottom: 0.5rem;
+    }
+    .qual-sub {
+      color: var(--text-muted);
       font-size: 0.9rem;
-      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .module-item {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: transform 0.2s;
+    }
+    .module-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .module-icon {
+      background: var(--glow);
+      color: var(--primary);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
     }
 
     .assignment-item, .material-item, .timetable-item {
@@ -429,15 +446,10 @@
 
         <div id="overview" class="tab-content" style="display:block;">
           <div class="card">
-            <h2>Academic Summary</h2>
-            <div id="courseContainer" style="margin-top: 1rem;"></div>
-            <div id="assignedSubjectsList" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
-                <p style="color:var(--text-muted)">Loading academic data...</p>
+            <h2>Your Curriculum</h2>
+            <div id="curriculumDisplay" style="margin-top: 1.5rem;">
+                <p class="empty-state">Loading qualification details...</p>
             </div>
-          </div>
-          <div class="card">
-            <h2>System Updates</h2>
-            <p>Your learning environment is fully synced. Navigate through the sidebar to access your modules.</p>
           </div>
         </div>
 
@@ -511,7 +523,7 @@
     themeToggle.checked = savedTheme === 'light';
     themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'light' : 'dark'));
 
-    // ── Auth & Data Loading ───────────────────────────────────────────────
+    // ── Auth Logic ───────────────────────────────────────────────
     async function getLearnerData(email) {
       if (!email) return null;
       const normalizedEmail = email.toLowerCase().trim();
@@ -520,19 +532,19 @@
           const data = snapshot.val();
           if (!data) return resolve(null);
           const entries = Array.isArray(data) ? data : Object.values(data);
-          const found = entries.find(entry => {
+          const learner = entries.find(entry => {
             const entryEmail = typeof entry === 'string' ? entry : entry?.email;
             return entryEmail?.toLowerCase().trim() === normalizedEmail;
           });
-          resolve(found);
+          resolve(learner);
         }, { onlyOnce: true });
       });
     }
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const learnerEntry = await getLearnerData(user.email);
-        if (!learnerEntry) {
+        const learner = await getLearnerData(user.email);
+        if (!learner) {
           await signOut(auth);
           document.getElementById('errorMessage').textContent = 'Access denied: Email not on allowed list.';
           return;
@@ -541,41 +553,37 @@
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('userDisplayName').textContent = user.displayName || 'Learner';
         
-        // Display Course and Subjects
-        displayAcademicInfo(learnerEntry);
+        displayCurriculum(learner);
       } else {
         document.getElementById('authPage').style.display = 'flex';
         document.getElementById('dashboard').style.display = 'none';
       }
     });
 
-    function displayAcademicInfo(learner) {
-        const subjectsContainer = document.getElementById('assignedSubjectsList');
-        const courseContainer = document.getElementById('courseContainer');
+    // ── CURRICULUM DISPLAY LOGIC ──
+    function displayCurriculum(learner) {
+        const display = document.getElementById('curriculumDisplay');
+        const qual = learner.qualification || "Qualification Not Assigned";
+        const modules = learner.modules;
 
-        // Handle Course Display
-        if (learner.course) {
-            courseContainer.innerHTML = `<span class="course-badge">${learner.course}</span><p style="font-size: 0.9rem; color: var(--text-muted);">Current Program</p>`;
-        } else {
-            courseContainer.innerHTML = `<p style="color:var(--text-muted)">No course assigned.</p>`;
+        let moduleHtml = '<div class="empty-state">No modules assigned to curriculum.</div>';
+
+        if (modules) {
+            const moduleList = Array.isArray(modules) ? modules : modules.split(',').map(m => m.trim());
+            moduleHtml = `<div class="module-grid">` + 
+                moduleList.map(mod => `
+                    <div class="module-item">
+                        <div class="module-icon"><i class="ri-book-open-line"></i></div>
+                        <span>${mod}</span>
+                    </div>
+                `).join('') + `</div>`;
         }
 
-        // Handle Subjects Display
-        const subjects = learner.subjects;
-        if (!subjects) {
-            subjectsContainer.innerHTML = '<p style="color:var(--text-muted)">No modules assigned yet.</p>';
-            return;
-        }
-
-        let subjectsArray = [];
-        if (typeof subjects === 'string') {
-            subjectsArray = subjects.split(',').map(s => s.trim());
-        } else if (Array.isArray(subjects)) {
-            subjectsArray = subjects;
-        }
-
-        subjectsContainer.innerHTML = `<p style="margin-bottom:0.5rem; font-weight:500;">Registered Modules:</p>` + 
-                                       subjectsArray.map(sub => `<span class="subject-tag">${sub}</span>`).join('');
+        display.innerHTML = `
+            <div class="qual-header">${qual}</div>
+            <div class="qual-sub">Registered Curriculum</div>
+            ${moduleHtml}
+        `;
     }
 
     // ── Tab Navigation ──────────────────────────────────────────────────
