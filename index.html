@@ -21,34 +21,28 @@
     
     .layout { display: flex; height: 100vh; }
 
-    /* Sidebar - Icons always visible */
+    /* Sidebar - Icons Always Visible */
     aside { 
       width: var(--sidebar-collapsed); background: var(--card-bg); border-right: 1px solid var(--border); 
       display: flex; flex-direction: column; padding: 1.5rem 0; flex-shrink: 0; z-index: 100;
-      overflow: hidden;
+      overflow-x: hidden;
     }
     aside:hover { width: var(--sidebar-w); }
     
-    aside .nav-text, aside .logo-text { opacity: 0; white-space: nowrap; transition: opacity 0.2s; pointer-events: none; margin-left: 10px; }
+    aside .nav-text, aside .logo-text { 
+      opacity: 0; white-space: nowrap; transition: opacity 0.2s; pointer-events: none; margin-left: 12px; 
+    }
     aside:hover .nav-text, aside:hover .logo-text { opacity: 1; pointer-events: auto; }
     
     .nav-link { 
-      display: flex; align-items: center; padding: .8rem; color: var(--gray); text-decoration: none; 
+      display: flex; align-items: center; padding: 0.8rem 1.2rem; color: var(--gray); text-decoration: none; 
       font-weight: 500; cursor: pointer; margin: 4px 12px; border-radius: 9999px; font-size: 14px; 
-      min-width: 54px;
     }
-    aside:hover .nav-link { padding: .8rem 1.2rem; }
     .nav-link:hover { background: var(--bg); color: var(--primary); }
     .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
     
-    /* Ensure Icons are visible in collapsed state */
     .nav-link i, aside .logo-icon { 
-        min-width: 24px; 
-        width: 24px; 
-        height: 24px; 
-        flex-shrink: 0; 
-        display: block;
-        color: inherit;
+        min-width: 24px; width: 24px; height: 24px; flex-shrink: 0; display: block; color: inherit;
     }
 
     main { flex: 1; overflow-y: auto; padding: 2.5rem; display: flex; flex-direction: column; }
@@ -62,7 +56,7 @@
     button:disabled { background: var(--gray); opacity: 0.6; cursor: not-allowed; }
     input, select { padding: .75rem 1.2rem; border-radius: 9999px; border: 1px solid var(--border); width: 100%; font-size: 14px; background: var(--bg); color: var(--text-main); }
 
-    /* Modern Modal Styles */
+    /* Modern Modal & Progress Bar */
     #modal-overlay {
         position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4);
         display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px);
@@ -72,6 +66,20 @@
         text-align: center; border: 1px solid var(--border); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .progress-container { width: 100%; background: var(--border); border-radius: 99px; height: 8px; margin: 15px 0; display: none; overflow: hidden; }
+    #progress-fill { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease; }
+
+    /* Assignment Grid Layout */
+    .assignment-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .assignment-container { grid-template-columns: 1fr; }
+    }
 
     #chat-sec { height: 100%; display: none; flex-direction: column; }
     #chat-sec.active { display: flex; }
@@ -83,10 +91,7 @@
     .msg.sent { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
     .msg.received { align-self: flex-start; background: var(--bg); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
 
-    .theme-switch {
-      display: flex; align-items: center; padding: 10px; margin: 10px 12px; border-radius: 9999px;
-      cursor: pointer; color: var(--gray);
-    }
+    .theme-switch { display: flex; align-items: center; padding: 10px; margin: 10px 12px; border-radius: 9999px; cursor: pointer; color: var(--gray); }
     .theme-switch:hover { background: var(--bg); }
 
     .module-card { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 1.8rem; border-radius: 24px; }
@@ -103,8 +108,13 @@
     <div class="modal-box">
         <div id="modal-icon" style="margin-bottom: 1rem;"></div>
         <h3 id="modal-title" style="margin: 0 0 0.5rem 0;">Notification</h3>
-        <p id="modal-text" style="color: var(--gray); font-size: 14px; margin-bottom: 1.5rem;"></p>
-        <button onclick="closeModal()" style="width: 100%;">Got it</button>
+        <p id="modal-text" style="color: var(--gray); font-size: 14px; margin-bottom: 1rem;"></p>
+        
+        <div class="progress-container" id="modal-progress">
+            <div id="progress-fill"></div>
+        </div>
+
+        <button id="modal-close-btn" onclick="closeModal()" style="width: 100%;">Got it</button>
     </div>
 </div>
 
@@ -159,20 +169,23 @@
     </section>
 
     <section id="task-sec" class="content-section">
-      <div class="card">
-        <h3>Assignments</h3>
-        <div id="assignments-list"></div>
-      </div>
-      <div class="card">
-        <h3>Submit Your Work (PDF)</h3>
-        <select id="submit-task-name" style="margin-bottom: 1rem;"></select>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <input type="file" id="pdfFile" accept="application/pdf" style="display: none;">
-          <button id="btnBrowse" style="background: var(--bg); color: var(--text-main); border: 1px dashed var(--border);">
-            <i data-lucide="upload-cloud"></i> <span id="fileName">Browse PDF File</span>
-          </button>
-          <button id="btnSubmitWork" style="background: var(--success); width: 100%;">Upload & Submit</button>
-        </div>
+      <div class="assignment-container">
+          <div id="assignments-column">
+              <h3 style="margin-bottom: 1.5rem;">Pending Assignments</h3>
+              <div id="assignments-list"></div>
+          </div>
+          
+          <div class="card" id="submission-column">
+            <h3>Submit Your Work (PDF)</h3>
+            <select id="submit-task-name" style="margin-bottom: 1rem;"></select>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <input type="file" id="pdfFile" accept="application/pdf" style="display: none;">
+              <button id="btnBrowse" style="background: var(--bg); color: var(--text-main); border: 1px dashed var(--border);">
+                <i data-lucide="upload-cloud"></i> <span id="fileName">Browse PDF File</span>
+              </button>
+              <button id="btnSubmitWork" style="background: var(--success); width: 100%;">Upload & Submit</button>
+            </div>
+          </div>
       </div>
     </section>
 
@@ -201,7 +214,6 @@
   import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
   import { getDatabase, ref, onValue, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
-  // CORRECTED CLOUDINARY ENDPOINT
   const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dv5bsbydu/upload";
   const CLOUDINARY_PRESET = "dv5bsbydu";
 
@@ -220,15 +232,22 @@
   const db = getDatabase(app);
   lucide.createIcons();
 
-  // Modern Modal Logic
-  window.showModal = (title, text, type = 'success') => {
+  window.showModal = (title, text, type = 'success', showProgress = false) => {
       const overlay = document.getElementById('modal-overlay');
       const iconBox = document.getElementById('modal-icon');
+      const progress = document.getElementById('modal-progress');
+      const closeBtn = document.getElementById('modal-close-btn');
+      
       document.getElementById('modal-title').textContent = title;
       document.getElementById('modal-text').textContent = text;
       
+      progress.style.display = showProgress ? 'block' : 'none';
+      closeBtn.style.display = showProgress ? 'none' : 'block';
+      document.getElementById('progress-fill').style.width = '0%';
+
       iconBox.innerHTML = type === 'success' 
         ? '<i data-lucide="check-circle" style="color:var(--success); width:48px; height:48px;"></i>'
+        : type === 'loading' ? '<i data-lucide="loader" style="color:var(--primary); width:48px; height:48px;" class="spin"></i>'
         : '<i data-lucide="alert-circle" style="color:#ef4444; width:48px; height:48px;"></i>';
       
       overlay.style.display = 'flex';
@@ -238,13 +257,6 @@
 
   document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-mode');
 
-  const curriculum = {
-    "BCom Accounting": ["Financial Accounting 101", "Business Management", "Commercial Law"],
-    "BSc Computer Science": ["Intro to Programming", "Calculus 1", "Data Structures"],
-    "LLB Law": ["Family Law", "Legal Foundations", "Criminal Law"],
-    "Diploma in Engineering": ["Engineering Physics", "Technical Drawing", "Mechanics"]
-  };
-
   onAuthStateChanged(auth, user => {
     document.getElementById('auth-screen').style.display = user ? 'none' : 'flex';
     document.getElementById('main-app').style.display = user ? 'flex' : 'none';
@@ -253,111 +265,91 @@
 
   function syncLearner(user) {
     document.getElementById('welcome-msg').textContent = `Hi, ${user.displayName.split(' ')[0]}`;
-    
     onValue(ref(db, 'chats'), snap => {
-        const box = document.getElementById('chat-messages');
-        box.innerHTML = '';
+        const box = document.getElementById('chat-messages'); box.innerHTML = '';
         snap.forEach(c => {
-            const d = c.val();
-            const isMe = d.uid === user.uid;
+            const d = c.val(); const isMe = d.uid === user.uid;
             box.innerHTML += `<div class="msg ${isMe ? 'sent' : 'received'}"><b>${d.user}</b>${d.text}</div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
-
     onValue(ref(db, 'learners'), snap => {
-      let q = null;
-      snap.forEach(c => { if(c.val().email.toLowerCase() === user.email.toLowerCase()) q = c.val().assignedQual; });
-      if(q) {
+      snap.forEach(c => { if(c.val().email.toLowerCase() === user.email.toLowerCase()) {
+        const q = c.val().assignedQual;
         document.getElementById('student-qual').textContent = `Enrolled: ${q}`;
         loadContent(q);
-      }
+      }});
     });
   }
 
   function loadContent(qual) {
-    const mods = curriculum[qual] || [];
-    document.getElementById('module-grid').innerHTML = mods.map(m => `<div class="module-card"><h3>${m}</h3><p>2026 Core</p></div>`).join('');
-
     onValue(ref(db, 'materials'), snap => {
       const list = document.getElementById('materials-list'); list.innerHTML = '';
       snap.forEach(c => { if(c.val().qual === qual) list.innerHTML += `<tr><td style="padding:15px; border-bottom:1px solid var(--border)"><b>${c.val().title}</b></td><td><a href="${c.val().link}" target="_blank" download>Download</a></td></tr>`; });
     });
-
     onValue(ref(db, 'assignments'), snap => {
       const list = document.getElementById('assignments-list'); const sel = document.getElementById('submit-task-name');
       list.innerHTML = ''; sel.innerHTML = '<option value="">Select Assignment</option>';
-      snap.forEach(c => { 
-        if(c.val().qual === qual) {
-            list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+      snap.forEach(c => { if(c.val().qual === qual) {
+            list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
               <div><b>${c.val().title}</b><br><small>Due: ${c.val().dueDate}</small></div>
               <a href="${c.val().fileUrl || '#'}" target="_blank" style="color:var(--primary); font-size:12px; font-weight:700">DOWNLOAD TASK</a>
             </div>`;
             sel.innerHTML += `<option value="${c.val().title}">${c.val().title}</option>`;
-        }
-      });
+      }});
       lucide.createIcons();
-    });
-
-    onValue(ref(db, 'timetable'), snap => {
-        const list = document.getElementById('timetable-list'); list.innerHTML = '';
-        snap.forEach(c => { list.innerHTML += `<tr><td style="padding:10px"><b>${c.val().day}</b></td><td>${c.val().time}</td><td>${c.val().subject}</td></tr>`; });
     });
   }
 
   const fileInput = document.getElementById('pdfFile');
-  const btnBrowse = document.getElementById('btnBrowse');
-  const fileNameDisplay = document.getElementById('fileName');
-
-  btnBrowse.onclick = () => fileInput.click();
-  fileInput.onchange = () => {
-    if(fileInput.files.length > 0) fileNameDisplay.textContent = fileInput.files[0].name;
-  };
+  document.getElementById('btnBrowse').onclick = () => fileInput.click();
+  fileInput.onchange = () => { if(fileInput.files[0]) document.getElementById('fileName').textContent = fileInput.files[0].name; };
 
   document.getElementById('btnSubmitWork').onclick = async () => {
     const task = document.getElementById('submit-task-name').value;
     const file = fileInput.files[0];
-    
     if(!task || !file) return showModal("Wait!", "Please select an assignment and a PDF file.", "error");
 
-    document.getElementById('btnSubmitWork').disabled = true;
-    document.getElementById('btnSubmitWork').textContent = "Uploading...";
+    showModal("Uploading", "Sending your PDF to the server...", "loading", true);
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", CLOUDINARY_PRESET);
 
-    try {
-      const resp = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
-      const data = await resp.json();
-      
-      if(data.secure_url) {
-        await push(ref(db, 'submissions'), {
-          studentName: auth.currentUser.displayName,
-          studentEmail: auth.currentUser.email,
-          assignmentTitle: task,
-          link: data.secure_url,
-          timestamp: serverTimestamp()
-        });
-        showModal("Success!", "Assignment Submitted via Cloudinary!");
-        fileInput.value = "";
-        fileNameDisplay.textContent = "Browse PDF File";
-      } else {
-          throw new Error("Cloudinary error");
-      }
-    } catch (err) {
-      showModal("Error", "Upload failed. Please check your internet or file size.", "error");
-    } finally {
-      document.getElementById('btnSubmitWork').disabled = false;
-      document.getElementById('btnSubmitWork').textContent = "Upload & Submit";
-    }
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", CLOUDINARY_URL, true);
+
+    xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+            const percent = (e.loaded / e.total) * 100;
+            document.getElementById('progress-fill').style.width = percent + '%';
+        }
+    };
+
+    xhr.onload = async () => {
+        const data = JSON.parse(xhr.responseText);
+        if(data.secure_url) {
+            await push(ref(db, 'submissions'), {
+                studentName: auth.currentUser.displayName,
+                studentEmail: auth.currentUser.email,
+                assignmentTitle: task,
+                link: data.secure_url,
+                timestamp: serverTimestamp()
+            });
+            showModal("Success!", "Assignment Submitted Successfully!");
+            fileInput.value = ""; document.getElementById('fileName').textContent = "Browse PDF File";
+        } else { showModal("Error", "Server rejected the file.", "error"); }
+    };
+
+    xhr.onerror = () => showModal("Error", "Upload failed. Check connection.", "error");
+    xhr.send(formData);
   };
 
   document.getElementById('btnSendChat').onclick = async () => {
-    const text = document.getElementById('chatInput').value;
-    if(text.trim()) {
-        await push(ref(db, 'chats'), { user: auth.currentUser.displayName, uid: auth.currentUser.uid, text: text, ts: serverTimestamp() });
-        document.getElementById('chatInput').value = '';
+    const input = document.getElementById('chatInput');
+    if(input.value.trim()) {
+        await push(ref(db, 'chats'), { user: auth.currentUser.displayName, uid: auth.currentUser.uid, text: input.value, ts: serverTimestamp() });
+        input.value = '';
     }
   };
 
