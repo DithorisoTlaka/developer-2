@@ -364,7 +364,7 @@
   document.getElementById('btnSendChat').onclick = async () => {
     const input = document.getElementById('chatInput');
     if(input.value.trim()) {
-        await push(ref(db, 'chats'), { user: auth.currentUser.displayName, uid: auth.currentUser.uid, text: input.value, ts: serverTimestamp() });
+        await push(ref(db, 'users'), { user: auth.currentUser.displayName, uid: auth.currentUser.uid, text: input.value, ts: serverTimestamp() });
         input.value = '';
     }
   };
