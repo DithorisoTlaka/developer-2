@@ -524,6 +524,7 @@
     themeToggle.addEventListener('change', () => setTheme(themeToggle.checked ? 'light' : 'dark'));
 
     // ── Auth Logic ───────────────────────────────────────────────
+    // Updated to fetch full learner object from the 'learners' node
     async function getLearnerData(email) {
       if (!email) return null;
       const normalizedEmail = email.toLowerCase().trim();
@@ -531,10 +532,14 @@
         onValue(ref(database, 'learners'), (snapshot) => {
           const data = snapshot.val();
           if (!data) return resolve(null);
+          
+          // Handle both Array and Object structures in Firebase
           const entries = Array.isArray(data) ? data : Object.values(data);
+          
+          // Find the specific learner by email
           const learner = entries.find(entry => {
-            const entryEmail = typeof entry === 'string' ? entry : entry?.email;
-            return entryEmail?.toLowerCase().trim() === normalizedEmail;
+             const entryEmail = (typeof entry === 'object' && entry !== null) ? entry.email : entry;
+             return entryEmail?.toLowerCase().trim() === normalizedEmail;
           });
           resolve(learner);
         }, { onlyOnce: true });
@@ -561,6 +566,7 @@
     });
 
     // ── CURRICULUM DISPLAY LOGIC ──
+    // Updated to handle 'qualification' and 'modules' from the learner object
     function displayCurriculum(learner) {
         const display = document.getElementById('curriculumDisplay');
         const qual = learner.qualification || "Qualification Not Assigned";
@@ -569,6 +575,7 @@
         let moduleHtml = '<div class="empty-state">No modules assigned to curriculum.</div>';
 
         if (modules) {
+            // Support comma-separated string or actual array from Firebase
             const moduleList = Array.isArray(modules) ? modules : modules.split(',').map(m => m.trim());
             moduleHtml = `<div class="module-grid">` + 
                 moduleList.map(mod => `
