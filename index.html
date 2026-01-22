@@ -3,306 +3,275 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LMS Admin – Full Provisioning & Management</title>
+  <title>Learner Portal – My Education</title>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-    :root{
-      --primary:#2563eb;--primary-hover:#1d4ed8;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;
-      --gray:#64748b;--bg:#f8fafc;--card-bg:#ffffff;--text-main:#0f172a;--sidebar-w:260px;
-      --border:#e2e8f0;--shadow:0 4px 6px -1px rgb(0 0 0 / 0.1),0 2px 4px -2px rgb(0 0 0 / 0.1);
+    :root {
+      --primary: #2563eb; --primary-light: #eff6ff; --success: #10b981; --bg: #f8fafc;
+      --card-bg: #ffffff; --text-main: #0f172a; --gray: #64748b; --border: #e2e8f0;
     }
-    body.dark-mode{
-      --bg:#020617;--card-bg:#0f172a;--text-main:#f8fafc;--border:#1e293b;--gray:#94a3b8;
-      --shadow:0 10px 15px -3px rgb(0 0 0 / 0.5);
+    body.dark-mode {
+      --bg: #020617; --card-bg: #0f172a; --text-main: #f8fafc; --border: #1e293b; --gray: #94a3b8;
     }
-    *{box-sizing:border-box;transition:background-color .2s,color .2s,border-color .2s}
-    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);margin:0;color:var(--text-main);height:100vh;overflow:hidden}
-    .layout{display:flex;height:100vh}
+    * { box-sizing: border-box; transition: background-color .2s, border-color .2s; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: var(--text-main); height: 100vh; overflow: hidden; }
     
-    /* Fixed Sidebar Styles */
-    aside{background:var(--card-bg);border-right:1px solid var(--border);padding:1.5rem 0;width:var(--sidebar-w);z-index:100;height:100vh;display:flex;flex-direction:column;box-shadow:var(--shadow);flex-shrink: 0;}
+    .layout { display: flex; height: 100vh; }
+    aside { width: 280px; background: var(--card-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem 0; flex-shrink: 0; }
     
-    .logo{padding:0 1.5rem 2rem;font-size:1.25rem;font-weight:800;color:var(--primary);display:flex;align-items:center;gap:12px}
-    .logo i { min-width: 24px; }
+    .nav-link { display: flex; align-items: center; padding: .8rem 1.2rem; color: var(--gray); text-decoration: none; font-weight: 500; cursor: pointer; gap: 12px; margin: 4px 12px; border-radius: 12px; font-size: 14px; }
+    .nav-link:hover { background: var(--bg); color: var(--primary); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
     
-    nav ul{list-style:none;padding:0;margin:0}
+    main { flex: 1; overflow-y: auto; padding: 2.5rem; }
+    .card { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     
-    /* Navigation: Icons and Text Always Visible */
-    nav a{display:flex;align-items:center;padding:.8rem 1.2rem;color:var(--gray);text-decoration:none;font-weight:500;cursor:pointer;font-size:14px;white-space:nowrap;gap:12px;margin:4px 12px;border-radius:12px}
-    nav a i{min-width:24px; flex-shrink: 0;}
-    nav a span{opacity:1; pointer-events:auto}
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .module-card { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 1.8rem; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); }
     
-    nav a:hover{background:var(--bg);color:var(--primary)}
-    nav a.active{background:#eff6ff;color:var(--primary);font-weight:600}
-    body.dark-mode nav a.active{background:#1e3a8a;color:#60a5fa}
+    .content-section { display: none; animation: fadeIn .3s ease; }
+    .content-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .main-wrapper{flex:1; display:flex; flex-direction:column; min-width: 0;}
-    header{background:var(--card-bg);padding:0 2.5rem;display:flex;justify-content:space-between;align-items:center;min-height:70px;border-bottom:1px solid var(--border)}
-    header h2{font-size:1.25rem;font-weight:700;margin:0}
-    main{padding:2.5rem;overflow-y:auto;flex:1}
-    .card{background:var(--card-bg);border-radius:16px;border:1px solid var(--border);padding:1.8rem;margin-bottom:1.5rem;box-shadow:0 1px 3px 0 rgb(0 0 0 / .1)}
-    .card:hover{border-color:var(--primary);box-shadow:var(--shadow)}
-    .content-section{display:none;animation:fadeIn .3s ease}
-    .content-section.active{display:block}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    table{width:100%;border-collapse:collapse;margin-top:1rem}
-    th,td{padding:1.2rem;text-align:left;border-bottom:1px solid var(--border)}
-    th{background:var(--bg);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);font-weight:700}
-    button{background:var(--primary);color:#fff;border:none;padding:.65rem 1.4rem;border-radius:9999px;cursor:pointer;font-weight:600;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
-    button:active{transform:scale(.98)}
-    button.danger{background:var(--danger)}
-    button.success{background:var(--success)}
-    input,select,textarea{padding:.75rem;border:1px solid var(--border);border-radius:10px;width:100%;margin-bottom:12px;background:var(--bg);color:var(--text-main);font-size:14px}
-    input:focus{outline:none;border-color:var(--primary)}
-    .label{font-size:12px;color:var(--gray);font-weight:600;display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
-    .subject-tag{display:inline-block;background:#f1f5f9;color:#475569;padding:6px 14px;border-radius:9999px;font-size:11px;font-weight:600;margin:3px;border:1px solid var(--border)}
-    body.dark-mode .subject-tag{background:#1e293b;color:#cbd5e1}
-    .theme-toggle{cursor:pointer;width:40px;height:40px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
-    #chat-box{height:350px;overflow-y:auto;border:1px solid var(--border);padding:1.5rem;border-radius:16px;background:var(--bg);margin-bottom:1.5rem}
-    .msg{margin-bottom:1rem;padding:1rem;border-radius:16px;background:var(--card-bg);border:1px solid var(--border);max-width:80%}
-    .msg b{color:var(--primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px}
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 1.2rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    input, select, button { padding: .75rem; border-radius: 10px; border: 1px solid var(--border); width: 100%; font-size: 14px; }
+    button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    button:active { transform: scale(0.98); }
+
+    #auth-screen { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg); }
+    .status-pill { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.2); }
   </style>
 </head>
 <body>
-<div class="layout">
-  <aside id="sidebar">
-    <div class="logo"><i data-lucide="layers"></i><span>LMS Admin</span></div>
-    <nav id="sidebar-nav" style="display:none">
-      <ul>
-        <li><a class="nav-link active" data-target="invite-sec"><i data-lucide="user-plus"></i><span>Add Learner</span></a></li>
-        <li><a class="nav-link" data-target="directory-sec"><i data-lucide="users"></i><span>Directory</span></a></li>
-        <li><a class="nav-link" data-target="materials-sec"><i data-lucide="book-open"></i><span>Materials</span></a></li>
-        <li><a class="nav-link" data-target="assignments-sec"><i data-lucide="file-text"></i><span>Assignments</span></a></li>
-        <li><a class="nav-link" data-target="timetable-sec"><i data-lucide="calendar"></i><span>Timetable</span></a></li>
-        <li><a class="nav-link" data-target="chats-sec"><i data-lucide="message-square"></i><span>Chats</span></a></li>
-        <li><a class="nav-link" data-target="reports-sec"><i data-lucide="bar-chart-3"></i><span>Analytics</span></a></li>
-      </ul>
-    </nav>
-  </aside>
 
-  <div class="main-wrapper">
-    <header>
-      <h2 id="view-title">Provisioning</h2>
-      <div style="display:flex;gap:15px;align-items:center">
-        <div class="theme-toggle" id="themeToggle"><i data-lucide="moon" id="themeIcon" style="width:20px"></i></div>
-        <button id="signOutBtn" style="display:none;background:var(--bg);color:var(--text-main);border:1px solid var(--border)">Sign Out</button>
-      </div>
-    </header>
-
-    <main>
-      <div id="auth-section" class="card" style="max-width:400px;margin:5rem auto;text-align:center">
-        <div style="background:#eff6ff;width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem"><i data-lucide="shield-check" style="width:32px;height:32px;color:var(--primary)"></i></div>
-        <h1 style="font-size:1.5rem;font-weight:800;margin-bottom:.5rem">Admin Portal</h1>
-        <p style="color:var(--gray);margin-bottom:2rem;font-size:14px">Secure access for faculty and administrators.</p>
-        <button id="googleSignInBtn" style="width:100%;padding:1.2rem;font-size:16px"><i data-lucide="log-in"></i> Sign in with Google</button>
-      </div>
-
-      <div id="dashboard" style="display:none">
-        <section id="invite-sec" class="content-section active">
-          <div class="card">
-            <h3 style="margin-top:0">New Learner Provisioning</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:1.5rem">
-              <div><label class="label">Learner Email</label><input type="email" id="newLearnerEmail" placeholder="student@example.ac.za"></div>
-              <div><label class="label">Assign Qualification</label><select class="qual-drop" id="qualSelect"></select></div>
-            </div>
-            <label class="label">Included Modules</label>
-            <div id="modulePreview" style="padding:1.5rem;border:2px dashed var(--border);border-radius:12px;margin:10px 0;min-height:80px"></div>
-            <button id="provisionBtn" class="success" style="width:100%;margin-top:1rem;padding:1rem">Invite & Enroll Learner</button>
-          </div>
-        </section>
-
-        <section id="directory-sec" class="content-section">
-          <div class="card">
-            <h3 style="margin-top:0">Learner Directory</h3>
-            <table><thead><tr><th>Email</th><th>Qualification</th><th>Modules</th><th>Actions</th></tr></thead><tbody id="directoryList"></tbody></table>
-          </div>
-        </section>
-
-        <section id="materials-sec" class="content-section">
-          <div class="card">
-            <h3 style="margin-top:0">Upload Learning Materials</h3>
-            <label class="label">Material Title</label><input type="text" id="matTitle" placeholder="e.g. Lecture 1: Intro to Accounting">
-            <label class="label">Target Qualification</label><select class="qual-drop" id="matQual"></select>
-            <label class="label">Resource URL (Drive/PDF Link)</label><input type="text" id="matLink" placeholder="https://...">
-            <button id="btnUploadMat" class="success">Post Material</button>
-          </div>
-        </section>
-
-        <section id="assignments-sec" class="content-section">
-          <div class="card">
-            <h3 style="margin-top:0">Issue Assignment</h3>
-            <input type="text" id="assTitle" placeholder="Assignment Name">
-            <select class="qual-drop" id="assQual"></select>
-            <label class="label">Due Date</label><input type="date" id="assDate">
-            <button id="btnPostAss" class="success">Post Assignment</button>
-          </div>
-        </section>
-
-        <section id="timetable-sec" class="content-section">
-          <div class="card">
-            <h3 style="margin-top:0">Weekly Schedule</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.5rem">
-              <select id="ttDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option></select>
-              <input type="time" id="ttTime"><input type="text" id="ttSubject" placeholder="Subject Name">
-            </div>
-            <button id="btnAddTT" style="width:100%">Add Slot to Schedule</button>
-            <table><thead><tr><th>Day</th><th>Time</th><th>Subject</th></tr></thead><tbody id="timetableList"></tbody></table>
-          </div>
-        </section>
-
-        <section id="chats-sec" class="content-section">
-          <div class="card">
-            <h3 style="margin-top:0">Broadcasting Chat</h3>
-            <div id="chat-box"></div>
-            <div style="display:flex;gap:10px"><input type="text" id="chatInput" placeholder="Send a message to all students..." style="margin-bottom:0"><button id="btnSendChat">Send</button></div>
-          </div>
-        </section>
-
-        <section id="reports-sec" class="content-section">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
-            <div class="card" style="margin-bottom:0;display:flex;justify-content:space-between;align-items:center">
-              <div><label class="label">Active Students</label><h1 id="count-learners" style="margin:0">0</h1></div><i data-lucide="users" style="color:var(--primary);width:40px;height:40px;opacity:.3"></i>
-            </div>
-            <div class="card" style="margin-bottom:0;display:flex;justify-content:space-between;align-items:center">
-              <div><label class="label">Total Materials</label><h1 id="count-mats" style="margin:0">0</h1></div><i data-lucide="book" style="color:var(--success);width:40px;height:40px;opacity:.3"></i>
-            </div>
-          </div>
-          <div class="card">
-            <h3 style="margin-top:0">Submission Tracker</h3>
-            <table><thead><tr><th>Student Name</th><th>Student Email</th><th>Assignment</th><th>Link</th><th>Actions</th></tr></thead><tbody id="submissionList"></tbody></table>
-          </div>
-        </section>
-      </div>
-    </main>
+<div id="auth-screen">
+  <div class="card" style="max-width: 400px; width: 90%; text-align: center; padding: 3rem 2rem;">
+    <div style="background: var(--primary-light); width: 64px; height: 64px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+        <i data-lucide="graduation-cap" style="width: 32px; height: 32px; color: var(--primary);"></i>
+    </div>
+    <h2 style="margin-bottom: 0.5rem;">Learner Portal</h2>
+    <p style="color: var(--gray); font-size: 14px; margin-bottom: 2rem;">Sign in to access your course materials and assignments.</p>
+    <button id="loginBtn" style="padding: 1rem;"><i data-lucide="log-in"></i> Student Login</button>
   </div>
 </div>
 
-<script type="module">
-  import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-  import {getAuth,signInWithPopup,GoogleAuthProvider,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import {getDatabase,ref,push,onValue,remove,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+<div class="layout" id="main-app" style="display:none">
+  <aside>
+    <div style="padding: 0 1.5rem 2rem; font-weight: 800; color: var(--primary); font-size: 1.25rem; display: flex; align-items: center; gap: 12px;">
+        <i data-lucide="layers"></i> LMS Learner
+    </div>
+    <nav>
+      <a class="nav-link active" data-target="home-sec"><i data-lucide="home"></i> Dashboard</a>
+      <a class="nav-link" data-target="course-sec"><i data-lucide="book-open"></i> Study Materials</a>
+      <a class="nav-link" data-target="task-sec"><i data-lucide="file-check"></i> My Assignments</a>
+      <a class="nav-link" data-target="time-sec"><i data-lucide="calendar"></i> Class Schedule</a>
+    </nav>
+    <div style="margin-top: auto; padding: 1rem;">
+        <button id="logoutBtn" style="background: transparent; color: var(--gray); border: 1px solid var(--border);"><i data-lucide="log-out"></i> Sign Out</button>
+    </div>
+  </aside>
 
-  const firebaseConfig={
-    apiKey:"AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
-    authDomain:"learnermanagementsystem-f3b6a.firebaseapp.com",
-    databaseURL:"https://learnermanagementsystem-f3b6a-default-rtdb.firebaseio.com",
-    projectId:"learnermanagementsystem-f3b6a",
-    storageBucket:"learnermanagementsystem-f3b6a.firebasestorage.app",
-    messagingSenderId:"173549259244",
-    appId:"1:173549259244:web:f8722018a989c484a7d8c9"
+  <main>
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+      <div>
+        <h1 id="welcome-msg" style="margin: 0; font-size: 1.75rem; font-weight: 800;">Hello!</h1>
+        <div id="student-qual" style="margin-top: 5px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="info" style="width: 16px;"></i> Identifying enrollment...
+        </div>
+      </div>
+    </header>
+
+    <section id="home-sec" class="content-section active">
+      <h3 style="margin-bottom: 1rem;">My Modules</h3>
+      <div class="module-grid" id="module-grid">
+        </div>
+    </section>
+
+    <section id="course-sec" class="content-section">
+      <div class="card">
+        <h3>Shared Learning Resources</h3>
+        <table>
+          <thead><tr><th>Resource Name</th><th>Access</th></tr></thead>
+          <tbody id="materials-list"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="task-sec" class="content-section">
+      <div class="card">
+        <h3>Assignment Inbox</h3>
+        <div id="assignments-list"></div>
+      </div>
+      
+      <div class="card">
+        <h3>Submit Your Work</h3>
+        <p style="font-size: 13px; color: var(--gray); margin-bottom: 1.5rem;">Select your assignment and provide a link to your Cloud folder (Google Drive/Dropbox).</p>
+        <select id="submit-task-name" style="margin-bottom: 1rem;"></select>
+        <input type="text" id="submit-link" placeholder="Paste link to your document here..." style="margin-bottom: 1rem;">
+        <button id="btnSubmitWork" style="background: var(--success);"><i data-lucide="send"></i> Submit Assignment</button>
+      </div>
+    </section>
+
+    <section id="time-sec" class="content-section">
+        <div class="card">
+          <h3>Your Weekly Schedule</h3>
+          <table>
+            <thead><tr><th>Day</th><th>Time</th><th>Module</th></tr></thead>
+            <tbody id="timetable-list"></tbody>
+          </table>
+        </div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { getDatabase, ref, onValue, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLvkRwSpd-hbPaDP31pV1H-4N5_Re-_xc",
+    authDomain: "learnermanagementsystem-f3b6a.firebaseapp.com",
+    databaseURL: "https://learnermanagementsystem-f3b6a-default-rtdb.firebaseio.com",
+    projectId: "learnermanagementsystem-f3b6a",
+    storageBucket: "learnermanagementsystem-f3b6a.firebasestorage.app",
+    messagingSenderId: "173549259244",
+    appId: "1:173549259244:web:f8722018a989c484a7d8c9"
   };
 
-  const app=initializeApp(firebaseConfig);
-  const auth=getAuth(app);
-  const db=getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
   lucide.createIcons();
 
-  const themeToggle=document.getElementById('themeToggle');
-  const themeIcon=document.getElementById('themeIcon');
-  themeToggle.onclick=()=>{
-    document.body.classList.toggle('dark-mode');
-    const isDark=document.body.classList.contains('dark-mode');
-    themeIcon.setAttribute('data-lucide',isDark?'sun':'moon');
-    lucide.createIcons();
+  const curriculum = {
+    "BCom Accounting": ["Financial Accounting 101", "Business Management", "Commercial Law"],
+    "BSc Computer Science": ["Intro to Programming", "Calculus 1", "Data Structures"],
+    "LLB Law": ["Family Law", "Legal Foundations", "Criminal Law"],
+    "Diploma in Engineering": ["Engineering Physics", "Technical Drawing", "Mechanics"]
   };
 
-  const tertiaryCurriculum={
-    "BCom Accounting":["Financial Accounting 101","Business Management","Commercial Law"],
-    "BSc Computer Science":["Intro to Programming","Calculus 1","Data Structures"],
-    "LLB Law":["Family Law","Legal Foundations","Criminal Law"],
-    "Diploma in Engineering":["Engineering Physics","Technical Drawing","Mechanics"]
-  };
-
-  onAuthStateChanged(auth,user=>{
-    document.getElementById('auth-section').style.display=user?'none':'block';
-    document.getElementById('dashboard').style.display=user?'block':'none';
-    document.getElementById('sidebar-nav').style.display=user?'block':'none';
-    document.getElementById('signOutBtn').style.display=user?'block':'none';
-    if(user)initApp();
+  onAuthStateChanged(auth, user => {
+    document.getElementById('auth-screen').style.display = user ? 'none' : 'flex';
+    document.getElementById('main-app').style.display = user ? 'flex' : 'none';
+    if(user) {
+        syncLearnerProfile(user);
+    }
   });
 
-  function initApp(){
-    document.querySelectorAll('.qual-drop').forEach(sel=>{
-      sel.innerHTML='<option value="">-- Select Qual --</option>';
-      Object.keys(tertiaryCurriculum).forEach(q=>sel.innerHTML+=`<option value="${q}">${q}</option>`);
-    });
-    document.getElementById('qualSelect').onchange=e=>{
-      const mods=tertiaryCurriculum[e.target.value]||[];
-      document.getElementById('modulePreview').innerHTML=mods.map(m=>`<span class="subject-tag">${m}</span>`).join('');
-    };
-
-    onValue(ref(db,'learners'),snap=>{
-      const list=document.getElementById('directoryList');
-      list.innerHTML='';let count=0;
-      snap.forEach(child=>{
-        count++;const d=child.val();
-        list.innerHTML+=`<tr><td>${d.email}</td><td>${d.assignedQual}</td><td>${(tertiaryCurriculum[d.assignedQual]||[]).join(', ')}</td>
-        <td><button class="danger" onclick="deleteItem('learners/${child.key}')">Delete</button></td></tr>`;
+  function syncLearnerProfile(user) {
+    document.getElementById('welcome-msg').textContent = `Hi, ${user.displayName.split(' ')[0] || 'Learner'}`;
+    
+    // Check if user is in the 'learners' database created by Admin
+    onValue(ref(db, 'learners'), snap => {
+      let found = false;
+      snap.forEach(child => {
+        const student = child.val();
+        if(student.email.toLowerCase() === user.email.toLowerCase()) {
+          const qual = student.assignedQual;
+          document.getElementById('student-qual').innerHTML = `<i data-lucide="check-circle" style="color:var(--success); width:16px;"></i> Enrolled: ${qual}`;
+          renderModules(qual);
+          loadStudentContent(qual);
+          found = true;
+        }
       });
-      document.getElementById('count-learners').textContent=count;
-    });
-    onValue(ref(db,'materials'),snap=>{let c=0;snap.forEach(()=>c++);document.getElementById('count-mats').textContent=c});
-    onValue(ref(db,'timetable'),snap=>{
-      const list=document.getElementById('timetableList');list.innerHTML='';
-      snap.forEach(child=>{const d=child.val();list.innerHTML+=`<tr><td>${d.day}</td><td>${d.time}</td><td>${d.subject}</td></tr>`});
-    });
-    onValue(ref(db,'chats'),snap=>{
-      const box=document.getElementById('chat-box');box.innerHTML='';
-      snap.forEach(child=>{const d=child.val();box.innerHTML+=`<div class="msg"><b>${d.user||'System'}</b>${d.text}</div>`});
-      box.scrollTop=box.scrollHeight;
-    });
-    onValue(ref(db,'submissions'),snap=>{
-      const list=document.getElementById('submissionList');list.innerHTML='';
-      snap.forEach(child=>{
-        const d=child.val();
-        list.innerHTML+=`<tr><td><b>${d.studentName||'Anonymous'}</b></td><td>${d.studentEmail||'No Email'}</td>
-        <td>${d.assignmentTitle||'Assignment'}</td><td><a href="${d.link}" target="_blank" style="color:var(--primary);font-weight:600">View Work</a></td>
-        <td><button class="danger" onclick="deleteItem('submissions/${child.key}')">Remove</button></td></tr>`;
-      });
+      if(!found) {
+        document.getElementById('student-qual').innerHTML = `<i data-lucide="alert-circle" style="color:var(--danger); width:16px;"></i> Not Enrolled. Contact Admin.`;
+      }
+      lucide.createIcons();
     });
   }
 
-  window.deleteItem=path=>{if(confirm("Delete this?"))remove(ref(db,path))};
+  function renderModules(qual) {
+    const mods = curriculum[qual] || [];
+    const grid = document.getElementById('module-grid');
+    grid.innerHTML = mods.map(m => `
+      <div class="module-card">
+        <div class="status-pill">Active Module</div>
+        <h2 style="margin: 15px 0 5px 0; font-size: 1.4rem;">${m}</h2>
+        <p style="font-size: 12px; opacity: 0.8;">Standard Curriculum 2026</p>
+      </div>
+    `).join('');
+  }
 
-  document.getElementById('provisionBtn').onclick=async()=>{
-    const email=document.getElementById('newLearnerEmail').value;
-    const qual=document.getElementById('qualSelect').value;
-    if(email&&qual){await push(ref(db,'learners'),{email,assignedQual:qual,createdAt:serverTimestamp()});alert("Learner Added")}
-  };
-  document.getElementById('btnUploadMat').onclick=async()=>{
-    const t=document.getElementById('matTitle').value,q=document.getElementById('matQual').value,l=document.getElementById('matLink').value;
-    if(t&&q&&l){await push(ref(db,'materials'),{title:t,qual:q,link:l});alert("Material Uploaded")}
-  };
-  document.getElementById('btnPostAss').onclick=async()=>{
-    const t=document.getElementById('assTitle').value,q=document.getElementById('assQual').value,d=document.getElementById('assDate').value;
-    if(t&&q&&d){await push(ref(db,'assignments'),{title:t,qual:q,dueDate:d});alert("Assignment Issued")}
-  };
-  document.getElementById('btnAddTT').onclick=async()=>{
-    const day=document.getElementById('ttDay').value,time=document.getElementById('ttTime').value,sub=document.getElementById('ttSubject').value;
-    if(day&&time&&sub)await push(ref(db,'timetable'),{day,time,subject:sub});
-  };
-  document.getElementById('btnSendChat').onclick=async()=>{
-    const text=document.getElementById('chatInput').value;
-    if(text&&auth.currentUser){
-      const identifier=auth.currentUser.displayName ? `${auth.currentUser.displayName} (${auth.currentUser.email})` : auth.currentUser.email;
-      await push(ref(db,'chats'),{user:identifier,text,ts:serverTimestamp()});
-      document.getElementById('chatInput').value='';
+  function loadStudentContent(qual) {
+    // 1. Load Materials
+    onValue(ref(db, 'materials'), snap => {
+      const list = document.getElementById('materials-list');
+      list.innerHTML = '';
+      snap.forEach(child => {
+        const d = child.val();
+        if(d.qual === qual) {
+          list.innerHTML += `<tr>
+            <td><div style="font-weight:600">${d.title}</div></td>
+            <td><a href="${d.link}" target="_blank" style="color:var(--primary); font-weight:600; text-decoration:none;">View File</a></td>
+          </tr>`;
+        }
+      });
+    });
+
+    // 2. Load Assignments
+    onValue(ref(db, 'assignments'), snap => {
+      const list = document.getElementById('assignments-list');
+      const select = document.getElementById('submit-task-name');
+      list.innerHTML = ''; select.innerHTML = '<option value="">-- Choose Assignment --</option>';
+      snap.forEach(child => {
+        const d = child.val();
+        if(d.qual === qual) {
+          list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div><div style="font-weight:600">${d.title}</div><div style="font-size:12px; color:var(--danger)">Due: ${d.dueDate}</div></div>
+            <i data-lucide="file-text" style="color:var(--gray)"></i>
+          </div>`;
+          select.innerHTML += `<option value="${d.title}">${d.title}</option>`;
+        }
+      });
+      lucide.createIcons();
+    });
+
+    // 3. Load Timetable
+    onValue(ref(db, 'timetable'), snap => {
+        const list = document.getElementById('timetable-list');
+        list.innerHTML = '';
+        snap.forEach(child => {
+            const d = child.val();
+            list.innerHTML += `<tr><td><b>${d.day}</b></td><td>${d.time}</td><td>${d.subject}</td></tr>`;
+        });
+    });
+  }
+
+  document.getElementById('btnSubmitWork').onclick = async () => {
+    const link = document.getElementById('submit-link').value;
+    const task = document.getElementById('submit-task-name').value;
+    if(link && task) {
+      await push(ref(db, 'submissions'), {
+        studentName: auth.currentUser.displayName,
+        studentEmail: auth.currentUser.email,
+        assignmentTitle: task,
+        link: link,
+        timestamp: serverTimestamp()
+      });
+      alert("Assignment submitted successfully!");
+      document.getElementById('submit-link').value = '';
+    } else {
+        alert("Please select an assignment and provide a link.");
     }
   };
 
-  document.querySelectorAll('.nav-link').forEach(link=>{
-    link.onclick=()=>{
-      document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.onclick = () => {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       link.classList.add('active');
-      document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
       document.getElementById(link.dataset.target).classList.add('active');
-      document.getElementById('view-title').textContent=link.innerText.trim();
     };
   });
 
-  document.getElementById('googleSignInBtn').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider());
-  document.getElementById('signOutBtn').onclick=()=>signOut(auth);
+  document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider());
+  document.getElementById('logoutBtn').onclick = () => signOut(auth);
 </script>
 </body>
 </html>
