@@ -706,7 +706,7 @@
     function loadChat() {
       const chatArea = document.getElementById('chatArea');
       // Updated to match the path used in sendMessage
-      chatUnsubscribe = onValue(ref(database, 'lecturer_chat/messages'), (snapshot) => {
+      chatUnsubscribe = onValue(ref(database, 'chats'), (snapshot) => {
         chatArea.innerHTML = '';
         if (!snapshot.exists()) {
             chatArea.innerHTML = '<div class="empty-state">No messages yet. Start the conversation!</div>';
