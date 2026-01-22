@@ -21,23 +21,35 @@
     
     .layout { display: flex; height: 100vh; }
 
+    /* Sidebar - Icons always visible */
     aside { 
       width: var(--sidebar-collapsed); background: var(--card-bg); border-right: 1px solid var(--border); 
       display: flex; flex-direction: column; padding: 1.5rem 0; flex-shrink: 0; z-index: 100;
+      overflow: hidden;
     }
     aside:hover { width: var(--sidebar-w); }
     
-    aside .nav-text, aside .logo-text { opacity: 0; white-space: nowrap; transition: opacity 0.2s; pointer-events: none; }
+    aside .nav-text, aside .logo-text { opacity: 0; white-space: nowrap; transition: opacity 0.2s; pointer-events: none; margin-left: 10px; }
     aside:hover .nav-text, aside:hover .logo-text { opacity: 1; pointer-events: auto; }
     
     .nav-link { 
       display: flex; align-items: center; padding: .8rem; color: var(--gray); text-decoration: none; 
-      font-weight: 500; cursor: pointer; gap: 12px; margin: 4px 12px; border-radius: 9999px; font-size: 14px; 
+      font-weight: 500; cursor: pointer; margin: 4px 12px; border-radius: 9999px; font-size: 14px; 
+      min-width: 54px;
     }
     aside:hover .nav-link { padding: .8rem 1.2rem; }
     .nav-link:hover { background: var(--bg); color: var(--primary); }
     .nav-link.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
-    .nav-link i { min-width: 24px; display: flex; justify-content: center; }
+    
+    /* Ensure Icons are visible in collapsed state */
+    .nav-link i, aside .logo-icon { 
+        min-width: 24px; 
+        width: 24px; 
+        height: 24px; 
+        flex-shrink: 0; 
+        display: block;
+        color: inherit;
+    }
 
     main { flex: 1; overflow-y: auto; padding: 2.5rem; display: flex; flex-direction: column; }
     .card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -50,6 +62,17 @@
     button:disabled { background: var(--gray); opacity: 0.6; cursor: not-allowed; }
     input, select { padding: .75rem 1.2rem; border-radius: 9999px; border: 1px solid var(--border); width: 100%; font-size: 14px; background: var(--bg); color: var(--text-main); }
 
+    /* Modern Modal Styles */
+    #modal-overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4);
+        display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px);
+    }
+    .modal-box {
+        background: var(--card-bg); padding: 2rem; border-radius: 24px; max-width: 400px; width: 90%;
+        text-align: center; border: 1px solid var(--border); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
     #chat-sec { height: 100%; display: none; flex-direction: column; }
     #chat-sec.active { display: flex; }
     #chat-window { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; margin-top: 1rem; }
@@ -61,7 +84,7 @@
     .msg.received { align-self: flex-start; background: var(--bg); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
 
     .theme-switch {
-      display: flex; align-items: center; gap: 12px; margin: 10px 12px; padding: 10px; border-radius: 9999px;
+      display: flex; align-items: center; padding: 10px; margin: 10px 12px; border-radius: 9999px;
       cursor: pointer; color: var(--gray);
     }
     .theme-switch:hover { background: var(--bg); }
@@ -76,6 +99,15 @@
 </head>
 <body>
 
+<div id="modal-overlay">
+    <div class="modal-box">
+        <div id="modal-icon" style="margin-bottom: 1rem;"></div>
+        <h3 id="modal-title" style="margin: 0 0 0.5rem 0;">Notification</h3>
+        <p id="modal-text" style="color: var(--gray); font-size: 14px; margin-bottom: 1.5rem;"></p>
+        <button onclick="closeModal()" style="width: 100%;">Got it</button>
+    </div>
+</div>
+
 <div id="auth-screen">
   <div class="card" style="max-width: 400px; width: 90%; text-align: center; padding: 3rem 2rem;">
     <i data-lucide="graduation-cap" style="width: 64px; height: 64px; color: var(--primary); margin: 0 auto 1.5rem;"></i>
@@ -86,8 +118,8 @@
 
 <div class="layout" id="main-app" style="display:none">
   <aside id="sidebar">
-    <div style="padding: 0 1.5rem 1.5rem; font-weight: 800; color: var(--primary); font-size: 1.25rem; display: flex; align-items: center; gap: 12px;">
-        <i data-lucide="layers"></i> <span class="logo-text">LMS Learner</span>
+    <div style="padding: 0 1.5rem 1.5rem; font-weight: 800; color: var(--primary); font-size: 1.25rem; display: flex; align-items: center;">
+        <i data-lucide="layers" class="logo-icon"></i> <span class="logo-text">LMS Learner</span>
     </div>
 
     <nav>
@@ -169,7 +201,8 @@
   import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
   import { getDatabase, ref, onValue, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
-  const CLOUDINARY_URL = "CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@dv5bsbydu";
+  // CORRECTED CLOUDINARY ENDPOINT
+  const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dv5bsbydu/upload";
   const CLOUDINARY_PRESET = "dv5bsbydu";
 
   const firebaseConfig = {
@@ -186,6 +219,22 @@
   const auth = getAuth(app);
   const db = getDatabase(app);
   lucide.createIcons();
+
+  // Modern Modal Logic
+  window.showModal = (title, text, type = 'success') => {
+      const overlay = document.getElementById('modal-overlay');
+      const iconBox = document.getElementById('modal-icon');
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-text').textContent = text;
+      
+      iconBox.innerHTML = type === 'success' 
+        ? '<i data-lucide="check-circle" style="color:var(--success); width:48px; height:48px;"></i>'
+        : '<i data-lucide="alert-circle" style="color:#ef4444; width:48px; height:48px;"></i>';
+      
+      overlay.style.display = 'flex';
+      lucide.createIcons();
+  }
+  window.closeModal = () => document.getElementById('modal-overlay').style.display = 'none';
 
   document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-mode');
 
@@ -256,7 +305,6 @@
     });
   }
 
-  // Cloudinary Upload Logic
   const fileInput = document.getElementById('pdfFile');
   const btnBrowse = document.getElementById('btnBrowse');
   const fileNameDisplay = document.getElementById('fileName');
@@ -270,7 +318,7 @@
     const task = document.getElementById('submit-task-name').value;
     const file = fileInput.files[0];
     
-    if(!task || !file) return alert("Please select an assignment and a PDF file.");
+    if(!task || !file) return showModal("Wait!", "Please select an assignment and a PDF file.", "error");
 
     document.getElementById('btnSubmitWork').disabled = true;
     document.getElementById('btnSubmitWork').textContent = "Uploading...";
@@ -291,13 +339,14 @@
           link: data.secure_url,
           timestamp: serverTimestamp()
         });
-        alert("Assignment Submitted via Cloudinary!");
+        showModal("Success!", "Assignment Submitted via Cloudinary!");
         fileInput.value = "";
         fileNameDisplay.textContent = "Browse PDF File";
+      } else {
+          throw new Error("Cloudinary error");
       }
     } catch (err) {
-      console.error(err);
-      alert("Upload failed.");
+      showModal("Error", "Upload failed. Please check your internet or file size.", "error");
     } finally {
       document.getElementById('btnSubmitWork').disabled = false;
       document.getElementById('btnSubmitWork').textContent = "Upload & Submit";
