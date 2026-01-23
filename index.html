@@ -786,11 +786,9 @@
   // ── Updated logout with loading feedback ────────────────────────────────
   document.getElementById('logoutBtn').onclick = async () => {
     showModal("Signing out", "Please wait...", "loading", true);
-    // Small delay so the user can actually see the message (optional but improves UX)
     await new Promise(resolve => setTimeout(resolve, 800));
     try {
       await signOut(auth);
-      // Modal will stay until redirect / auth state change closes it
     } catch (err) {
       showModal("Error", "Sign out failed. Please try again.", "error");
     }
