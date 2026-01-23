@@ -675,21 +675,75 @@
     document.getElementById('stat-mods').textContent = mods.length;
     document.getElementById('module-grid').innerHTML = mods.map(m => `<div class="module-card"><h3>${m}</h3><p>2026 Core Module</p></div>`).join('');
 
+    // ── Improved Materials listener ────────────────────────────────────────
     onValue(ref(db, 'materials'), snap => {
-      const list = document.getElementById('materials-list'); list.innerHTML = '';
-      let total = 0;
-      snap.forEach(c => { 
-        if(c.val().qual === qual) {
-          total++;
-          list.innerHTML += `<tr><td style="padding:15px; border-bottom:1px solid var(--border)"><b>${c.val().title}</b></td><td style="text-align:right"><a href="${c.val().link}" target="_blank" style="text-decoration:none; color:var(--primary); font-weight:600">Download</a></td></tr>`; 
+        const list = document.getElementById('materials-list');
+        list.innerHTML = '';
+
+        let total = 0;
+        let foundAny = false;
+
+        const items = [];
+
+        snap.forEach(child => {
+            const mat = child.val();
+            if (mat.qual === qual || !mat.qual) {   // also show global materials (no qual set)
+                foundAny = true;
+                total++;
+
+                const title     = mat.title     || "Untitled Material";
+                const desc      = mat.description || "";
+                const link      = mat.link      || mat.fileUrl || "#";
+                const uploaded  = mat.timestamp 
+                    ? new Date(mat.timestamp).toLocaleDateString('en-ZA', { dateStyle: 'medium' })
+                    : "—";
+                const type      = mat.type      || (link.toLowerCase().endsWith('.pdf') ? "PDF" : "File");
+
+                items.push({
+                    ts: mat.timestamp || 0,
+                    html: `
+                    <tr>
+                        <td style="padding:15px; border-bottom:1px solid var(--border);">
+                            <div style="font-weight:600;">${title}</div>
+                            ${desc ? `<small style="color:var(--gray); display:block; margin-top:4px;">${desc}</small>` : ''}
+                        </td>
+                        <td style="padding:15px; border-bottom:1px solid var(--border); color:var(--gray); font-size:13px;">
+                            ${type}<br><small>${uploaded}</small>
+                        </td>
+                        <td style="padding:15px; border-bottom:1px solid var(--border); text-align:right;">
+                            ${link !== "#" 
+                                ? `<a href="${link}" target="_blank" rel="noopener noreferrer" 
+                                     style="color:var(--primary); font-weight:600; text-decoration:none;">
+                                     Download
+                                  </a>`
+                                : '<span style="color:var(--gray);">No file</span>'}
+                        </td>
+                    </tr>`
+                });
+            }
+        });
+
+        // Sort newest first
+        items.sort((a, b) => b.ts - a.ts);
+
+        // Render
+        if (foundAny) {
+            items.forEach(item => list.innerHTML += item.html);
+        } else {
+            list.innerHTML = `
+                <tr>
+                    <td colspan="3" style="text-align:center; padding:40px 20px; color:var(--gray);">
+                        No study materials available for this qualification yet.
+                    </td>
+                </tr>`;
         }
-      });
-      if (total > counts.material && counts.material !== 0 && activeTab !== 'course-sec') {
-          showModal("New Material", "Lecturer uploaded new learning materials.", "success");
-          document.getElementById('badge-materials').style.display = 'block';
-      }
-      counts.material = total;
-      if(total === 0) list.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:20px; color:var(--gray)">No materials available.</td></tr>';
+
+        // Unread badge logic
+        if (total > counts.material && counts.material !== 0 && activeTab !== 'course-sec') {
+            showModal("New Material", "New learning resource has been uploaded.", "success");
+            document.getElementById('badge-materials').style.display = 'block';
+        }
+        counts.material = total;
     });
 
     onValue(ref(db, 'assignments'), snap => {
@@ -783,7 +837,6 @@
 
   document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider());
 
-  // ── Updated logout with loading feedback ────────────────────────────────
   document.getElementById('logoutBtn').onclick = async () => {
     showModal("Signing out", "Please wait...", "loading", true);
     await new Promise(resolve => setTimeout(resolve, 800));
